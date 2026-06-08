@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="../VillaAgency.Business/VillaAgency.Business.csproj" />
+  <Project Path="../VillaAgency.DataAccess/VillaAgency.DataAccess.csproj" />
+  <Project Path="../VillaAgency.Dto/VillaAgency.Dto.csproj" />
+  <Project Path="../VillaAgency.Entity/VillaAgency.Entity.csproj" />
+  <Project Path="VillaAgency.WebUI.csproj" />
+</Solution>
