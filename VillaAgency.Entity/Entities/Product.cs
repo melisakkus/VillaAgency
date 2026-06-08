@@ -1,4 +1,6 @@
-﻿namespace VillaAgency.Entity.Entities
+﻿using VillaAgency.Entity.Common;
+
+namespace VillaAgency.Entity.Entities
 {
     public class Product : BaseEntity
     {

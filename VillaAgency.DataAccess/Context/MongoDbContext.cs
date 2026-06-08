@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using VillaAgency.DataAccess.Configurations;
 
 namespace VillaAgency.DataAccess.Context
 {

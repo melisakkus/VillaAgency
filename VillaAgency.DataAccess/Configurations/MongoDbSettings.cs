@@ -1,4 +1,4 @@
-﻿namespace VillaAgency.DataAccess
+﻿namespace VillaAgency.DataAccess.Configurations
 {
     public class MongoDbSettings
     {

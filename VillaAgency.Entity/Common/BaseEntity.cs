@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 
-namespace VillaAgency.Entity.Entities
+namespace VillaAgency.Entity.Common
 {
     public class BaseEntity
     {

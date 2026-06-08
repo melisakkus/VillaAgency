@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VillaAgency.DataAccess.Abstract;
+using VillaAgency.DataAccess.Configurations;
 using VillaAgency.DataAccess.Context;
 using VillaAgency.DataAccess.Repositories;
 
