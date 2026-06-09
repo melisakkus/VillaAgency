@@ -12,7 +12,8 @@ namespace VillaAgency.DataAccess.Extension
         public static IServiceCollection AddDataAccessServices(
             this IServiceCollection services, IConfiguration config)
         {
-            var mongoSettings = config.GetSection("MongoDB").Get<MongoDbSettings>();
+            var mongoSettings = config.GetSection("MongoDB").Get<MongoDbSettings>()
+                ?? throw new InvalidOperationException("MongoDB configuration is missing.");
 
             services.AddSingleton(mongoSettings);
             services.AddSingleton<MongoDbContext>();
