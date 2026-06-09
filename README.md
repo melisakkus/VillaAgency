@@ -58,22 +58,26 @@ VillaAgency (Solution)
 │
 ├── 💻 VillaAgency.DataAccess (Class Library)
 │       ├── 📁 Abstract
-│       │   └── 📄 IRepository.cs (Generic Repository Contract interface)
+│       │   └── 📄 IGenericDal.cs (Generic Repository Contract interface)
+│       └── 📁 Concrete
+│       │   └── 📁 MongoDb.Driver
+│       │         └── 📄 GenericRepository.cs (Concrete MongoDB implementation)
 │       ├── 📁 Configurations
 │       │   └── 📄 MongoDbSettings.cs (Strongly-typed configuration mapper)
 │       ├── 📁 Context
 │       │   └── 📄 MongoDbContext.cs (Cluster Connection & Collection hub)
 │       ├── 📁 Extensions
 │       │   └── 📄 DataAccessServiceExtension.cs (Data Layer DI Container Manifest)
-│       └── 📁 Repositories
-│           └── 📄 MongoRepository.cs (Concrete MongoDB implementation)
+
 │
 ├── 💻 VillaAgency.Dto (Class Library)
 │       └── 📁 BannerDtos (Data Transfer Object structural layouts)
 │
 ├── 💻 VillaAgency.Business (Class Library)
 │       ├── 📁 Abstract (Business Domain Services - e.g., IBannerService)
+│       │   └── 📄 IGenericService.cs 
 │       ├── 📁 Concrete (Domain implementation Logic Managers - e.g., BannerManager)
+│           └── 📄 GenericManager.cs 
 │       └── 📁 Extensions
 │           └── 📄 BusinessServiceExtension.cs (Layered DI chaining adapter)
 │
@@ -97,9 +101,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 public class BaseEntity
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
+   public ObjectId Id { get; set; }
 }
 ```
 
@@ -164,64 +166,89 @@ namespace VillaAgency.DataAccess.Context
 }
 ```
 
-## 🔵 STEP 3 — The Abstract Service Contract (DataAccess / IRepository.cs)
+## 🔵 STEP 3 — The Abstract Service Contract (DataAccess / IGenericDal.cs)
 To maintain pure system decoupling across persistent layers, a common transactional contract interface was drafted using the Dependency Inversion Principle (DIP). The upstream business tier binds exclusively to this abstract schema.
 
 ```C#
+using MongoDB.Bson;
+using System.Linq.Expressions;
+using VillaAgency.Entity.Common;
+
 namespace VillaAgency.DataAccess.Abstract
 {
-    public interface IRepository<T>
+    public interface IGenericDal<T> where T : BaseEntity
     {
-        Task<List<T>> GetAllAsync();
-        Task<T> GetByIdAsync(string id);
         Task CreateAsync(T entity);
-        Task UpdateAsync(string id, T entity);
-        Task DeleteAsync(string id);
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(ObjectId id);
+
+        Task<List<T>> GetListAsync();
+        Task<T> GetByIdAsync(string id);
+
+        Task<int> CountAsync();
+
+        Task<List<T>> GetFilteredListAsync(Expression<Func<T,bool>> predicate);
     }
 }
+
 ```
 
 ## 🔵 STEP 4 — Concrete Persistence Logic (DataAccess / MongoRepository.cs)
 The architectural bridge where the generic data contract interface is materialized utilizing official native MongoDB asynchronous driver extensions.
 
 ```C#
+using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Linq.Expressions;
 using VillaAgency.DataAccess.Abstract;
 using VillaAgency.DataAccess.Context;
+using VillaAgency.Entity.Common;
 
-namespace VillaAgency.DataAccess.Repositories
+namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
 {
-    public class MongoRepository<T> : IRepository<T>
+    public class GenericRepository<T> : IGenericDal<T> where T : BaseEntity
     {
         private readonly IMongoCollection<T> _collection;
-        public MongoRepository(MongoDbContext context)
+        public GenericRepository(MongoDbContext context)
         {
             _collection = context.GetCollection<T>();
         }
 
-        public Task CreateAsync(T entity)
+        public async Task<int> CountAsync()
         {
-            throw new NotImplementedException();
+            return (int)await _collection.CountDocumentsAsync(Builders<T>.Filter.Empty);
         }
 
-        public Task DeleteAsync(string id)
+        public async Task CreateAsync(T entity)
         {
-            throw new NotImplementedException();
+            await _collection.InsertOneAsync(entity);
         }
 
-        public Task<List<T>> GetAllAsync()
+        public async Task DeleteAsync(ObjectId id)
         {
-            throw new NotImplementedException();
+            await _collection.DeleteOneAsync(x => x.Id == id);
         }
 
-        public Task<T> GetByIdAsync(string id)
+        public async Task<T> GetByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            var filter = Builders<T>.Filter.Eq("_id",new ObjectId(id));
+            return await _collection.Find(filter).FirstOrDefaultAsync();
         }
 
-        public Task UpdateAsync(string id, T entity)
+        public async Task<List<T>> GetFilteredListAsync(Expression<Func<T, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _collection.Find(predicate).ToListAsync();
+        }
+
+        public async Task<List<T>> GetListAsync()
+        {
+            return await _collection.Find(Builders<T>.Filter.Empty).ToListAsync();
+        }
+
+        public async Task UpdateAsync(T entity)
+        {
+            var id = entity.Id;
+            await _collection.ReplaceOneAsync(x => x.Id == id, entity);
         }
     }
 }
@@ -249,7 +276,7 @@ namespace VillaAgency.DataAccess.Extension
 
             services.AddSingleton(mongoSettings);
             services.AddSingleton<MongoDbContext>();
-            services.AddScoped(typeof(IRepository<>), typeof(MongoRepository<>));
+            services.AddScoped(typeof(IGenericDal<>), typeof(GenericRepository<>));
 
             return services;
         }
@@ -291,3 +318,114 @@ The ultimate execution compilation entry point where a single declarative invoca
 // Inside the WebUI Presentation root Program.cs file:
 builder.Services.AddBusinessServices(builder.Configuration);
 ```
+
+## 🔵 STEP 8 — Business Logic Contract (Business / IGenericService.cs)
+Just as IGenericDal<T> in the DataAccess layer exposes its own contract, the Business layer exposes its contract to the outside world via the IGenericService<T> interface. The "T" prefix on method names emphasizes that these methods belong to the Business layer and prevents confusion between layers.
+```C#
+using MongoDB.Bson;
+using System.Linq.Expressions;
+using VillaAgency.Entity.Common;
+
+namespace VillaAgency.Business.Abstract
+{
+    public interface IGenericService<T> where T : BaseEntity
+    {
+        Task TCreateAsync(T entity);
+        Task TUpdateAsync(T entity);
+        Task TDeleteAsync(ObjectId id);
+
+        Task<List<T>> TGetListAsync();
+        Task<T> TGetByIdAsync(string id);
+
+        Task<int> TCountAsync();
+
+        Task<List<T>> TGetFilteredListAsync(Expression<Func<T, bool>> predicate);
+    }
+}
+```
+
+## 🔵 STEP 9 — Business Logic Concrete Class (Business / GenericManager.cs)
+This is the concrete implementation of the IGenericService<T> interface. For now, it delegates directly to IGenericDal<T> methods. The existence of this intermediate layer is critical because business rules such as validation, logging, and caching will be added here as the project grows, without ever touching the DataAccess layer.
+```C#
+using MongoDB.Bson;
+using System.Linq.Expressions;
+using VillaAgency.Business.Abstract;
+using VillaAgency.DataAccess.Abstract;
+using VillaAgency.Entity.Common;
+
+namespace VillaAgency.Business.Concrete
+{
+    public class GenericManager<T> : IGenericService<T> where T : BaseEntity
+    {
+        private readonly IGenericDal<T> _genericDal;
+
+        public GenericManager(IGenericDal<T> genericDal)
+        {
+            _genericDal = genericDal;
+        }
+
+        public async Task<int> TCountAsync()
+        {
+            return await _genericDal.CountAsync();
+        }
+
+        public async Task TCreateAsync(T entity)
+        {
+            await _genericDal.CreateAsync(entity);
+        }
+
+        public async Task TDeleteAsync(ObjectId id)
+        {
+            await _genericDal.DeleteAsync(id);
+        }
+
+        public Task<T> TGetByIdAsync(string id)
+        {
+            return _genericDal.GetByIdAsync(id);
+        }
+
+        public Task<List<T>> TGetFilteredListAsync(Expression<Func<T, bool>> predicate)
+        {
+            return _genericDal.GetFilteredListAsync(predicate);
+        }
+
+        public Task<List<T>> TGetListAsync()
+        {
+            return _genericDal.GetListAsync();
+        }
+
+        public async Task TUpdateAsync(T entity)
+        {
+            await _genericDal.UpdateAsync(entity);
+        }
+    }
+}
+```
+## 🔵 STEP 10 — Updating Business Dependency Registrations (Business / BusinessServiceExtension.cs)
+The BusinessServiceExtension.cs that was written as a skeleton in Step 6 is now completed. The IGenericService<T> ↔ GenericManager<T> mapping is registered in the DI Container, closing the layer chain.
+```C#
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using VillaAgency.Business.Abstract;
+using VillaAgency.Business.Concrete;
+using VillaAgency.DataAccess.Extension;
+
+namespace VillaAgency.Business.Extension
+{
+    public static class BusinessServiceExtension
+    {
+        public static IServiceCollection AddBusinessServices(
+            this IServiceCollection services, IConfiguration config)
+        {
+            // 1. Chain-register the DataAccess layer's services first
+            services.AddDataAccessServices(config);
+
+            // 2. Register the Business layer's generic service mapping
+            services.AddScoped(typeof(IGenericService<>), typeof(GenericManager<>));
+
+            return services;
+        }
+    }
+}
+```
+
