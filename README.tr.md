@@ -1,5 +1,9 @@
 # 📑 PROJE GÜNLÜĞÜ: VillaAgency Projesi (.NET 8 & MongoDB)
 
+Dil Seçenekleri : [🇬🇧 English](README.md) | [🇹🇷 Türkçe](README.tr.md)
+
+---
+
 ## 📌 Proje Özeti & Hedefler
 * **Amaç:** MongoDB veritabanını, çok katmanlı mimari (N-Tier Architecture) ve Repository Tasarım Deseni (Repository Design Pattern) kullanarak .NET 8 MVC projesine entegre etmek.
 * **Tema:** Villa satın alma odaklı emlak platformu ve buna bağlı bir Admin Paneli.
@@ -52,22 +56,26 @@ VillaAgency (Solution)
 │
 ├── 💻 VillaAgency.DataAccess (Class Library)
 │       ├── 📁 Abstract
-│       │   └── 📄 IRepository.cs (Generic Repository Arayüzü)
+│       │   └── 📄 IGenericDal.cs (Generic Repository Arayüzü)
+│       └── 📁 Concrete
+│       │   └── 📁 MongoDb.Driver
+│       │         └── 📄 GenericRepository.cs (MongoDB somut implementasyonu)
 │       ├── 📁 Configurations
 │       │   └── 📄 MongoDbSettings.cs (appsettings.json eşlemesi)
 │       ├── 📁 Context
 │       │   └── 📄 MongoDbContext.cs (Bağlantı ve Koleksiyon yönetimi)
 │       ├── 📁 Extensions
 │           └── 📄 DataAccessServiceExtension.cs (DI Container Kayıtları)
-│       └── 📁 Repositories
-│       │   └── 📄 MongoRepository.cs (MongoDB somut implementasyonu)
+
 │
 ├── 💻 VillaAgency.Dto (Class Library)
 │       └── 📁 BannerDtos (Data Transfer Object sınıfları)
 │
 ├── 💻 VillaAgency.Business (Class Library)
 │       ├── 📁 Abstract (İş mantığı arayüzleri - Örn: IBannerService)
+│       │   └── 📄 IGenericService.cs 
 │       ├── 📁 Concrete (İş mantığı somut sınıfları - Örn: BannerManager)
+│           └── 📄 GenericManager.cs 
 │       └── 📁 Extensions
 │           └── 📄 BusinessServiceExtension.cs (Katman zincirleme kaydı)
 │
@@ -91,9 +99,7 @@ Geliştirmeye en bağımsız katman olan Entity ile başlandı.
   
   public class BaseEntity
   {
-      [BsonId]
-      [BsonRepresentation(BsonType.ObjectId)]
-      public string Id { get; set; }
+     public ObjectId Id { get; set; }
   }
 
 - Banner.cs Yazıldı: BaseEntity'den miras alan ilk kalıcı sınıf oluşturuldu.
@@ -156,69 +162,91 @@ namespace VillaAgency.DataAccess.Context
 
 ```
 
-## 🔵 ADIM 3 — Soyutlama Kontratı (DataAccess / IRepository.cs)
+## 🔵 ADIM 3 — Soyutlama Kontratı (DataAccess / IGenericDal.cs)
 Sistemin veritabanı teknolojisinden (MongoDB, SQL Server, Oracle vb.) bağımsız çalışabilmesi için bir sözleşme (Interface) tasarlandı. SOLID'in Dependency Inversion Principle (DIP) ilkesi uygulandı. Business katmanı sadece bu interface'i tanır.
 
 ```C#
+using MongoDB.Bson;
+using System.Linq.Expressions;
+using VillaAgency.Entity.Common;
+
 namespace VillaAgency.DataAccess.Abstract
 {
-    public interface IRepository<T>
+    public interface IGenericDal<T> where T : BaseEntity
     {
-        Task<List<T>> GetAllAsync();
-        Task<T> GetByIdAsync(string id);
         Task CreateAsync(T entity);
-        Task UpdateAsync(string id, T entity);
-        Task DeleteAsync(string id);
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(ObjectId id);
+
+        Task<List<T>> GetListAsync();
+        Task<T> GetByIdAsync(string id);
+
+        Task<int> CountAsync();
+
+        Task<List<T>> GetFilteredListAsync(Expression<Func<T,bool>> predicate);
     }
 }
-
 ```
 
 ## 🔵 ADIM 4 — Somut Kodlama (DataAccess / MongoRepository.cs)
 IRepository<T> interface'inin MongoDB sürücüsü kullanılarak doldurulduğu yerdir. MongoDbContext aracılığıyla ilgili koleksiyona bağlanır.
 
 ```C#
+using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Linq.Expressions;
 using VillaAgency.DataAccess.Abstract;
 using VillaAgency.DataAccess.Context;
+using VillaAgency.Entity.Common;
 
-namespace VillaAgency.DataAccess.Repositories
+namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
 {
-    public class MongoRepository<T> : IRepository<T>
+    public class GenericRepository<T> : IGenericDal<T> where T : BaseEntity
     {
         private readonly IMongoCollection<T> _collection;
-        public MongoRepository(MongoDbContext context)
+        public GenericRepository(MongoDbContext context)
         {
             _collection = context.GetCollection<T>();
         }
 
-        public Task CreateAsync(T entity)
+        public async Task<int> CountAsync()
         {
-            throw new NotImplementedException();
+            return (int)await _collection.CountDocumentsAsync(Builders<T>.Filter.Empty);
         }
 
-        public Task DeleteAsync(string id)
+        public async Task CreateAsync(T entity)
         {
-            throw new NotImplementedException();
+            await _collection.InsertOneAsync(entity);
         }
 
-        public Task<List<T>> GetAllAsync()
+        public async Task DeleteAsync(ObjectId id)
         {
-            throw new NotImplementedException();
+            await _collection.DeleteOneAsync(x => x.Id == id);
         }
 
-        public Task<T> GetByIdAsync(string id)
+        public async Task<T> GetByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            var filter = Builders<T>.Filter.Eq("_id",new ObjectId(id));
+            return await _collection.Find(filter).FirstOrDefaultAsync();
         }
 
-        public Task UpdateAsync(string id, T entity)
+        public async Task<List<T>> GetFilteredListAsync(Expression<Func<T, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _collection.Find(predicate).ToListAsync();
+        }
+
+        public async Task<List<T>> GetListAsync()
+        {
+            return await _collection.Find(Builders<T>.Filter.Empty).ToListAsync();
+        }
+
+        public async Task UpdateAsync(T entity)
+        {
+            var id = entity.Id;
+            await _collection.ReplaceOneAsync(x => x.Id == id, entity);
         }
     }
 }
-
 ```
 
 ## 🔵 ADIM 5 — DataAccess Bağımlılık Kayıtları (DataAccess / DataAccessServiceExtension.cs)
@@ -243,7 +271,7 @@ namespace VillaAgency.DataAccess.Extension
 
             services.AddSingleton(mongoSettings);
             services.AddSingleton<MongoDbContext>();
-            services.AddScoped(typeof(IRepository<>), typeof(MongoRepository<>));
+            services.AddScoped(typeof(IGenericDal<>), typeof(GenericRepository<>));
 
             return services;
         }
@@ -287,3 +315,117 @@ Tüm mimarinin ayağa kalktığı ana giriş noktasıdır. Sadece tek satır ekl
 // WebUI katmanındaki Program.cs içerisi:
 builder.Services.AddBusinessServices(builder.Configuration);
 ```
+
+## 🔵 ADIM 8 — İş Mantığı Sözleşmesi (Business / IGenericService.cs)
+DataAccess katmanındaki IGenericDal<T> nasıl bir sözleşme sunuyorsa, Business katmanı da dışarıya kendi sözleşmesini IGenericService<T> arayüzü aracılığıyla sunar. Metot isimlerindeki "T" ön eki, bu metotların Business katmanına ait olduğunu vurgular ve katmanlar arası karışıklığı önler.
+
+```C#
+using MongoDB.Bson;
+using System.Linq.Expressions;
+using VillaAgency.Entity.Common;
+
+namespace VillaAgency.Business.Abstract
+{
+    public interface IGenericService<T> where T : BaseEntity
+    {
+        Task TCreateAsync(T entity);
+        Task TUpdateAsync(T entity);
+        Task TDeleteAsync(ObjectId id);
+
+        Task<List<T>> TGetListAsync();
+        Task<T> TGetByIdAsync(string id);
+
+        Task<int> TCountAsync();
+
+        Task<List<T>> TGetFilteredListAsync(Expression<Func<T, bool>> predicate);
+    }
+}
+```
+
+## 🔵 ADIM 9 — İş Mantığı Somut Sınıfı (Business / GenericManager.cs)
+IGenericService<T> arayüzünün somut implementasyonudur. Şu an için doğrudan IGenericDal<T> metodlarına yönlendirme (delegation) yapar. İlerleyen süreçte iş kuralları (validasyon, loglama, önbellekleme vb.) bu katmana ekleneceği için bu ara katmanın varlığı kritik önem taşır.
+```C#
+using MongoDB.Bson;
+using System.Linq.Expressions;
+using VillaAgency.Business.Abstract;
+using VillaAgency.DataAccess.Abstract;
+using VillaAgency.Entity.Common;
+
+namespace VillaAgency.Business.Concrete
+{
+    public class GenericManager<T> : IGenericService<T> where T : BaseEntity
+    {
+        private readonly IGenericDal<T> _genericDal;
+
+        public GenericManager(IGenericDal<T> genericDal)
+        {
+            _genericDal = genericDal;
+        }
+
+        public async Task<int> TCountAsync()
+        {
+            return await _genericDal.CountAsync();
+        }
+
+        public async Task TCreateAsync(T entity)
+        {
+            await _genericDal.CreateAsync(entity);
+        }
+
+        public async Task TDeleteAsync(ObjectId id)
+        {
+            await _genericDal.DeleteAsync(id);
+        }
+
+        public Task<T> TGetByIdAsync(string id)
+        {
+            return _genericDal.GetByIdAsync(id);
+        }
+
+        public Task<List<T>> TGetFilteredListAsync(Expression<Func<T, bool>> predicate)
+        {
+            return _genericDal.GetFilteredListAsync(predicate);
+        }
+
+        public Task<List<T>> TGetListAsync()
+        {
+            return _genericDal.GetListAsync();
+        }
+
+        public async Task TUpdateAsync(T entity)
+        {
+            await _genericDal.UpdateAsync(entity);
+        }
+    }
+}
+```
+
+## 🔵 ADIM 10 — Business Bağımlılık Kayıtlarının Güncellenmesi (Business / BusinessServiceExtension.cs)
+Adım 6'da iskelet olarak yazılan BusinessServiceExtension.cs artık tamamlanır. IGenericService<T> ↔ GenericManager<T> eşlemesi DI Container'a kaydedilerek katman zinciri tamamlanmış olur.
+
+```C#
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using VillaAgency.Business.Abstract;
+using VillaAgency.Business.Concrete;
+using VillaAgency.DataAccess.Extension;
+
+namespace VillaAgency.Business.Extension
+{
+    public static class BusinessServiceExtension
+    {
+        public static IServiceCollection AddBusinessServices(
+            this IServiceCollection services, IConfiguration config)
+        {
+            // 1. DataAccess katmanının servislerini zincirleme olarak kaydet
+            services.AddDataAccessServices(config);
+
+            // 2. Business katmanının generic servis kaydı
+            services.AddScoped(typeof(IGenericService<>), typeof(GenericManager<>));
+
+            return services;
+        }
+    }
+}
+```
+
