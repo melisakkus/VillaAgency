@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VillaAgency.DataAccess.Abstract;
+using VillaAgency.DataAccess.Concrete.MongoDb.Driver;
 using VillaAgency.DataAccess.Configurations;
 using VillaAgency.DataAccess.Context;
-using VillaAgency.DataAccess.Repositories;
 
 namespace VillaAgency.DataAccess.Extension
 {
@@ -16,8 +16,10 @@ namespace VillaAgency.DataAccess.Extension
 
             services.AddSingleton(mongoSettings);
             services.AddSingleton<MongoDbContext>();
-            services.AddScoped(typeof(IRepository<>), typeof(MongoRepository<>));
 
+            services.AddScoped(typeof(IGenericDal<>), typeof(GenericRepository<>));
+            // Sadece özel metodu olan:
+            // services.AddScoped<IProductDal, ProductDal>();
             return services;
         }
     }

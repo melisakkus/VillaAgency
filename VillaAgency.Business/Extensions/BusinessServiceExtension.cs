@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VillaAgency.Business.Abstract;
+using VillaAgency.Business.Concrete;
 using VillaAgency.DataAccess.Extension;
 
 namespace VillaAgency.Business.Extension
@@ -9,12 +11,9 @@ namespace VillaAgency.Business.Extension
         public static IServiceCollection AddBusinessServices(
             this IServiceCollection services, IConfiguration config)
         {
-            // 1. Önce DataAccess katmanının kendi servislerini kaydetmesini sağlıyoruz
             services.AddDataAccessServices(config);
 
-            // 2. Business katmanına ait Manager'ları (İş sınıflarını) buraya kaydediyoruz
-            // Örnek: services.AddScoped<IVillaService, VillaManager>();
-
+            services.AddScoped(typeof(IGenericService<>), typeof(GenericManager<>));
             return services;
         }
     }
