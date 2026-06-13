@@ -13,7 +13,6 @@ namespace VillaAgency.Business.Extension
         {
             services.AddDataAccessServices(config);
 
-            services.AddScoped(typeof(IGenericService<>), typeof(GenericManager<>));
             services.AddScoped<IBannerService, BannerManager>();
 
             return services;

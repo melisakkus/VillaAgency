@@ -1,9 +1,22 @@
-﻿using VillaAgency.Entity.Entities;
+﻿using MongoDB.Bson;
+using System.Linq.Expressions;
+using VillaAgency.Dto.Banner;
+using VillaAgency.Dto.BannerDtos;
+using VillaAgency.Entity.Entities;
 
 namespace VillaAgency.Business.Abstract
 {
     public interface IBannerService
     {
-        Task<List<Banner>> GetActiveBannersAsync();
+        Task TCreateAsync(CreateBannerDto dto);
+        Task TUpdateAsync(UpdateBannerDto dto);
+        Task TDeleteAsync(ObjectId id);
+
+        Task<List<ResultBannerDto>> TGetListAsync();
+        Task<ResultBannerDto> TGetByIdAsync(string id);
+
+        Task<int> TCountAsync();
+
+        Task<List<ResultBannerDto>> TGetFilteredListAsync(Expression<Func<Banner, bool>> predicate);
     }
 }

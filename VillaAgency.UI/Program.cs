@@ -1,3 +1,5 @@
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 using VillaAgency.Business.Extension;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,10 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-
 builder.Services.AddBusinessServices(builder.Configuration);
-
-
 
 var app = builder.Build();
 
@@ -26,6 +25,11 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+  name: "areas",
+  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+);
 
 app.MapControllerRoute(
     name: "default",

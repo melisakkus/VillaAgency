@@ -7,7 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\adminhmd-1.0.0\.vs\VSWorkspaceState.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\adminhmd-1.0.0\.vs\adminHMD\config\applicationhost.config" />
+    <None Include="wwwroot\adminhmd-1.0.0\.vs\adminHMD\v16\.suo" />
+    <None Include="wwwroot\adminhmd-1.0.0\.vs\slnx.sqlite" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.23" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\VillaAgency.Business\VillaAgency.Business.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Models\" />
   </ItemGroup>
 
 </Project>

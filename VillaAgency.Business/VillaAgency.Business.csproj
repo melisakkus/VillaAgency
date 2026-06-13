@@ -8,10 +8,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VillaAgency.DataAccess\VillaAgency.DataAccess.csproj" />
+    <ProjectReference Include="..\VillaAgency.Dto\VillaAgency.Dto.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="NewFolder\" />
+    <PackageReference Include="Mapster" Version="10.0.8" />
   </ItemGroup>
 
 </Project>

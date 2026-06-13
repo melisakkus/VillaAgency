@@ -11,7 +11,7 @@ namespace VillaAgency.DataAccess.Abstract
         Task DeleteAsync(ObjectId id);
 
         Task<List<T>> GetListAsync();
-        Task<T> GetByIdAsync(string id);
+        Task<T> GetByIdAsync(ObjectId id);
 
         Task<int> CountAsync();
 

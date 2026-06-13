@@ -30,9 +30,9 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
             await _collection.DeleteOneAsync(x => x.Id == id);
         }
 
-        public async Task<T> GetByIdAsync(string id)
+        public async Task<T> GetByIdAsync(ObjectId id)
         {
-            var filter = Builders<T>.Filter.Eq("_id",new ObjectId(id));
+            var filter = Builders<T>.Filter.Eq("_id",id);
             return await _collection.Find(filter).FirstOrDefaultAsync();
         }
 
