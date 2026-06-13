@@ -18,11 +18,12 @@ The project isolates dependencies within the layered architecture based on their
 | Layer Name | Dependency / NuGet Package | Version | Purpose |
 | :--- | :--- | :--- | :--- |
 | **All Layers** | `.NET 8 SDK / runtime` | v8.0 | Core execution runtime infrastructure for the entire suite. |
+| **VillaAgency.Entity** | `MongoDB.Bson` | v10.0.8 | Light structural library handling native MongoDB Binary JSON types, unique identity generation (`ObjectId`), and data metadata attributes. |
 | **VillaAgency.DataAccess** | `MongoDB.Driver` | v3.9.0 | Main official driver to orchestrate connections, build queries, and run asynchronous CRUD operations. |
 | **VillaAgency.DataAccess** | `Microsoft.Extensions.Configuration` | v10.0.8 | Infrastructure to read data settings from structural configuration files like `appsettings.json`. |
 | **VillaAgency.DataAccess** | `Microsoft.Extensions.Configuration.Binder` | v10.0.8 | Object graph mapping framework to bind raw configuration keys directly into C# objects (`MongoDbSettings`). |
 | **VillaAgency.DataAccess** | `Microsoft.Extensions.DependencyInjection` | v10.0.8 | IoC container extensions to register DataAccess services (Context, Repositories) into the runtime scope. |
-| **VillaAgency.Entity** | `MongoDB.Bson` | v3.9.0 | Light structural library handling native MongoDB Binary JSON types, unique identity generation (`ObjectId`), and data metadata attributes. |
+| **VillaAgency.Business** | `Mapster` | v3.9.0 | Lightweight object mapping library used to transform DTO ↔ Entity models in the Business layer, ensuring clean separation between presentation contracts and domain entities. |
 | **VillaAgency.WebUI** | `Microsoft.AspNetCore.Mvc` | Native | Core web infrastructure bringing the web interface, routing, administrative views, and Controllers to life. |
 
 ---
@@ -72,20 +73,32 @@ VillaAgency (Solution)
 │
 ├── 💻 VillaAgency.Dto (Class Library)
 │       └── 📁 BannerDtos (Data Transfer Object structural layouts)
+│       │   └── 📄 CreateBannerDto.cs
+│       │   └── 📄 ResultBannerDto.cs
+│       │   └── 📄 UpdateBannerDto.cs
 │
 ├── 💻 VillaAgency.Business (Class Library)
 │       ├── 📁 Abstract (Business Domain Services - e.g., IBannerService)
-│       │   └── 📄 IGenericService.cs 
+│       │   └── 📄 IBannerService.cs
 │       ├── 📁 Concrete (Domain implementation Logic Managers - e.g., BannerManager)
-│           └── 📄 GenericManager.cs 
+│           └── 📄 BannerManager.cs
 │       └── 📁 Extensions
 │           └── 📄 BusinessServiceExtension.cs (Layered DI chaining adapter)
 │
 └── 💻 VillaAgency.WebUI (ASP.NET Core MVC)
-        ├── 📁 Controllers
-        ├── 📁 Views
-        ├── 📄 appsettings.json (System configuration registry)
-        └── 📄 Program.cs (Application composition bootstrap file)
+│       ├── 📁 Areas
+│       │   └── 📁 Admin
+│       │       └── 📁 Controllers
+│       │           └── 📄 BannerController.cs
+│       │       └── 📁 Data
+│       │       └── 📁 Models
+│       │       └── 📁 Views
+│       │           └── 📁 Shared
+│       │               └── 📄 _AdminLayout.cshtml
+│       ├── 📁 Controllers
+│       ├── 📁 Views
+│       ├── 📄 appsettings.json (System configuration registry)
+│       └── 📄 Program.cs (Application composition bootstrap file)
 
 ```
 
@@ -183,7 +196,7 @@ namespace VillaAgency.DataAccess.Abstract
         Task DeleteAsync(ObjectId id);
 
         Task<List<T>> GetListAsync();
-        Task<T> GetByIdAsync(string id);
+        Task<T> GetByIdAsync(ObjectId id);
 
         Task<int> CountAsync();
 
@@ -229,9 +242,9 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
             await _collection.DeleteOneAsync(x => x.Id == id);
         }
 
-        public async Task<T> GetByIdAsync(string id)
+        public async Task<T> GetByIdAsync(ObjectId id)
         {
-            var filter = Builders<T>.Filter.Eq("_id",new ObjectId(id));
+            var filter = Builders<T>.Filter.Eq("_id",id);
             return await _collection.Find(filter).FirstOrDefaultAsync();
         }
 
@@ -303,7 +316,7 @@ namespace VillaAgency.Business.Extension
             services.AddDataAccessServices(config);
 
             // 2. Business domain managers register comfortably within this scope below
-            // Example: services.AddScoped<IVillaService, VillaManager>();
+            services.AddScoped<IBannerService, BannerManager>();
 
             return services;
         }
@@ -319,90 +332,115 @@ The ultimate execution compilation entry point where a single declarative invoca
 builder.Services.AddBusinessServices(builder.Configuration);
 ```
 
-## 🔵 STEP 8 — Business Logic Contract (Business / IGenericService.cs)
-Just as IGenericDal<T> in the DataAccess layer exposes its own contract, the Business layer exposes its contract to the outside world via the IGenericService<T> interface. The "T" prefix on method names emphasizes that these methods belong to the Business layer and prevents confusion between layers.
+## 🔵 STEP 8 — Entity-Specific Business Contract (Business / IBannerService.cs)
+As the project evolved, the Business layer was redesigned to expose entity-specific service contracts rather than a fully generic abstraction. This approach enables the Business layer to work directly with DTOs, encapsulate validation rules, and prevent presentation layers from interacting with persistence entities.
+
+The IBannerService contract exposes only DTO-based operations to external consumers while internally coordinating entity transformations.
+
 ```C#
 using MongoDB.Bson;
 using System.Linq.Expressions;
-using VillaAgency.Entity.Common;
+using VillaAgency.Dto.Banner;
+using VillaAgency.Dto.BannerDtos;
+using VillaAgency.Entity.Entities;
 
 namespace VillaAgency.Business.Abstract
 {
-    public interface IGenericService<T> where T : BaseEntity
+    public interface IBannerService
     {
-        Task TCreateAsync(T entity);
-        Task TUpdateAsync(T entity);
+        Task TCreateAsync(CreateBannerDto dto);
+        Task TUpdateAsync(UpdateBannerDto dto);
         Task TDeleteAsync(ObjectId id);
 
-        Task<List<T>> TGetListAsync();
-        Task<T> TGetByIdAsync(string id);
+        Task<List<ResultBannerDto>> TGetListAsync();
+        Task<ResultBannerDto> TGetByIdAsync(string id);
 
         Task<int> TCountAsync();
 
-        Task<List<T>> TGetFilteredListAsync(Expression<Func<T, bool>> predicate);
+        Task<List<ResultBannerDto>> TGetFilteredListAsync(Expression<Func<Banner, bool>> predicate);
     }
 }
-```
 
-## 🔵 STEP 9 — Business Logic Concrete Class (Business / GenericManager.cs)
-This is the concrete implementation of the IGenericService<T> interface. For now, it delegates directly to IGenericDal<T> methods. The existence of this intermediate layer is critical because business rules such as validation, logging, and caching will be added here as the project grows, without ever touching the DataAccess layer.
+```
+### 🎯 Why Entity-Specific Services?
+
+* **Public Contract:** DTOs become the public contract of the Business layer.
+* **Domain Isolation:** Entities remain isolated inside the domain and persistence layers.
+* **Encapsulated Rules:** Validation and business rules can be introduced without affecting Controllers.
+* **Independent Evolution:** Different entities can evolve independently without forcing generic abstractions everywhere.
+* **Clean Architecture:** Supports Clean Architecture principles by preventing UI $\rightarrow$ Entity coupling.
+
+
+## STEP 9 — Business Logic Implementation & DTO Mapping (Business / BannerManager.cs)
+
+### ⚙️ BannerManager & Business Workflow
+
+The `BannerManager` class represents the real business workflow implementation. Unlike the previous generic manager approach, this class now handles the complete lifecycle of a request:
+
+1. **Receive:** Accepts DTOs directly from the Presentation Layer.
+2. **Validate:** Performs strict validation and safety guard checks.
+3. **Map:** Converts DTOs $\leftrightarrow$ Entities seamlessly using **Mapster**.
+4. **Persist:** Communicates safely with the DataAccess layer through abstractions.
+5. **Return:** Sends clean DTOs back to the Presentation layer.
+
+> 🔒 **Key Benefit:** This strict lifecycle ensures that persistence models never leak outside the Business layer.
+
+
 ```C#
+using Mapster;
 using MongoDB.Bson;
 using System.Linq.Expressions;
 using VillaAgency.Business.Abstract;
 using VillaAgency.DataAccess.Abstract;
-using VillaAgency.Entity.Common;
+using VillaAgency.Dto.Banner;
+using VillaAgency.Dto.BannerDtos;
+using VillaAgency.Entity.Entities;
 
 namespace VillaAgency.Business.Concrete
 {
-    public class GenericManager<T> : IGenericService<T> where T : BaseEntity
+    public class BannerManager : IBannerService
     {
-        private readonly IGenericDal<T> _genericDal;
+        private readonly IGenericDal<Banner> _genericDal;
 
-        public GenericManager(IGenericDal<T> genericDal)
+        public BannerManager(IGenericDal<Banner> genericDal)
         {
-            _genericDal = genericDal;
+            _genericDal = genericDal
+                ?? throw new ArgumentNullException(nameof(genericDal));
         }
 
-        public async Task<int> TCountAsync()
+        public async Task TCreateAsync(CreateBannerDto dto)
         {
-            return await _genericDal.CountAsync();
-        }
+            if (dto is null)
+                throw new ArgumentNullException(nameof(dto));
 
-        public async Task TCreateAsync(T entity)
-        {
+            var entity = dto.Adapt<Banner>();
+
             await _genericDal.CreateAsync(entity);
         }
 
-        public async Task TDeleteAsync(ObjectId id)
+        public async Task<List<ResultBannerDto>> TGetListAsync()
         {
-            await _genericDal.DeleteAsync(id);
+            var entities = await _genericDal.GetListAsync();
+
+            return entities.Adapt<List<ResultBannerDto>>();
         }
 
-        public Task<T> TGetByIdAsync(string id)
+        public async Task<ResultBannerDto> TGetByIdAsync(string id)
         {
-            return _genericDal.GetByIdAsync(id);
+            if (!ObjectId.TryParse(id, out var objectId))
+                throw new FormatException("Invalid ObjectId format.");
+
+            var entity = await _genericDal.GetByIdAsync(objectId);
+
+            return entity.Adapt<ResultBannerDto>();
         }
 
-        public Task<List<T>> TGetFilteredListAsync(Expression<Func<T, bool>> predicate)
-        {
-            return _genericDal.GetFilteredListAsync(predicate);
-        }
-
-        public Task<List<T>> TGetListAsync()
-        {
-            return _genericDal.GetListAsync();
-        }
-
-        public async Task TUpdateAsync(T entity)
-        {
-            await _genericDal.UpdateAsync(entity);
-        }
+        // Other methods omitted for brevity...
     }
 }
 ```
-## 🔵 STEP 10 — Updating Business Dependency Registrations (Business / BusinessServiceExtension.cs)
-The BusinessServiceExtension.cs that was written as a skeleton in Step 6 is now completed. The IGenericService<T> ↔ GenericManager<T> mapping is registered in the DI Container, closing the layer chain.
+## 🔵 STEP 10 — Registering Entity-Specific Services (Business / BusinessServiceExtension.cs)
+With the introduction of entity-specific service contracts, the Dependency Injection container is updated to register concrete business managers individually.
 ```C#
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -415,17 +453,65 @@ namespace VillaAgency.Business.Extension
     public static class BusinessServiceExtension
     {
         public static IServiceCollection AddBusinessServices(
-            this IServiceCollection services, IConfiguration config)
+            this IServiceCollection services,
+            IConfiguration config)
         {
-            // 1. Chain-register the DataAccess layer's services first
             services.AddDataAccessServices(config);
 
-            // 2. Register the Business layer's generic service mapping
-            services.AddScoped(typeof(IGenericService<>), typeof(GenericManager<>));
+            services.AddScoped<IBannerService, BannerManager>();
 
             return services;
         }
     }
 }
 ```
+## 🔵 STEP 11 — UI Layer Implementation (WebUI)
+### 🔄 Parallel Development Model
+The UI layer has been developed simultaneously with the DataAccess and Business layers. Instead of waiting for all backend layers to be fully completed, a modular (Feature-Driven) development approach has been followed.
 
+**Example Process (Banner Module):**
+* **DataAccess (DAL):** Database entities and abstractions for the module were created.
+* **Business (BL):** Business logic, validations, and DTO structures were implemented.
+* **UI / Presentation:** At the same time, listing and view structures were designed and developed.
+
+> 💡 **Continuous Feedback:** During this process, layers were not static; they were continuously improved, tested, and evolved in a flexible feedback loop, supporting each other.
+
+## 🔵 STEP 12 — Areas Structure Implementation (Admin Panel)
+In the project, the user interface (Frontend) and administration panel (Admin) are separated using the ASP.NET Core Areas structure. This design ensures that the Admin section is isolated and implemented as a modular subsystem independent from the main application.
+### 🎯 Architectural Goals
+The main purpose of this structure is to achieve a sustainable and scalable architecture:
+* **Separation of Concerns:** Clear separation between the user interface and the admin panel
+* **Modularity & Scalability:** A modular structure that allows easy integration of new features as the project grows
+* **Independent Administration:** The admin panel is isolated from the main application and managed as a standalone subsystem
+### 📁 Implementations
+* Areas/Admin structure was created
+* Controllers and Views for the Admin panel were set up
+* A shared layout file _AdminLayout.cshtml was created
+* A consistent UI structure was established for admin pages
+
+### 🔵 STEP 13 — Banner Controller (Admin Panel)
+The BannerController was created as the foundation of the first CRUD structure within the admin panel.
+```c#
+using Microsoft.AspNetCore.Mvc;
+using VillaAgency.Business.Abstract;
+
+namespace VillaAgency.WebUI.Areas.Admin.Controllers
+{
+    [Area("Admin")]
+    public class BannerController : Controller
+    {
+        private readonly IBannerService _bannerService;
+
+        public BannerController(IBannerService bannerService)
+        {
+            _bannerService = bannerService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var values = await _bannerService.TGetListAsync();
+            return View(values);
+        }
+    }
+}
+```
