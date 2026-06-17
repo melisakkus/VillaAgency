@@ -13,5 +13,6 @@ namespace VillaAgency.Entity.Entities
         public string Email { get; set; }
         public string Subject { get; set; }
         public string Content { get; set; }
+        public DateTime MessageDate { get; set; }
     }
 }

@@ -1,0 +1,89 @@
+﻿<style>
+    :root {
+        --sidebar-divider-color: rgba(0, 0, 0, 0.1);
+        --sidebar-heading-color: rgba(0, 0, 0, 0.55); 
+    }
+
+    body.dark-theme, [data-theme="dark"] {
+        --sidebar-divider-color: rgba(255, 255, 255, 0.2); 
+        --sidebar-heading-color: rgba(255, 255, 255, 0.6); 
+    }
+
+    .sidebar-divider {
+        border-top: 1px solid var(--sidebar-divider-color); 
+        margin: 15px 10px;
+        opacity: 1; 
+    }
+
+    .sidebar-heading {
+        color: var(--sidebar-heading-color); 
+        font-size: 0.75rem; 
+        text-transform: uppercase; 
+        letter-spacing: 1px; 
+        padding: 0 15px 10px 15px;
+        font-weight: 700;
+    }
+</style>
+
+
+<aside class="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
+
+    <div class="sidebar-header">
+        <a class="brand-mark" href="index.html" aria-label="adminHMD dashboard">
+            <span class="brand-icon"><i class="bi bi-grid-1x2-fill" aria-hidden="true"></i></span>
+            <span class="brand-copy">
+                <span class="brand-title">VillaAgency</span>
+                <span class="brand-subtitle">Admin</span>
+            </span>
+        </a>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+            <span class="nav-icon"><i class="bi bi-speedometer2" aria-hidden="true"></i></span>
+            <span class="nav-text">Dashboard</span>
+        </a>
+
+        <a class="nav-link" asp-area="Admin" asp-controller="Message" asp-action="Index">
+            <span class="nav-icon"><i class="bi bi-envelope" aria-hidden="true"></i></span>
+            <span class="nav-text">Messages</span>
+        </a>
+
+        <hr class="sidebar-divider" />
+        <div class="sidebar-heading">Website Management</div>
+
+        <a class="nav-link" asp-area="Admin" asp-controller="Deal" asp-action="Index">
+            <span class="nav-icon"><i class="bi-tags-fill" aria-hidden="true"></i></span>
+            <span class="nav-text">Deals</span>
+        </a>
+        <a class="nav-link" asp-area="Admin" asp-controller="Product" asp-action="Index">
+            <span class="nav-icon"><i class="bi-house-heart-fill" aria-hidden="true"></i></span>
+            <span class="nav-text">Products</span>
+        </a>
+        <a class="nav-link" asp-area="Admin" asp-controller="Banner" asp-action="Index">
+            <span class="nav-icon"><i class="bi-image-fill" aria-hidden="true"></i></span>
+            <span class="nav-text">Banners</span>
+        </a>
+        <a class="nav-link" asp-area="Admin" asp-controller="Contact" asp-action="Index">
+            <span class="nav-icon"><i class="bi-person-lines-fill" aria-hidden="true"></i></span>
+            <span class="nav-text">Contact Infos</span>
+        </a>
+        <a class="nav-link" asp-area="Admin" asp-controller="Counter" asp-action="Index">
+            <span class="nav-icon"><i class="bi-calculator-fill" aria-hidden="true"></i></span>
+            <span class="nav-text">Counters</span>
+        </a>
+        <a class="nav-link" asp-area="Admin" asp-controller="Feature" asp-action="Index">
+            <span class="nav-icon"><i class="bi-stars" aria-hidden="true"></i></span>
+            <span class="nav-text">Features</span>
+        </a>
+        <a class="nav-link" asp-area="Admin" asp-controller="Question" asp-action="Index">
+            <span class="nav-icon"><i class="bi-question-circle-fill" aria-hidden="true"></i></span>
+            <span class="nav-text">Questions</span>
+        </a>
+        <a class="nav-link" asp-area="Admin" asp-controller="VideoView" asp-action="Index">
+            <span class="nav-icon"><i class="bi-play-btn-fill" aria-hidden="true"></i></span>
+            <span class="nav-text">Video Views</span>
+        </a>
+    </nav>
+
+</aside>
