@@ -25,7 +25,6 @@
                 </div>
             </nav>
 
-
             <main class="dashboard-content">
                 <div class="container-fluid px-3 px-lg-4 py-4">
                     <section class="panel blank-panel">
@@ -39,8 +38,8 @@
         </div>
     </div>
 
-    <script src="~/adminhmd-1.0.0/assets/js/bootstrap.bundle.min.js"></script>
-    <script src="~/adminhmd-1.0.0/assets/js/main.js"></script>
+    @await Component.InvokeAsync("_AdminScripts")
+
 </body>
 </html>
 
