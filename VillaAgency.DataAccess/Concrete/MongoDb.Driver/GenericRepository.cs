@@ -49,7 +49,11 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
         public async Task UpdateAsync(T entity)
         {
             var id = entity.Id;
-            await _collection.ReplaceOneAsync(x => x.Id == id, entity);
+            var result = await _collection.ReplaceOneAsync(x => x.Id == id, entity);
+            if (result.MatchedCount == 0)
+            {
+                throw new Exception("Update failed: entity not found.");
+            }
         }
     }
 }

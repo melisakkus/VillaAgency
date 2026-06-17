@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 
-namespace VillaAgency.Dto.Banner
+namespace VillaAgency.Dto.BannerDtos
 {
     public class CreateBannerDto
     {

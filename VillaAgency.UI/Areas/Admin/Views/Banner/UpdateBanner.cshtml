@@ -1,0 +1,57 @@
+﻿@model UpdateBannerDto
+@{
+    ViewData["Title"] = "UpdateBanner";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div class="d-flex align-items-center gap-2">
+            <span class="bg-primary rounded-circle" style="width:10px;height:10px;"></span>
+            <h5 class="mb-0 fw-semibold">UPDATE BANNER</h5>
+        </div>
+
+        <a asp-controller="Banner" asp-action="Index" class="btn btn-sm btn-outline-secondary"> ← Back </a>
+
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-lg-10 col-xl-10 mx-auto">
+
+            <form method="post">
+
+                <input type="hidden" asp-for="Id"/>
+                <div class="mb-3">
+                    <label asp-for="City" class="form-label fw-semibold">City</label>
+                    <input asp-for="City"
+                           class="form-control form-control-lg"
+                           placeholder="Enter city name" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label fw-semibold">Title</label>
+                    <input asp-for="Title"
+                           class="form-control form-control-lg"
+                           placeholder="Enter banner title" />
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="ImageUrl" class="form-label fw-semibold">Image URL</label>
+                    <input asp-for="ImageUrl"
+                           class="form-control form-control-lg"
+                           placeholder="https://example.com/image.jpg" />
+                </div>
+
+                <div class="d-flex justify-content-center gap-3">
+                    <a asp-controller="Banner" asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
+                    <button class="btn btn-primary px-4"> Save Banner </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>

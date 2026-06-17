@@ -1,9 +1,9 @@
-﻿using Mapster;
+﻿using Humanizer;
+using Mapster;
 using MongoDB.Bson;
 using System.Linq.Expressions;
 using VillaAgency.Business.Abstract;
 using VillaAgency.DataAccess.Abstract;
-using VillaAgency.Dto.Banner;
 using VillaAgency.Dto.BannerDtos;
 using VillaAgency.Entity.Entities;
 
@@ -27,8 +27,15 @@ namespace VillaAgency.Business.Concrete
             if (dto is null)
                 throw new ArgumentNullException(nameof(dto), "Dto cannot be null.");
 
-            var entity = dto.Adapt<Banner>();
-            await _genericDal.CreateAsync(entity);
+            try
+            {
+                var entity = dto.Adapt<Banner>();
+                await _genericDal.CreateAsync(entity);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("An error occurred while creating the banner.", ex);
+            }
         }
 
         public async Task TDeleteAsync(ObjectId id)
@@ -36,21 +43,32 @@ namespace VillaAgency.Business.Concrete
             if(id == ObjectId.Empty)
                 throw new ArgumentException("Invalid Id (Empty ObjectId).", nameof(id));
 
-             await _genericDal.DeleteAsync(id);
+            try{
+                await _genericDal.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while deleting the banner.",ex);
+            }
         }
 
-        public async Task<ResultBannerDto> TGetByIdAsync(string id)
+        public async Task<UpdateBannerDto> TGetByIdAsync(ObjectId id)
         {
             if(id == null)
             {
                 throw new ArgumentNullException(nameof(id), "Id cannot be null.");
             }
 
-            if (!ObjectId.TryParse(id, out var objectId))
-                throw new FormatException("Id is not in a valid ObjectId format.");
+            try
+            {
+                var entity = await _genericDal.GetByIdAsync(id);
+                return entity.Adapt<UpdateBannerDto>();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while retrieving the banner.", ex);
+            }
 
-            var entity = await _genericDal.GetByIdAsync(objectId);
-            return entity.Adapt<ResultBannerDto>();
         }
 
         public async Task<List<ResultBannerDto>> TGetFilteredListAsync(Expression<Func<Banner, bool>> predicate)
@@ -58,14 +76,28 @@ namespace VillaAgency.Business.Concrete
             if (predicate is null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            var entities = await _genericDal.GetFilteredListAsync(predicate);
-            return entities.Adapt<List<ResultBannerDto>>();
+            try
+            {
+                var entities = await _genericDal.GetFilteredListAsync(predicate);
+                return entities.Adapt<List<ResultBannerDto>>();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving the filtered list of banners.", ex);
+            }
         }
 
         public async Task<List<ResultBannerDto>> TGetListAsync()
         {
-            var entities = await _genericDal.GetListAsync();
-            return entities.Adapt<List<ResultBannerDto>>();
+            try
+            {
+                var entities = await _genericDal.GetListAsync();
+                return entities.Adapt<List<ResultBannerDto>>();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving the list of banners.", ex);
+            }
         }
 
         public async Task TUpdateAsync(UpdateBannerDto dto)
@@ -78,8 +110,17 @@ namespace VillaAgency.Business.Concrete
             {
                 throw new ArgumentException("Entity to be updated must have a valid Id.");
             }
-            var entity = dto.Adapt<Banner>();   
-            await _genericDal.UpdateAsync(entity);
+
+            try
+            {
+                var entity = dto.Adapt<Banner>();
+                await _genericDal.UpdateAsync(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while updating the banner.", ex);
+            }
+
         }
     }
 }

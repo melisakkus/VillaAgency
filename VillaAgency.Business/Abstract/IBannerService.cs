@@ -1,6 +1,5 @@
 ﻿using MongoDB.Bson;
 using System.Linq.Expressions;
-using VillaAgency.Dto.Banner;
 using VillaAgency.Dto.BannerDtos;
 using VillaAgency.Entity.Entities;
 
@@ -13,7 +12,7 @@ namespace VillaAgency.Business.Abstract
         Task TDeleteAsync(ObjectId id);
 
         Task<List<ResultBannerDto>> TGetListAsync();
-        Task<ResultBannerDto> TGetByIdAsync(string id);
+        Task<UpdateBannerDto> TGetByIdAsync(ObjectId id);
 
         Task<int> TCountAsync();
 

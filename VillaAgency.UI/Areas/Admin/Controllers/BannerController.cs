@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using VillaAgency.Business.Abstract;
-using VillaAgency.Dto.Banner;
 using VillaAgency.Dto.BannerDtos;
 
 namespace VillaAgency.WebUI.Areas.Admin.Controllers
@@ -33,20 +32,21 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
             return RedirectToAction("Index");   
         }
 
-        [HttpDelete]
+
         public async Task<IActionResult> DeleteBanner(ObjectId id) 
         {
             await _bannerService.TDeleteAsync(id);
             return RedirectToAction("Index");
         }
 
+
         public async Task<IActionResult> UpdateBanner(ObjectId id)
         {
-            var dto = await _bannerService.TGetByIdAsync(id.ToString());
+            var dto = await _bannerService.TGetByIdAsync(id);
             return View(dto);
         }
 
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> UpdateBanner(UpdateBannerDto dto)
         {
             await _bannerService.TUpdateAsync(dto);
