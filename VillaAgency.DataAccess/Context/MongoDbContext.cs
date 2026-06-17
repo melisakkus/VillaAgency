@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Humanizer;
+using MongoDB.Driver;
 using VillaAgency.DataAccess.Configurations;
 
 namespace VillaAgency.DataAccess.Context
@@ -14,7 +15,8 @@ namespace VillaAgency.DataAccess.Context
 
         public IMongoCollection<T> GetCollection<T>()
         {
-            return _database.GetCollection<T>(typeof(T).Name);
+            var collectionName = typeof(T).Name.Pluralize();
+            return _database.GetCollection<T>(collectionName);
         }
     }
 }
