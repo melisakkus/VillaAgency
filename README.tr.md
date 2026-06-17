@@ -18,11 +18,12 @@ Projenin katmanlı mimari yapısında, her katmanın sorumluluğuna göre NuGet 
 | Katman Adı | Bağımlılık / NuGet Paketi | Sürüm | Amacı |
 | :--- | :--- | :--- | :--- |
 | **Bütün Katmanlar** | `.NET 8 SDK / runtime` | v8.0 | Projenin genel çalışma zamanı (runtime) altyapısı. |
+| **VillaAgency.Entity** | `MongoDB.Bson` | v3.9.0 | MongoDB'ye özgü veri formatı olan BSON (Binary JSON) nesne kimliklerini (`ObjectId`) ve veritabanı niteliklerini (Attributes) model sınıflarında kullanmak için. |
 | **VillaAgency.DataAccess** | `MongoDB.Driver` | v3.9.0 | MongoDB veritabanına bağlanmak, sorgu üretmek (Find, Filter) ve asenkron CRUD operasyonlarını yürütmek için ana sürücü. |
 | **VillaAgency.DataAccess** | `Microsoft.Extensions.Configuration` | v10.0.8 | `appsettings.json` gibi yapılandırma dosyalarındaki verileri okuma altyapısı sağlar. |
 | **VillaAgency.DataAccess** | `Microsoft.Extensions.Configuration.Binder` | v10.0.8 | Yapılandırma dosyasındaki ham metin verilerini (MongoDB string'leri gibi) doğrudan C# nesnelerine (`MongoDbSettings`) otomatik eşlemek (map etmek) için. |
 | **VillaAgency.DataAccess** | `Microsoft.Extensions.DependencyInjection` | v10.0.8 | DataAccess katmanındaki servislerin (Context, Repository) uygulama havuzuna IoC/DI prensipleriyle kaydedilmesini sağlar. |
-| **VillaAgency.Entity** | `MongoDB.Bson` | v3.9.0 | MongoDB'ye özgü veri formatı olan BSON (Binary JSON) nesne kimliklerini (`ObjectId`) ve veritabanı niteliklerini (Attributes) model sınıflarında kullanmak için. |
+| **VillaAgency.Business** | `Mapster` | v3.9.0 | Business katmanında DTO ↔ Entity modelleri arasında dönüşüm yapmak için kullanılan hafif bir mapping kütüphanesidir. |
 | **VillaAgency.WebUI** | `Microsoft.AspNetCore.Mvc` | Yerleşik | Kullanıcı arayüzünü, Admin panelini ve Controller/View mekanizmasını ayağa kaldıran ana web çatısı. |
 
 ---
@@ -66,24 +67,35 @@ VillaAgency (Solution)
 │       │   └── 📄 MongoDbContext.cs (Bağlantı ve Koleksiyon yönetimi)
 │       ├── 📁 Extensions
 │           └── 📄 DataAccessServiceExtension.cs (DI Container Kayıtları)
-
 │
 ├── 💻 VillaAgency.Dto (Class Library)
 │       └── 📁 BannerDtos (Data Transfer Object sınıfları)
+│       │   └── 📄 CreateBannerDto.cs
+│       │   └── 📄 ResultBannerDto.cs
+│       │   └── 📄 UpdateBannerDto.cs
 │
 ├── 💻 VillaAgency.Business (Class Library)
 │       ├── 📁 Abstract (İş mantığı arayüzleri - Örn: IBannerService)
-│       │   └── 📄 IGenericService.cs 
+│       │   └── 📄 IBannerService.cs
 │       ├── 📁 Concrete (İş mantığı somut sınıfları - Örn: BannerManager)
-│           └── 📄 GenericManager.cs 
+│           └── 📄 BannerManager.cs
 │       └── 📁 Extensions
 │           └── 📄 BusinessServiceExtension.cs (Katman zincirleme kaydı)
 │
 └── 💻 VillaAgency.WebUI (ASP.NET Core MVC)
-        ├── 📁 Controllers
-        ├── 📁 Views
-        ├── 📄 appsettings.json (Bağlantı string'leri)
-        └── 📄 Program.cs (Uygulama başlangıç noktası)
+│       ├── 📁 Areas
+│       │   └── 📁 Admin
+│       │       └── 📁 Controllers
+│       │           └── 📄 BannerController.cs
+│       │       └── 📁 Data
+│       │       └── 📁 Models
+│       │       └── 📁 Views
+│       │           └── 📁 Shared
+│       │               └── 📄 _AdminLayout.cshtml
+│       ├── 📁 Controllers
+│       ├── 📁 Views
+│       ├── 📄 appsettings.json (Bağlantı string'leri)
+│       └── 📄 Program.cs (Uygulama başlangıç noktası)
 
 ```
 
@@ -179,7 +191,7 @@ namespace VillaAgency.DataAccess.Abstract
         Task DeleteAsync(ObjectId id);
 
         Task<List<T>> GetListAsync();
-        Task<T> GetByIdAsync(string id);
+        Task<T> GetByIdAsync(ObjectId id);
 
         Task<int> CountAsync();
 
@@ -224,9 +236,9 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
             await _collection.DeleteOneAsync(x => x.Id == id);
         }
 
-        public async Task<T> GetByIdAsync(string id)
+        public async Task<T> GetByIdAsync(ObjectId id)
         {
-            var filter = Builders<T>.Filter.Eq("_id",new ObjectId(id));
+            var filter = Builders<T>.Filter.Eq("_id",id);
             return await _collection.Find(filter).FirstOrDefaultAsync();
         }
 
@@ -299,7 +311,7 @@ namespace VillaAgency.Business.Extension
             services.AddDataAccessServices(config);
 
             // 2. Business katmanına ait Manager'ları (İş sınıflarını) buraya kaydediyoruz
-            // Örnek: services.AddScoped<IVillaService, VillaManager>();
+            services.AddScoped<IBannerService, BannerManager>();
 
             return services;
         }
@@ -316,93 +328,114 @@ Tüm mimarinin ayağa kalktığı ana giriş noktasıdır. Sadece tek satır ekl
 builder.Services.AddBusinessServices(builder.Configuration);
 ```
 
-## 🔵 ADIM 8 — İş Mantığı Sözleşmesi (Business / IGenericService.cs)
-DataAccess katmanındaki IGenericDal<T> nasıl bir sözleşme sunuyorsa, Business katmanı da dışarıya kendi sözleşmesini IGenericService<T> arayüzü aracılığıyla sunar. Metot isimlerindeki "T" ön eki, bu metotların Business katmanına ait olduğunu vurgular ve katmanlar arası karışıklığı önler.
+## 🔵 ADIM 8 — Entity Bazlı Business Katmanı Sözleşmesi (Business / IBannerService.cs)
+Proje geliştikçe Business katmanı, tamamen generic yapıdan çıkarılarak entity bazlı servis sözleşmelerine dönüştürülmüştür. Bu yaklaşım sayesinde Business katmanı artık doğrudan DTO’lar ile çalışmakta, validasyon ve iş kuralları burada yönetilmektedir.
+Bu yapı, Presentation katmanının (Controller) doğrudan Entity veya Repository ile temas etmesini engeller ve temiz mimariyi güçlendirir.
 
 ```C#
 using MongoDB.Bson;
 using System.Linq.Expressions;
-using VillaAgency.Entity.Common;
+using VillaAgency.Dto.Banner;
+using VillaAgency.Dto.BannerDtos;
+using VillaAgency.Entity.Entities;
 
 namespace VillaAgency.Business.Abstract
 {
-    public interface IGenericService<T> where T : BaseEntity
+    public interface IBannerService
     {
-        Task TCreateAsync(T entity);
-        Task TUpdateAsync(T entity);
+        Task TCreateAsync(CreateBannerDto dto);
+        Task TUpdateAsync(UpdateBannerDto dto);
         Task TDeleteAsync(ObjectId id);
 
-        Task<List<T>> TGetListAsync();
-        Task<T> TGetByIdAsync(string id);
+        Task<List<ResultBannerDto>> TGetListAsync();
+        Task<ResultBannerDto> TGetByIdAsync(string id);
 
         Task<int> TCountAsync();
 
-        Task<List<T>> TGetFilteredListAsync(Expression<Func<T, bool>> predicate);
+        Task<List<ResultBannerDto>> TGetFilteredListAsync(
+            Expression<Func<Banner, bool>> predicate);
     }
 }
 ```
+### 🎯 Neden Entity Bazlı Service Yapısı?
 
-## 🔵 ADIM 9 — İş Mantığı Somut Sınıfı (Business / GenericManager.cs)
-IGenericService<T> arayüzünün somut implementasyonudur. Şu an için doğrudan IGenericDal<T> metodlarına yönlendirme (delegation) yapar. İlerleyen süreçte iş kuralları (validasyon, loglama, önbellekleme vb.) bu katmana ekleneceği için bu ara katmanın varlığı kritik önem taşır.
+* **Dışa Açılan Sözleşme (Public Contract):** DTO’lar Business katmanının dışa açılan sözleşmesi haline gelir.
+* **Domain İzolasyonu:** Entity yapıları dış katmanlardan (UI/API) tamamen izole edilir.
+* **Merkezi İş Kuralları:** Validation ve iş kuralları (business rules) merkezi bir noktada toplanır.
+* **Gevşek Bağlılık (Loose Coupling):** Katmanlar arası bağımlılık azalır, esneklik artar.
+* **Bağımsız Yaşam Döngüsü:** Her entity, generic soyutlamalara zorlanmadan kendi servis yaşam döngüsüne sahip olur.
+* **Temiz Mimari:** UI $\rightarrow$ Entity bağımlılığı engellenerek Clean Architecture prensipleri güçlendirilir.
+
+
+## 🔵 ADIM 9 — Business Katmanı Implementasyonu ve DTO Mapping (BannerManager.cs)
+### ⚙️ BannerManager ve İş Akışı
+
+`BannerManager`, gerçek iş mantığının (business logic) uygulandığı sınıftır. Bu yapı ile birlikte, generic manager yaklaşımının aksine bir isteğin tüm yaşam döngüsü şu adımlarla yönetilir:
+
+1. **Veri Kabulü:** Controller’dan gelen veriler doğrudan DTO olarak alınır.
+2. **Validasyon:** İş kuralları ve gerekli validasyon kontrolleri gerçekleştirilir.
+3. **Dönüşüm:** DTO $\leftrightarrow$ Entity dönüşümleri **Mapster** kütüphanesi ile güvenli bir şekilde yapılır.
+4. **Veri Erişimi:** DataAccess katmanı ile sıkı bağımlılık kurulmaz, yalnızca abstraction üzerinden iletişim sağlanır.
+5. **Çıkış:** UI/Presentation katmanına sadece DTO döndürülür.
+
+> 🔒 **En Büyük Kazanım:** Bu akış sayesinde Entity sınıfları hiçbir şekilde Presentation (UI/API) katmanına sızmaz.
+
 ```C#
+using Mapster;
 using MongoDB.Bson;
 using System.Linq.Expressions;
 using VillaAgency.Business.Abstract;
 using VillaAgency.DataAccess.Abstract;
-using VillaAgency.Entity.Common;
+using VillaAgency.Dto.Banner;
+using VillaAgency.Dto.BannerDtos;
+using VillaAgency.Entity.Entities;
 
 namespace VillaAgency.Business.Concrete
 {
-    public class GenericManager<T> : IGenericService<T> where T : BaseEntity
+    public class BannerManager : IBannerService
     {
-        private readonly IGenericDal<T> _genericDal;
+        private readonly IGenericDal<Banner> _genericDal;
 
-        public GenericManager(IGenericDal<T> genericDal)
+        public BannerManager(IGenericDal<Banner> genericDal)
         {
-            _genericDal = genericDal;
+            _genericDal = genericDal 
+                ?? throw new ArgumentNullException(nameof(genericDal));
         }
 
-        public async Task<int> TCountAsync()
+        public async Task TCreateAsync(CreateBannerDto dto)
         {
-            return await _genericDal.CountAsync();
-        }
+            if (dto is null)
+                throw new ArgumentNullException(nameof(dto));
 
-        public async Task TCreateAsync(T entity)
-        {
+            var entity = dto.Adapt<Banner>();
+
             await _genericDal.CreateAsync(entity);
         }
 
-        public async Task TDeleteAsync(ObjectId id)
+        public async Task<List<ResultBannerDto>> TGetListAsync()
         {
-            await _genericDal.DeleteAsync(id);
+            var entities = await _genericDal.GetListAsync();
+
+            return entities.Adapt<List<ResultBannerDto>>();
         }
 
-        public Task<T> TGetByIdAsync(string id)
+        public async Task<ResultBannerDto> TGetByIdAsync(string id)
         {
-            return _genericDal.GetByIdAsync(id);
+            if (!ObjectId.TryParse(id, out var objectId))
+                throw new FormatException("Geçersiz ObjectId formatı.");
+
+            var entity = await _genericDal.GetByIdAsync(objectId);
+
+            return entity.Adapt<ResultBannerDto>();
         }
 
-        public Task<List<T>> TGetFilteredListAsync(Expression<Func<T, bool>> predicate)
-        {
-            return _genericDal.GetFilteredListAsync(predicate);
-        }
-
-        public Task<List<T>> TGetListAsync()
-        {
-            return _genericDal.GetListAsync();
-        }
-
-        public async Task TUpdateAsync(T entity)
-        {
-            await _genericDal.UpdateAsync(entity);
-        }
+        // Diğer metodlar sadeleştirilmiştir...
     }
 }
 ```
 
-## 🔵 ADIM 10 — Business Bağımlılık Kayıtlarının Güncellenmesi (Business / BusinessServiceExtension.cs)
-Adım 6'da iskelet olarak yazılan BusinessServiceExtension.cs artık tamamlanır. IGenericService<T> ↔ GenericManager<T> eşlemesi DI Container'a kaydedilerek katman zinciri tamamlanmış olur.
-
+## 🔵 ADIM 10 — Entity Bazlı Business Servislerinin DI Kaydı (Business / BusinessServiceExtension.cs)
+Her entity için ayrı servis kayıtları yapılmaktadır. Bu yapı sayesinde DI container daha okunabilir ve kontrol edilebilir hale gelir.
 ```C#
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -415,17 +448,67 @@ namespace VillaAgency.Business.Extension
     public static class BusinessServiceExtension
     {
         public static IServiceCollection AddBusinessServices(
-            this IServiceCollection services, IConfiguration config)
+            this IServiceCollection services,
+            IConfiguration config)
         {
-            // 1. DataAccess katmanının servislerini zincirleme olarak kaydet
             services.AddDataAccessServices(config);
 
-            // 2. Business katmanının generic servis kaydı
-            services.AddScoped(typeof(IGenericService<>), typeof(GenericManager<>));
+            services.AddScoped<IBannerService, BannerManager>();
 
             return services;
         }
     }
 }
 ```
+## 🔵 ADIM 11 — UI Katmanının Oluşturulması (WebUI)
+### 🔄 Paralel Geliştirme (Parallel Development) Modeli
 
+UI katmanı; DataAccess ve Business katmanları ile eş zamanlı olarak geliştirilmiştir. Projede katmanların tamamen bitmesi beklenmeden, **modül bazlı (Feature-Driven)** bir ilerleme sağlanmıştır.
+
+**Örnek Süreç (Banner Modülü):**
+* **DataAccess (DAL):** Modüle ait veri tabanı nesneleri ve soyutlamaları oluşturuldu.
+* **Business (BL):** İş mantığı, validasyonlar ve DTO yapıları hazırlandı.
+* **UI / Presentation:** Diğer katmanlarla eş zamanlı olarak listeleme ve View yapıları tasarlandı.
+
+> 💡 **Sürekli Besleme (Continuous Feedback):** Bu süreçte katmanlar statik kalmamış; sürekli olarak geliştirilmiş, test edilmiş ve birbirini besleyecek şekilde esnek bir döngüyle ilerlemiştir.
+
+## 🔵 ADIM 12 — Areas Yapısının Kurulması (Admin Panel)
+Proje içerisinde kullanıcı arayüzü (Frontend) ve yönetim paneli (Admin) birbirinden ayrılarak ASP.NET Core Areas yapısı kullanılmıştır. Bu yapı sayesinde Admin tarafı, ana uygulamadan izole ve modüler bir alt sistem olarak tasarlanmıştır.
+### 🎯 Mimari Amaçlar
+Bu yapının temel amacı, sürdürülebilir ve ölçeklenebilir bir mimari oluşturmaktır:
+* **Katman Ayrımı (Separation of Concerns):** Kullanıcı arayüzü ile admin panelinin net şekilde ayrılması
+* **Modülerlik ve Ölçeklenebilirlik:** Projenin büyümesine paralel olarak yeni özelliklerin kolayca eklenebileceği modüler ve ölçeklenebilir bir yapı oluşturmak.
+* **Bağımsız Yönetim (Independent Administration):** Admin tarafını ana uygulamadan izole ederek, bağımsız bir mini uygulama (Sub-system) gibi yönetebilmek.
+
+### 📁 Yapılanlar
+* Areas/Admin yapısı oluşturuldu
+* Admin için Controller ve View yapısı hazırlandı
+* Ortak kullanım için _AdminLayout.cshtml oluşturuldu
+* Admin panel sayfalarında standart UI düzeni sağlandı
+
+## 🔵 ADIM 13 — Banner Controller (Admin Panel)
+Admin paneli içerisinde ilk CRUD yapısının temeli olarak BannerController oluşturulmuştur.
+```c#
+using Microsoft.AspNetCore.Mvc;
+using VillaAgency.Business.Abstract;
+
+namespace VillaAgency.WebUI.Areas.Admin.Controllers
+{
+    [Area("Admin")]
+    public class BannerController : Controller
+    {
+        private readonly IBannerService _bannerService;
+
+        public BannerController(IBannerService bannerService)
+        {
+            _bannerService = bannerService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var values = await _bannerService.TGetListAsync();
+            return View(values);
+        }
+    }
+}
+```
