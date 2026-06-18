@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
-using System.Threading.Tasks;
 using VillaAgency.Business.Abstract;
-using VillaAgency.Dto.BannerDtos;
 using VillaAgency.Dto.ContactDtos;
 
 namespace VillaAgency.WebUI.Areas.Admin.Controllers
