@@ -43,11 +43,11 @@ This project is built from the ground up prioritizing architectural scalability 
     * If a database migration occurs, the `Business` and `WebUI` source code remains completely untouched. Engineers only write a brand new `EfRepository` under the `DataAccess` library and re-bind the container target mapped in `DataAccessServiceExtension.cs`.
     * This stands as a true textbook implementation of the **Dependency Inversion Principle (DIP)** (The **D** in SOLID) — the software ecosystem locks itself into abstract components, not concrete volatile data drivers.
  
-### 3. PERFORMANCE-FIRST PRESENTATION CACHING (In-Memory Optimization)
-* **Microsecond-Level Latency Reduction:** The highly trafficked villa/product listing (Index) page is served directly from the server's volatile memory (In-Memory) instead of querying the database on every single request. This maximizes page rendering speeds while mitigating the I/O and Read overhead on the MongoDB cluster to near-zero.
-* **Strict Separation of Concerns (SoC):** The caching mechanism is architecturally encapsulated solely within the WebUI layer. This design keeps the Business layer completely decoupled and isolated from presentation-specific caching needs and IMemoryCache dependencies. Consequently, the business layer remains "pure," focusing exclusively on domain logic and data transformation (Mapster).
-* **Defensive Cache Lookup:** A defensive control workflow is enforced utilizing the TryGetValue pattern. If the requested DTO collection exists within the memory store, the incoming request is resolved directly at the Controller level without propagating down to the Business and DataAccess layers. In the event of a cache miss, data is asynchronously fetched from the database and committed to the cache with optimized settings: a 30-minute Absolute Expiration combined with a 10-minute Sliding Expiration.
-* **Proactive Cache Invalidation:** To guarantee strict data consistency, a proactive state-purging strategy is implemented. The exact moment any Data Manipulation Language (DML) or CUD operations (Create, Update, Delete) are triggered, the corresponding CacheKey is immediately evicted from memory. This completely eliminates the risk of "dirty reads," ensuring 100% real-time synchronization between the persistent database and the cache store.
+### 3. ABSTRACTED PERFORMANCE CACHING & INVALIDATION (Infrastructure Decoupling)
+* **Microsecond-Level Latency Reduction:** The highly trafficked villa/product listing (Index) page is served directly from the server's memory store via an optimized caching tier instead of querying the database on every single request. This maximizes page rendering speeds while mitigating the I/O and Read overhead on the MongoDB cluster to near-zero.
+* **Technology-Agnostic Abstraction (SOLID Open/Closed Principle):** Instead of tightly coupling controllers to .NET's native IMemoryCache engine, the architecture introduces a custom ICacheService abstraction layer. This isolates the presentation tier from concrete infrastructure implementation. If system scaling demands a shift from volatile server RAM (In-Memory) to a distributed cluster like Redis, not a single line of controller code will change; engineers only need to inject a new runtime manager within the IoC container.
+* **Defensive Cache Lookup & Strict Token Governance:** A defensive control workflow is enforced utilizing custom service wrapper methods. If the requested DTO collection exists within the memory store, the incoming request is resolved instantly at the Controller level. In the event of a cache miss, data is asynchronously fetched and committed using centrally managed configuration policies (30-minute absolute / 10-minute sliding expiration). Furthermore, inline "magic strings" are eliminated by organizing all cache tokens inside a single, centralized CacheKeys registry hub (DRY Principle).
+* **Proactive State Invalidation & CQRS Real-Time Balance:** To guarantee absolute data consistency, a proactive state-purging strategy is implemented. While public UI components leverage read-only cache streams, administrative data manipulation operations (Create, Update, Delete) systematically trigger cache eviction pipelines via _cacheService.Remove(). This eliminates the risk of "dirty reads" and ensures 100% real-time synchronization between the persistent database and the cache layer.
 
 ---
 
@@ -526,18 +526,89 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
 ```
 
 ## 🔵 STEP 14 — Product Controller & Core UI Performance Caching (Main UI Scope)
-The ProductController handles core data retrieval operations within the main public user interface while implementing a strict caching strategy on ResultProductDto objects to prevent database roundtrips.
-- Read Strategy: The index view utilizes an asynchronous cache lookup via IMemoryCache. If the cache is cold, it queries the completely decoupled ProductManager layer, maps the entities to DTOs, and stores them under a 30-minute absolute / 10-minute sliding policy threshold.
-- Write & Invalidation Strategy: To uphold absolute data consistency, mutability operations (Create, Update, Delete) systematically execute explicit cache expulsion immediately following a successful MongoDB execution, eliminating stale representations before forcing a redirect.
+The application handles product operations using a highly optimized caching strategy designed to prevent database roundtrips, reduce latency, and enforce loose coupling across infrastructure layers.
+
+Instead of injecting the native .NET IMemoryCache framework directly into multiple controllers, this system architecture introduces a custom abstract ICacheService layer combined with a centralized CacheKeys constant hub.
+
+### ⚙️ Why This Caching Architecture? (Value Propositions & Benefits)
+- Enterprise-Grade Loose Coupling (Abstraction Over Technology): Controllers interact solely with our custom ICacheService interface contracts. They remain completely agnostic of the underlying caching platform. If system scale dictates migrating from local volatile server memory (In-Memory) to a distributed, persistent session cluster like Redis, not a single line of controller code will change. The engineering team would only inject a new RedisCacheManager implementation inside the IoC Container (Open/Closed Principle).
+- Prevention of Code Duplication (DRY Principle): By migrating cache key identifiers from hardcoded inline "magic strings" inside individual controllers into a centralized VillaAgency.Business.Constants.CacheKeys static hub, key changes are governed from a single source of truth.
+- Read-Heavy vs. Write-Heavy Domain Partitioning:
+    * Main UI Scope (Read-Heavy): The public user interface runs a defensive TryGet lookup strategy. If data is warm, it bypasses the entire Business and DataAccess pipelines completely, reducing query resolution speeds down to microseconds. Cold cache states trigger an asynchronous fetch, storing DTO responses under a strict 30-minute absolute / 10-minute sliding policy threshold.
+   * Admin Scope (Write-Heavy): The administration panel bypasses cache checks during list fetches to guarantee the admin always observes real-time database reality. However, the exact moment a state mutability operation occurs (Create, Update, Delete), it fires an active Cache Invalidation (Eviction) pipeline via _cacheService.Remove(), purging stale data fragments and preventing "dirty reads" globally.
+
+#### 💻 Production Source Blueprint Manifest
+##### 1. Caching Contracts & Centralized Key Registry
 
 ```c#
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+namespace VillaAgency.Business.Abstract
+{
+    public interface ICacheService
+    {
+        bool TryGet<T>(string cacheKey, out T value);
+        void Set<T>(string cacheKey, T value, TimeSpan absoluteExpiration, TimeSpan slidingExpiration);
+        void Remove(string cacheKey);
+    }
+}
+```
+
+```c#
+namespace VillaAgency.Business.Constants
+{
+    public static class CacheKeys
+    {
+        public const string ProductsUiCacheKey = "products_ui_cache_key";
+    }
+}
+```
+
+```c#
 using Microsoft.Extensions.Caching.Memory;
-using MongoDB.Bson;
+using System;
+using VillaAgency.Business.Abstract;
+
+namespace VillaAgency.Business.Concrete
+{
+    public class CacheManager : ICacheService
+    {
+        private readonly IMemoryCache _memoryCache;
+
+        public CacheManager(IMemoryCache memoryCache)
+        {
+            _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
+        }
+
+        public bool TryGet<T>(string cacheKey, out T value)
+        {
+            return _memoryCache.TryGetValue(cacheKey, out value);
+        }
+
+        public void Set<T>(string cacheKey, T value, TimeSpan absoluteExpiration, TimeSpan slidingExpiration)
+        {
+            var cacheOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = absoluteExpiration,
+                SlidingExpiration = slidingExpiration
+            };
+
+            _memoryCache.Set(cacheKey, value, cacheOptions);
+        }
+
+        public void Remove(string cacheKey)
+        {
+            _memoryCache.Remove(cacheKey);
+        }
+    }
+}
+```
+##### 2. Public Presentation Layer Implementation (Read-Heavy)
+```c#
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using VillaAgency.Business.Abstract;
-using VillaAgency.DataAccess.Abstract;
+using VillaAgency.Business.Constants;
 using VillaAgency.Dto.ProductDtos;
 
 namespace VillaAgency.WebUI.Controllers
@@ -545,54 +616,80 @@ namespace VillaAgency.WebUI.Controllers
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
-        private readonly IMemoryCache _memoryCache;
-        private const string CacheKey = "products_ui_cache_key";
+        private readonly ICacheService _cacheService;
 
-        public ProductController(IProductService productService, IMemoryCache memoryCache)
+        public ProductController(IProductService productService, ICacheService cacheService)
         {
             _productService = productService ?? throw new ArgumentNullException(nameof(productService));
-            _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
+            _cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
         }
 
-        //[ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
-        //public async Task<IActionResult> Index()
-        //{
-        //    var products = await _productService.TGetListAsync();
-        //    return View(products);
-        //}
-
-        public async Task <IActionResult> Index()
+        // DEFENSIVE READ LOGIC (Microsecond Latency Response)
+        public async Task<IActionResult> Index()
         {
-            if (!_memoryCache.TryGetValue(CacheKey, out List<ResultProductDto> cachedProducts))
+            if (!_cacheService.TryGet(CacheKeys.ProductsUiCacheKey, out List<ResultProductDto> cachedProducts))
             {
                 cachedProducts = await _productService.TGetListAsync();
 
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(30))
-                                        .SetSlidingExpiration(TimeSpan.FromMinutes(10));
-
-                _memoryCache.Set(CacheKey, cachedProducts, cacheEntryOptions);
+                _cacheService.Set(
+                    CacheKeys.ProductsUiCacheKey, 
+                    cachedProducts, 
+                    TimeSpan.FromMinutes(30), 
+                    TimeSpan.FromMinutes(10)
+                );
             }
             return View(cachedProducts);
         }
+    }
+}
+```
+##### 3. Administrative Panel Management Implementation (Write-Heavy / State Invalidation)
+```c#
+using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
+using System;
+using System.Threading.Tasks;
+using VillaAgency.Business.Abstract;
+using VillaAgency.Business.Constants;
+using VillaAgency.Dto.ProductDtos;
 
-        public IActionResult Create()
+namespace VillaAgency.WebUI.Areas.Admin.Controllers
+{
+    [Area("Admin")]
+    public class ProductController : Controller
+    {
+        private readonly IProductService _productService;
+        private readonly ICacheService _cacheService;
+
+        public ProductController(IProductService productService, ICacheService cacheService)
         {
-            return View();
+            _productService = productService ?? throw new ArgumentNullException(nameof(productService));
+            _cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
         }
 
+        // REAL-TIME READ (Bypasses caching to ensure data management accuracy)
+        public async Task<IActionResult> Index()
+        {
+            var products = await _productService.TGetListAsync();
+            return View(products);
+        }
+
+        public IActionResult Create() => View();
+
+        // WRITE & CACHE INVALIDATION
         [HttpPost]
         public async Task<IActionResult> Create(CreateProductDto dto)
         {
             await _productService.TCreateAsync(dto);
-            _memoryCache.Remove(CacheKey);
+            _cacheService.Remove(CacheKeys.ProductsUiCacheKey);
             return RedirectToAction(nameof(Index));
         }
 
+        // DELETE & CACHE INVALIDATION
         public async Task<IActionResult> Delete(ObjectId id)
         {
             await _productService.TDeleteAsync(id);
-            _memoryCache.Remove(CacheKey);
+            _cacheService.Remove(CacheKeys.ProductsUiCacheKey);
             return RedirectToAction(nameof(Index));
         }
 
@@ -602,14 +699,14 @@ namespace VillaAgency.WebUI.Controllers
             return View(value);
         }
 
+        // UPDATE & CACHE INVALIDATION
         [HttpPost]
         public async Task<IActionResult> Update(UpdateProductDto dto)
         {
             await _productService.TUpdateAsync(dto);
-            _memoryCache.Remove(CacheKey);
+            _cacheService.Remove(CacheKeys.ProductsUiCacheKey);
             return RedirectToAction(nameof(Index));
         }
-
     }
 }
 ```
