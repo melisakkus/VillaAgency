@@ -42,6 +42,12 @@ Bu proje geliştirilirken sadece anlık ihtiyaçlar değil, kurumsal yazılım m
     * Eğer veritabanı değişirse; `Business` ve `WebUI` katmanlarına **hiç dokunulmaz**. Sadece `DataAccess` katmanında Entity Framework Core kullanan yeni bir `EfRepository` yazılır ve `DataAccessServiceExtension.cs` dosyasındaki bağımlılık kaydı güncellenir. 
     * Bu durum, SOLID prensiplerinin **D** harfi olan **Dependency Inversion (Bağımlılıkların Tersine Çevrilmesi)** ilkesinin birebir uygulanmış halidir. Sistem somut sınıflara değil, soyut kontratlara bağlıdır.
 
+### 3. PERFORMANS ODAKLI SUNUM KATMANI ÖNBELLEKLEME (In-Memory Optimizasyonu)
+* **Mikro Saniyeler Seviyesinde Yanıt Süresi (Latency Reduction):** Yoğun trafik alan villa/ürün listeleme (Index) sayfası, her istekte veritabanına gitmek yerine sunucu hafızasından (In-Memory) beslenir. Bu durum sayfa yüklenme hızını maksimuma çıkarırken, MongoDB cluster üzerindeki I/O (Giriş/Çıkış) ve Read (Okuma) yükünü neredeyse sıfıra indirir.
+* **Katı Sorumlulukların Ayrılması (Strict Separation of Concerns):** Caching mekanizması mimari olarak yalnızca WebUI katmanında konumlandırılmıştır. Bu sayede Business katmanı, sunum teknolojisinin önbellek ihtiyaçlarından ve IMemoryCache bağımlılığından tamamen izole (decoupled) tutulmuştur. İş katmanı sadece saf iş kurallarına ve veri dönüşümüne (Mapster) odaklanır.
+* **Defansif Önbellek Denetimi (Defensive Cache Lookup):** TryGetValue deseni kullanılarak defansif bir kontrol mekanizması işletilir. Talep edilen DTO listesi bellekte mevcutsa, istek Business ve DataAccess katmanlarına hiç uğramadan doğrudan Controller seviyesinden yanıtlanır. Bellekte veri yoksa (Cache Miss), veritabanından asenkron olarak çekilerek 30 dakikalık mutlak (Absolute) ve 10 dakikalık kayan (Sliding) sürelerle optimize bir şekilde hafızaya işlenir.
+* **Proaktif Önbellek Geçersiz kılma (Proactive Cache Invalidation):** Veri bütünlüğünü korumak adına proaktif bir "State-Purging" (durum temizleme) stratejisi uygulanır. Sistemde veri değişimine yol açan Create, Update ve Delete (CUD) operasyonları tetiklendiği an, ilgili CacheKey bellekten anında imha edilir (evict). Bu sayede kullanıcıların "kirli veri" (dirty data) görme riski tamamen engellenir ve veritabanı ile önbellek arasında %100 gerçek zamanlı (real-time) senkronizasyon sağlanır.
+  
 ---
 ## 📁 Proje Klasör Yapısı (Solution Explorer)
 
@@ -326,6 +332,9 @@ Tüm mimarinin ayağa kalktığı ana giriş noktasıdır. Sadece tek satır ekl
 ```C#
 // WebUI katmanındaki Program.cs içerisi:
 builder.Services.AddBusinessServices(builder.Configuration);
+
+// Uygulama çalışma zamanına ait (runtime) bellek içi önbellekleme yeteneğini IoC Container'a kaydeder.
+builder.Services.AddMemoryCache();
 ```
 
 ## 🔵 ADIM 8 — Entity Bazlı Business Katmanı Sözleşmesi (Business / IBannerService.cs)
@@ -509,6 +518,94 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
             var values = await _bannerService.TGetListAsync();
             return View(values);
         }
+    }
+}
+```
+
+### 🔵 ADIM 14 — Product Controller & Core UI Performance Caching (Main UI Scope)
+ProductController, ana public kullanıcı arayüzünde temel veri çekme işlemlerini yönetir ve database’e gereksiz roundtrip’leri önlemek için ResultProductDto nesneleri üzerinde sıkı bir caching stratejisi uygular.
+- Read Strategy: Index view, IMemoryCache üzerinden asenkron bir cache kontrolü kullanır. Cache boş (cold) ise ProductManager katmanına giderek verileri çeker, entity’leri DTO’lara map eder ve 30 dakikalık absolute / 10 dakikalık sliding policy ile cache’e kaydeder.
+- Write & Invalidation Strategy: Veri tutarlılığını korumak için create, update ve delete operasyonları başarılı MongoDB işlemi sonrasında explicit cache expulsion gerçekleştirir. Böylece stale (eski) veriler temizlenir ve kullanıcı redirect öncesi cache yeniden oluşturulmaya zorlanır.
+```c#
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using MongoDB.Bson;
+using System.Threading.Tasks;
+using VillaAgency.Business.Abstract;
+using VillaAgency.DataAccess.Abstract;
+using VillaAgency.Dto.ProductDtos;
+
+namespace VillaAgency.WebUI.Controllers
+{
+    public class ProductController : Controller
+    {
+        private readonly IProductService _productService;
+        private readonly IMemoryCache _memoryCache;
+        private const string CacheKey = "products_ui_cache_key";
+
+        public ProductController(IProductService productService, IMemoryCache memoryCache)
+        {
+            _productService = productService ?? throw new ArgumentNullException(nameof(productService));
+            _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
+        }
+
+        //[ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
+        //public async Task<IActionResult> Index()
+        //{
+        //    var products = await _productService.TGetListAsync();
+        //    return View(products);
+        //}
+
+        public async Task <IActionResult> Index()
+        {
+            if (!_memoryCache.TryGetValue(CacheKey, out List<ResultProductDto> cachedProducts))
+            {
+                cachedProducts = await _productService.TGetListAsync();
+
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(30))
+                                        .SetSlidingExpiration(TimeSpan.FromMinutes(10));
+
+                _memoryCache.Set(CacheKey, cachedProducts, cacheEntryOptions);
+            }
+            return View(cachedProducts);
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateProductDto dto)
+        {
+            await _productService.TCreateAsync(dto);
+            _memoryCache.Remove(CacheKey);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Delete(ObjectId id)
+        {
+            await _productService.TDeleteAsync(id);
+            _memoryCache.Remove(CacheKey);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Update(ObjectId id)
+        {
+            var value = await _productService.TGetByIdAsync(id);
+            return View(value);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(UpdateProductDto dto)
+        {
+            await _productService.TUpdateAsync(dto);
+            _memoryCache.Remove(CacheKey);
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
 ```
