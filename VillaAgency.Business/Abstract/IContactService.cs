@@ -8,7 +8,7 @@ namespace VillaAgency.Business.Abstract
     public interface IContactService
     {
         Task<List<ResultContactDto>> TGetAllAsync();
-        Task<ResultContactDto> TGetByIdAsync(ObjectId id);
+        Task<UpdateContactDto> TGetByIdAsync(ObjectId id);
 
         Task TCreateAsync(CreateContactDto dto);
         Task TUpdateAsync(UpdateContactDto dto);

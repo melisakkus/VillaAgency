@@ -1,5 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 using VillaAgency.Business.Extension;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddBusinessServices(builder.Configuration);
+
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

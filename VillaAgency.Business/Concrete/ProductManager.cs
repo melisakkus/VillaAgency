@@ -1,20 +1,37 @@
 ﻿using Mapster;
+using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Bson;
 using System.Linq.Expressions;
 using VillaAgency.Business.Abstract;
 using VillaAgency.DataAccess.Abstract;
-using VillaAgency.Dto.BannerDtos;
 using VillaAgency.Dto.ContactDtos;
+using VillaAgency.Dto.ProductDtos;
 using VillaAgency.Entity.Entities;
 
 namespace VillaAgency.Business.Concrete
 {
-    public class ContactManager : IContactService
+    public class ProductManager : IProductService
     {
-        private readonly IGenericDal<Contact> _genericDal;
-        public ContactManager(IGenericDal<Contact> genericDal)
+        private readonly IGenericDal<Product> _genericDal;
+
+
+        public ProductManager(IGenericDal<Product> genericDal)
         {
             _genericDal = genericDal ?? throw new ArgumentNullException(nameof(genericDal));
+        }
+
+        public async Task<List<ResultProductDto>> TGetListAsync()
+        {
+            try
+            {
+                var entities = await _genericDal.GetListAsync();
+                return entities.Adapt<List<ResultProductDto>>();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving the list of products.", ex);
+            }
+
         }
 
         public async Task<int> TCountAsync()
@@ -22,7 +39,7 @@ namespace VillaAgency.Business.Concrete
             return await _genericDal.CountAsync();
         }
 
-        public async Task TCreateAsync(CreateContactDto dto)
+        public async Task TCreateAsync(CreateProductDto dto)
         {
             if(dto is null)
             {
@@ -30,13 +47,13 @@ namespace VillaAgency.Business.Concrete
             }
             try
             {
-                var entity = dto.Adapt<Contact>();
+                var entity = dto.Adapt<Product>();
                 await _genericDal.CreateAsync(entity);
             }
             catch(Exception ex)
             {
-                throw new Exception("An error occurred while creating the contact.", ex);
-            }            
+                throw new Exception("An error occurred while creating the product.", ex);
+            }
         }
 
         public async Task TDeleteAsync(ObjectId id)
@@ -45,49 +62,34 @@ namespace VillaAgency.Business.Concrete
             {
                 throw new ArgumentException("Invalid Id (Empty ObjectId).", nameof(id));
             }
-
             try
             {
                 await _genericDal.DeleteAsync(id);
             }
             catch(Exception ex)
             {
-                throw new Exception("An error occurred while deleting the contact.", ex);
+                throw new Exception("An error occurred while deleting the product.", ex);
             }
         }
 
-        public async Task<List<ResultContactDto>> TGetAllAsync()
+        public async Task<UpdateProductDto> TGetByIdAsync(ObjectId id)
         {
-            try
-            {
-                var entities = await _genericDal.GetListAsync();
-                return entities.Adapt<List<ResultContactDto>>();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while retrieving the list of contacts.", ex);
-            }
-        }
-
-        public async Task<UpdateContactDto> TGetByIdAsync(ObjectId id)
-        {
-            if (id == ObjectId.Empty)
+            if(id == ObjectId.Empty)
             {
                 throw new ArgumentException("Invalid Id (Empty ObjectId).", nameof(id));
             }
-
             try
             {
-                var entity = await _genericDal.GetByIdAsync(id);
-                return entity.Adapt<UpdateContactDto>();
+                var value = await _genericDal.GetByIdAsync(id);
+                return value.Adapt<UpdateProductDto>();
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                throw new Exception($"An error occurred while retrieving the contact.", ex);
+                throw new Exception("An error occurred while retrieving the product by Id.", ex);
             }
         }
 
-        public async Task<List<ResultContactDto>> TGetFilteredListAsync(Expression<Func<Contact, bool>> predicate)
+        public async Task<List<ResultProductDto>> TGetFilteredListAsync(Expression<Func<Product, bool>> predicate)
         {
             if (predicate is null)
                 throw new ArgumentNullException(nameof(predicate));
@@ -95,15 +97,15 @@ namespace VillaAgency.Business.Concrete
             try
             {
                 var entities = await _genericDal.GetFilteredListAsync(predicate);
-                return entities.Adapt<List<ResultContactDto>>();
+                return entities.Adapt<List<ResultProductDto>>();
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while retrieving the filtered list of contacts.", ex);
+                throw new Exception("An error occurred while retrieving the filtered list of products.", ex);
             }
         }
 
-        public async Task TUpdateAsync(UpdateContactDto dto)
+        public async Task TUpdateAsync(UpdateProductDto dto)
         {
             if (dto is null)
             {
@@ -116,12 +118,12 @@ namespace VillaAgency.Business.Concrete
 
             try
             {
-                var entity = dto.Adapt<Contact>();
+                var entity = dto.Adapt<Product>();
                 await _genericDal.UpdateAsync(entity);
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while updating the contact.", ex);
+                throw new Exception("An error occurred while updating the product.", ex);
             }
         }
     }

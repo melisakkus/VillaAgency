@@ -14,6 +14,8 @@ namespace VillaAgency.Business.Extension
             services.AddDataAccessServices(config);
 
             services.AddScoped<IBannerService, BannerManager>();
+            services.AddScoped<IContactService,ContactManager>();
+            services.AddScoped<IProductService,ProductManager>();
 
             return services;
         }
