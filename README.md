@@ -42,6 +42,12 @@ This project is built from the ground up prioritizing architectural scalability 
     * The `WebUI` (Presentation) and `Business` (Logic) layers remain completely oblivious to underlying MongoDB implementations. They only reference the abstract `IRepository<T>` contract.
     * If a database migration occurs, the `Business` and `WebUI` source code remains completely untouched. Engineers only write a brand new `EfRepository` under the `DataAccess` library and re-bind the container target mapped in `DataAccessServiceExtension.cs`.
     * This stands as a true textbook implementation of the **Dependency Inversion Principle (DIP)** (The **D** in SOLID) — the software ecosystem locks itself into abstract components, not concrete volatile data drivers.
+ 
+### 3. PERFORMANCE-FIRST PRESENTATION CACHING (In-Memory Optimization)
+* **Microsecond-Level Latency Reduction:** The highly trafficked villa/product listing (Index) page is served directly from the server's volatile memory (In-Memory) instead of querying the database on every single request. This maximizes page rendering speeds while mitigating the I/O and Read overhead on the MongoDB cluster to near-zero.
+* **Strict Separation of Concerns (SoC):** The caching mechanism is architecturally encapsulated solely within the WebUI layer. This design keeps the Business layer completely decoupled and isolated from presentation-specific caching needs and IMemoryCache dependencies. Consequently, the business layer remains "pure," focusing exclusively on domain logic and data transformation (Mapster).
+* **Defensive Cache Lookup:** A defensive control workflow is enforced utilizing the TryGetValue pattern. If the requested DTO collection exists within the memory store, the incoming request is resolved directly at the Controller level without propagating down to the Business and DataAccess layers. In the event of a cache miss, data is asynchronously fetched from the database and committed to the cache with optimized settings: a 30-minute Absolute Expiration combined with a 10-minute Sliding Expiration.
+* **Proactive Cache Invalidation:** To guarantee strict data consistency, a proactive state-purging strategy is implemented. The exact moment any Data Manipulation Language (DML) or CUD operations (Create, Update, Delete) are triggered, the corresponding CacheKey is immediately evicted from memory. This completely eliminates the risk of "dirty reads," ensuring 100% real-time synchronization between the persistent database and the cache store.
 
 ---
 
@@ -330,6 +336,9 @@ The ultimate execution compilation entry point where a single declarative invoca
 ```C#
 // Inside the WebUI Presentation root Program.cs file:
 builder.Services.AddBusinessServices(builder.Configuration);
+
+// Enlisting the framework runtime memory caching capability
+builder.Services.AddMemoryCache();
 ```
 
 ## 🔵 STEP 8 — Entity-Specific Business Contract (Business / IBannerService.cs)
@@ -371,7 +380,7 @@ namespace VillaAgency.Business.Abstract
 * **Clean Architecture:** Supports Clean Architecture principles by preventing UI $\rightarrow$ Entity coupling.
 
 
-## STEP 9 — Business Logic Implementation & DTO Mapping (Business / BannerManager.cs)
+## 🔵 STEP 9 — Business Logic Implementation & DTO Mapping (Business / BannerManager.cs)
 
 ### ⚙️ BannerManager & Business Workflow
 
@@ -489,7 +498,7 @@ The main purpose of this structure is to achieve a sustainable and scalable arch
 * A shared layout file _AdminLayout.cshtml was created
 * A consistent UI structure was established for admin pages
 
-### 🔵 STEP 13 — Banner Controller (Admin Panel)
+## 🔵 STEP 13 — Banner Controller (Admin Panel)
 The BannerController was created as the foundation of the first CRUD structure within the admin panel.
 ```c#
 using Microsoft.AspNetCore.Mvc;
@@ -512,6 +521,95 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
             var values = await _bannerService.TGetListAsync();
             return View(values);
         }
+    }
+}
+```
+
+## 🔵 STEP 14 — Product Controller & Core UI Performance Caching (Main UI Scope)
+The ProductController handles core data retrieval operations within the main public user interface while implementing a strict caching strategy on ResultProductDto objects to prevent database roundtrips.
+- Read Strategy: The index view utilizes an asynchronous cache lookup via IMemoryCache. If the cache is cold, it queries the completely decoupled ProductManager layer, maps the entities to DTOs, and stores them under a 30-minute absolute / 10-minute sliding policy threshold.
+- Write & Invalidation Strategy: To uphold absolute data consistency, mutability operations (Create, Update, Delete) systematically execute explicit cache expulsion immediately following a successful MongoDB execution, eliminating stale representations before forcing a redirect.
+
+```c#
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using MongoDB.Bson;
+using System.Threading.Tasks;
+using VillaAgency.Business.Abstract;
+using VillaAgency.DataAccess.Abstract;
+using VillaAgency.Dto.ProductDtos;
+
+namespace VillaAgency.WebUI.Controllers
+{
+    public class ProductController : Controller
+    {
+        private readonly IProductService _productService;
+        private readonly IMemoryCache _memoryCache;
+        private const string CacheKey = "products_ui_cache_key";
+
+        public ProductController(IProductService productService, IMemoryCache memoryCache)
+        {
+            _productService = productService ?? throw new ArgumentNullException(nameof(productService));
+            _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
+        }
+
+        //[ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
+        //public async Task<IActionResult> Index()
+        //{
+        //    var products = await _productService.TGetListAsync();
+        //    return View(products);
+        //}
+
+        public async Task <IActionResult> Index()
+        {
+            if (!_memoryCache.TryGetValue(CacheKey, out List<ResultProductDto> cachedProducts))
+            {
+                cachedProducts = await _productService.TGetListAsync();
+
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(30))
+                                        .SetSlidingExpiration(TimeSpan.FromMinutes(10));
+
+                _memoryCache.Set(CacheKey, cachedProducts, cacheEntryOptions);
+            }
+            return View(cachedProducts);
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateProductDto dto)
+        {
+            await _productService.TCreateAsync(dto);
+            _memoryCache.Remove(CacheKey);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Delete(ObjectId id)
+        {
+            await _productService.TDeleteAsync(id);
+            _memoryCache.Remove(CacheKey);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Update(ObjectId id)
+        {
+            var value = await _productService.TGetByIdAsync(id);
+            return View(value);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(UpdateProductDto dto)
+        {
+            await _productService.TUpdateAsync(dto);
+            _memoryCache.Remove(CacheKey);
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
 ```
