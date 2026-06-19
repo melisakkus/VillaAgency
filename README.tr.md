@@ -318,7 +318,6 @@ namespace VillaAgency.Business.Extension
             services.AddDataAccessServices(config);
 
             // 2. Business katmanına ait Manager'ları (İş sınıflarını) buraya kaydediyoruz
-            services.AddScoped<IBannerService, BannerManager>();
 
             return services;
         }
