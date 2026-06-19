@@ -163,6 +163,7 @@ public class MongoDbSettings
 Acting as the conceptual counterpart to Entity Framework Core's DbContext, this engine orchestrates pool channels, connections, and automated collection parsing inside one wrapper class.
 
 ``` C#
+using Humanizer;
 using MongoDB.Driver;
 using VillaAgency.DataAccess.Configurations;
 
@@ -179,7 +180,8 @@ namespace VillaAgency.DataAccess.Context
 
         public IMongoCollection<T> GetCollection<T>()
         {
-            return _database.GetCollection<T>(typeof(T).Name);
+            var collectionName = typeof(T).Name.Pluralize();
+            return _database.GetCollection<T>(collectionName);
         }
     }
 }
