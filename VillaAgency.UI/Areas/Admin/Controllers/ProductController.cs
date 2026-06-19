@@ -32,6 +32,11 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateProductDto dto)
         {
+            if(!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
             await _productService.TCreateAsync(dto);
             _cacheService.Remove(CacheKeys.ProductsUiCacheKey);
             return RedirectToAction(nameof(Index));
@@ -53,6 +58,11 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(UpdateProductDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
             await _productService.TUpdateAsync(dto);
             _cacheService.Remove(CacheKeys.ProductsUiCacheKey);
             return RedirectToAction(nameof(Index));

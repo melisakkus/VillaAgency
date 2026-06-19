@@ -27,6 +27,7 @@
                     <input asp-for="City"
                            class="form-control form-control-lg"
                            placeholder="Enter city name" />
+                           <span asp-validation-for="City" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
@@ -34,6 +35,7 @@
                     <input asp-for="Title"
                            class="form-control form-control-lg"
                            placeholder="Enter banner title" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
 
                 <div class="mb-4">
@@ -41,6 +43,7 @@
                     <input asp-for="ImageUrl"
                            class="form-control form-control-lg"
                            placeholder="https://example.com/image.jpg" />
+                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
                 </div>
 
                 <div class="d-flex justify-content-center gap-3">

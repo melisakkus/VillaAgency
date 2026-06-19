@@ -28,6 +28,10 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBanner(CreateBannerDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
             await _bannerService.TCreateAsync(dto);
             return RedirectToAction("Index");   
         }
@@ -49,6 +53,10 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateBanner(UpdateBannerDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
             await _bannerService.TUpdateAsync(dto);
             return RedirectToAction("Index");
         }

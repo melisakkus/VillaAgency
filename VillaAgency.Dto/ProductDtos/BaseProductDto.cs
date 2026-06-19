@@ -1,8 +1,6 @@
-﻿using VillaAgency.Entity.Common;
-
-namespace VillaAgency.Entity.Entities
+﻿namespace VillaAgency.Dto.ProductDtos
 {
-    public class Product : BaseEntity
+    public class BaseProductDto
     {
         public string ImageUrl { get; set; }
         public string Category { get; set; }

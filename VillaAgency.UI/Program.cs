@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using VillaAgency.Business.Extension;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddBusinessServices(builder.Configuration);
 
 builder.Services.AddMemoryCache();
+
+builder.Services.AddFluentValidationAutoValidation();
 
 var app = builder.Build();
 

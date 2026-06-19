@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FluentValidation;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VillaAgency.Business.Abstract;
 using VillaAgency.Business.Concrete;
+using VillaAgency.Business.Validators.BannerValidators;
 using VillaAgency.DataAccess.Extension;
 
 namespace VillaAgency.Business.Extension
@@ -14,10 +16,12 @@ namespace VillaAgency.Business.Extension
             services.AddDataAccessServices(config);
 
             services.AddScoped<IBannerService, BannerManager>();
-            services.AddScoped<IContactService,ContactManager>();
-            services.AddScoped<IProductService,ProductManager>();
+            services.AddScoped<IContactService, ContactManager>();
+            services.AddScoped<IProductService, ProductManager>();
 
             services.AddSingleton<ICacheService, CacheManager>();
+
+            services.AddValidatorsFromAssemblyContaining<CreateBannerValidator>();
 
             return services;
         }

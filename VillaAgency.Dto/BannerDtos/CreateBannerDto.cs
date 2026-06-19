@@ -1,11 +1,7 @@
-﻿using MongoDB.Bson;
-
-namespace VillaAgency.Dto.BannerDtos
+﻿namespace VillaAgency.Dto.BannerDtos
 {
-    public class CreateBannerDto
+    public class CreateBannerDto : BaseBannerDto
     {
-        public string City { get; set; }
-        public string Title { get; set; }
-        public string ImageUrl { get; set; }
+
     }
 }
