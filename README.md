@@ -324,7 +324,6 @@ namespace VillaAgency.Business.Extension
             services.AddDataAccessServices(config);
 
             // 2. Business domain managers register comfortably within this scope below
-            services.AddScoped<IBannerService, BannerManager>();
 
             return services;
         }
