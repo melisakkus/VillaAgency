@@ -157,6 +157,7 @@ public class MongoDbSettings
 ## 🔵 ADIM 2 — Veritabanı Bağlantısı (DataAccess / MongoDbContext.cs)
 Entity Framework Core'daki `DbContext` yapısına benzer şekilde, projenin MongoDB bağlantısını, istemci havuzunu ve koleksiyon erişimlerini merkezi bir noktadan yönetmek amacıyla inşa edilmiştir.
 ```C#
+using Humanizer;
 using MongoDB.Driver;
 using VillaAgency.DataAccess.Configurations;
 
@@ -173,11 +174,11 @@ namespace VillaAgency.DataAccess.Context
 
         public IMongoCollection<T> GetCollection<T>()
         {
-            return _database.GetCollection<T>(typeof(T).Name);
+            var collectionName = typeof(T).Name.Pluralize();
+            return _database.GetCollection<T>(collectionName);
         }
     }
 }
-
 ```
 
 ## 🔵 ADIM 3 — Soyutlama Kontratı (DataAccess / IGenericDal.cs)
