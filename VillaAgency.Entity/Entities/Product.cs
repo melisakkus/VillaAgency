@@ -13,5 +13,18 @@ namespace VillaAgency.Entity.Entities
         public int? Area { get; set; }
         public int? Floor { get; set; }
         public int? ParkingCount { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public ProductStatus Status { get; set; }
+    }
+
+    public enum ProductStatus
+    {
+        Active,
+        Pending,
+        Sold,
+        Rented,
+        Archived
     }
 }

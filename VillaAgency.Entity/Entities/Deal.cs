@@ -13,5 +13,9 @@ namespace VillaAgency.Entity.Entities
         public int RoomCount { get; set; }
         public bool HasParkingArea { get; set; }
         public string PaymentType { get; set; }
+
+
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
     }
 }

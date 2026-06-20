@@ -1,10 +1,8 @@
 ﻿using Mapster;
-using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Bson;
 using System.Linq.Expressions;
 using VillaAgency.Business.Abstract;
 using VillaAgency.DataAccess.Abstract;
-using VillaAgency.Dto.ContactDtos;
 using VillaAgency.Dto.ProductDtos;
 using VillaAgency.Entity.Entities;
 
@@ -48,6 +46,9 @@ namespace VillaAgency.Business.Concrete
             try
             {
                 var entity = dto.Adapt<Product>();
+                entity.CreatedDate = DateTime.UtcNow;
+                entity.UpdatedDate = null;
+                entity.Status = ProductStatus.Active;
                 await _genericDal.CreateAsync(entity);
             }
             catch(Exception ex)
@@ -64,7 +65,10 @@ namespace VillaAgency.Business.Concrete
             }
             try
             {
-                await _genericDal.DeleteAsync(id);
+                var entity = await _genericDal.GetByIdAsync(id);
+                entity.Status = ProductStatus.Archived;
+                entity.UpdatedDate = DateTime.UtcNow;
+                await _genericDal.UpdateAsync(entity);
             }
             catch(Exception ex)
             {
@@ -118,7 +122,11 @@ namespace VillaAgency.Business.Concrete
 
             try
             {
-                var entity = dto.Adapt<Product>();
+                var entity = await _genericDal.GetByIdAsync(dto.Id);
+                if (entity == null)
+                    throw new Exception("Product not found");
+                dto.Adapt(entity);
+                entity.UpdatedDate = DateTime.UtcNow;
                 await _genericDal.UpdateAsync(entity);
             }
             catch (Exception ex)

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VillaAgency.Entity.Common;
+﻿using VillaAgency.Entity.Common;
 
 namespace VillaAgency.Entity.Entities
 {
@@ -13,6 +8,10 @@ namespace VillaAgency.Entity.Entities
         public string Email { get; set; }
         public string Subject { get; set; }
         public string Content { get; set; }
+
         public DateTime MessageDate { get; set; }
+        public bool IsRead { get; set; }
+        public bool IsDeleted { get; set; }
+
     }
 }
