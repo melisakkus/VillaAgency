@@ -1,26 +1,25 @@
 using FluentValidation.AspNetCore;
 using VillaAgency.Business.Extension;
+using VillaAgency.Business.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// 1. SERVICES
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddBusinessServices(builder.Configuration);
-
-builder.Services.AddMemoryCache();
 
 builder.Services.AddFluentValidationAutoValidation();
 
+builder.Services.AddMemoryCache();
+
+builder.Services.AddBusinessServices(builder.Configuration);
+
 var app = builder.Build();
 
+// 2. MIDDLEWARE PIPELINE
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+app.UseExceptionHandler("/Home/Error");
+
+app.UseHsts();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -29,6 +28,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// 3. ROUTING & ENDPOINTS
 app.MapControllerRoute(
   name: "areas",
   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
