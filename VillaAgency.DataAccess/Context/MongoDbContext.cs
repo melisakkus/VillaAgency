@@ -16,7 +16,8 @@ namespace VillaAgency.DataAccess.Context
         public IMongoCollection<T> GetCollection<T>()
         {
             var collectionName = typeof(T).Name.Pluralize();
-            return _database.GetCollection<T>(collectionName);
+            return _database.GetCollection<T>(collectionName);        
         }
+
     }
 }

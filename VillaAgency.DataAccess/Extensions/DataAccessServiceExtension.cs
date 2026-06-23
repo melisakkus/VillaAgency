@@ -19,8 +19,9 @@ namespace VillaAgency.DataAccess.Extension
             services.AddSingleton<MongoDbContext>();
 
             services.AddScoped(typeof(IGenericDal<>), typeof(GenericRepository<>));
-            // Sadece özel metodu olan:
-            // services.AddScoped<IProductDal, ProductDal>();
+            services.AddScoped<ICounterDal, CounterDal>();
+            services.AddScoped<IProductDal, ProductDal>();
+
             return services;
         }
     }

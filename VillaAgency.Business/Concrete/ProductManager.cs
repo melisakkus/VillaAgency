@@ -11,25 +11,20 @@ namespace VillaAgency.Business.Concrete
 {
     public class ProductManager : IProductService
     {
-        private readonly IGenericDal<Product> _genericDal;
+        private readonly IProductDal _productDal;
         private readonly ILogger<ProductManager> _logger;
 
-        public ProductManager(IGenericDal<Product> genericDal, ILogger<ProductManager> logger)
+        public ProductManager(IProductDal productDal, ILogger<ProductManager> logger)
         {
-            _genericDal = genericDal ?? throw new ArgumentNullException(nameof(genericDal));
+            _productDal = productDal ?? throw new ArgumentNullException(nameof(_productDal));
             _logger = logger;
         }
 
         public async Task<List<ResultProductDto>> TGetListAsync()
         {
-            var entities = await _genericDal.GetListAsync();
+            var entities = await _productDal.GetListAsync();
             _logger.LogInformation("Retrieved all products. Count: {Count}", entities.Count);
             return entities.Adapt<List<ResultProductDto>>();
-        }
-
-        public async Task<int> TCountAsync()
-        {
-            return await _genericDal.CountAsync();
         }
 
         public async Task TCreateAsync(CreateProductDto dto)
@@ -40,10 +35,10 @@ namespace VillaAgency.Business.Concrete
             }
 
             var entity = dto.Adapt<Product>();
-            entity.CreatedDate = DateTime.UtcNow;
+            entity.CreatedAt = DateTime.UtcNow;
             entity.UpdatedDate = null;
             entity.Status = ProductStatus.Active;
-            await _genericDal.CreateAsync(entity);
+            await _productDal.CreateAsync(entity);
             _logger.LogInformation("Product created successfully. Id: {Id}", entity.Id);
         }
 
@@ -54,7 +49,7 @@ namespace VillaAgency.Business.Concrete
                 throw new ArgumentException("Invalid Id (Empty ObjectId).", nameof(id));
             }
 
-            var entity = await _genericDal.GetByIdAsync(id);
+            var entity = await _productDal.GetByIdAsync(id);
 
             if (entity == null)
             {
@@ -71,7 +66,7 @@ namespace VillaAgency.Business.Concrete
             entity.Status = ProductStatus.Archived;
             entity.UpdatedDate = DateTime.UtcNow;
 
-            await _genericDal.UpdateAsync(entity);
+            await _productDal.UpdateAsync(entity);
             _logger.LogInformation("Product archived successfully. Id: {Id}", id);
         }
 
@@ -82,7 +77,7 @@ namespace VillaAgency.Business.Concrete
                 throw new ArgumentException("Invalid Id (Empty ObjectId).", nameof(id));
             }
 
-            var value = await _genericDal.GetByIdAsync(id);
+            var value = await _productDal.GetByIdAsync(id);
             if (value == null)
             {
                 _logger.LogWarning("Product not found. Id: {Id}", id);
@@ -91,16 +86,6 @@ namespace VillaAgency.Business.Concrete
 
             _logger.LogInformation("Fetched product by Id: {Id}", id);
             return value.Adapt<UpdateProductDto>();
-        }
-
-        public async Task<List<ResultProductDto>> TGetFilteredListAsync(Expression<Func<Product, bool>> predicate)
-        {
-            if (predicate is null)
-                throw new ArgumentNullException(nameof(predicate));
-
-            var entities = await _genericDal.GetFilteredListAsync(predicate);
-            _logger.LogInformation("Retrieved filtered products. Count: {Count}", entities.Count);
-            return entities.Adapt<List<ResultProductDto>>();
         }
 
         public async Task TUpdateAsync(UpdateProductDto dto)
@@ -114,7 +99,7 @@ namespace VillaAgency.Business.Concrete
                 throw new ArgumentException("Entity to be updated must have a valid Id.");
             }
 
-            var entity = await _genericDal.GetByIdAsync(dto.Id);
+            var entity = await _productDal.GetByIdAsync(dto.Id);
             if (entity == null)
             {
                 _logger.LogWarning("Product to update not found. Id: {Id}", dto.Id);
@@ -124,8 +109,20 @@ namespace VillaAgency.Business.Concrete
             dto.Adapt(entity);
             entity.UpdatedDate = DateTime.UtcNow;
 
-            await _genericDal.UpdateAsync(entity);
+            await _productDal.UpdateAsync(entity);
             _logger.LogInformation("Product updated successfully. Id: {Id}", dto.Id);
+        }
+
+        public async Task<List<ResultProductDto>> TGetPagedFilteredListAsync(int pageNumber, int pageSize, Expression<Func<Product, bool>> predicate = null)
+        {
+            var entities = await _productDal.GetPagedFilteredListAsync(pageNumber, pageSize, predicate);
+            _logger.LogInformation("Retrieved products for page {PageNumber}. Count: {Count}", pageNumber, entities.Count);
+            return entities.Adapt<List<ResultProductDto>>();
+        }
+
+        public async Task<List<string>> TGetUniqueCategoriesAsync()
+        {
+            return await _productDal.GetUniqueCategoriesAsync();
         }
     }
 }

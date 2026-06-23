@@ -15,19 +15,28 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
             _collection = context.GetCollection<T>();
         }
 
-        public async Task<int> CountAsync()
-        {
-            return (int)await _collection.CountDocumentsAsync(Builders<T>.Filter.Empty);
-        }
-
         public async Task CreateAsync(T entity)
         {
             await _collection.InsertOneAsync(entity);
         }
 
+        public async Task UpdateAsync(T entity)
+        {
+            var id = entity.Id;
+            var result = await _collection.ReplaceOneAsync(x => x.Id == id, entity);
+            if (result.MatchedCount == 0)
+            {
+                throw new Exception("Update failed: entity not found.");
+            }
+        }
+
         public async Task DeleteAsync(ObjectId id)
         {
             await _collection.DeleteOneAsync(x => x.Id == id);
+        }
+       public async Task<List<T>> GetListAsync()
+        {
+            return await _collection.Find(Builders<T>.Filter.Empty).ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(ObjectId id)
@@ -39,21 +48,6 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
         public async Task<List<T>> GetFilteredListAsync(Expression<Func<T, bool>> predicate)
         {
             return await _collection.Find(predicate).ToListAsync();
-        }
-
-        public async Task<List<T>> GetListAsync()
-        {
-            return await _collection.Find(Builders<T>.Filter.Empty).ToListAsync();
-        }
-
-        public async Task UpdateAsync(T entity)
-        {
-            var id = entity.Id;
-            var result = await _collection.ReplaceOneAsync(x => x.Id == id, entity);
-            if (result.MatchedCount == 0)
-            {
-                throw new Exception("Update failed: entity not found.");
-            }
         }
     }
 }

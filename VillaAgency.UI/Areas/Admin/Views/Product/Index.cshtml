@@ -1,0 +1,199 @@
+﻿@model List<ResultProductDto>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/custom_product.css" />
+
+@{
+    int pageSize = ViewBag.PageSize ?? 15;
+    int count = (ViewBag.CurrentPage - 1) * pageSize;
+    string currentStatus = ViewBag.SelectedStatus ?? "All";
+
+    var statusList = new[] {
+        new { Value = "All", Label = "All Products" },
+        new { Value = "Active", Label = "Active" },
+        new { Value = "Sold", Label = "Sold" },
+        new { Value = "Rented", Label = "Rented" },
+        new { Value = "Archived", Label = "Archived" }
+    };
+}
+
+<div class="card bg-transparent border-0 shadow-none w-100 m-0 mb-auto">
+
+    <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-3 border-bottom border-secondary-subtle px-0">
+        <div class="d-flex align-items-center gap-2">
+            <span class="bg-primary rounded-pill" style="width: 4px; height: 18px;"></span>
+            <h5 class="m-0 fw-bold text-body" style="letter-spacing: 0.6px; font-size: 0.95rem;">
+                PRODUCT MANAGEMENT
+            </h5>
+        </div>
+        <a asp-area="Admin" asp-controller="Product" asp-action="Create" class="btn btn-sm btn-primary px-3 shadow-sm">
+            <i class="bi bi-plus-lg me-1"></i> Add New
+        </a>
+    </div>
+
+    <div class="w-100 d-flex flex-wrap align-items-center justify-content-center gap-3 mt-3 pt-1 mb-4 border-bottom border-secondary-subtle pb-3">
+
+        <div class="d-inline-flex gap-1 p-1 rounded-3 align-items-center shadow-sm border border-secondary-subtle css-segmented-control">
+            @foreach (var st in statusList)
+            {
+                bool isActive = currentStatus.Equals(st.Value, StringComparison.OrdinalIgnoreCase);
+                string btnClass = isActive ? "css-nav-active shadow-sm fw-bold" : "css-nav-passive fw-medium";
+
+                <a asp-area="Admin" asp-controller="Product" asp-action="Index"
+                   asp-route-status="@st.Value"
+                   asp-route-category="@ViewBag.SelectedCategory"
+                   asp-route-page="1"
+                   class="btn btn-sm px-4 py-2 rounded-2 text-decoration-none transition-all fs-7 border-0 @btnClass">
+                    @st.Label
+                </a>
+            }
+        </div>
+
+        <div class="dropdown d-inline-flex p-1 rounded-3 align-items-center shadow-sm border border-secondary-subtle css-segmented-control" style="height: 40px;">
+            <span class="text-muted fw-semibold ps-2 me-1" style="font-size: 0.75rem; letter-spacing: 0.5px; text-transform: uppercase;">
+                Category:
+            </span>
+
+            <button class="btn btn-sm dropdown-toggle border-0 fw-bold text-body bg-transparent pe-3 py-1 d-flex align-items-center gap-1"
+                    type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 0.82rem;">
+                @(ViewBag.SelectedCategory == "All" ? "All Categories" : ViewBag.SelectedCategory)
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-dark shadow border border-secondary-subtle" aria-labelledby="categoryDropdown" style="font-size: 0.85rem;">
+                <li>
+                    <a class="dropdown-item @(ViewBag.SelectedCategory == "All" ? "active fw-bold" : "")"
+                       href="@Url.Action("Index", "Product", new { area = "Admin", status = ViewBag.SelectedStatus, category = "All", page = 1 })">
+                        All Categories
+                    </a>
+                </li>
+                @if (ViewBag.Categories != null)
+                {
+                    foreach (string catName in ViewBag.Categories as List<string>)
+                    {
+                        bool isSelected = catName.Equals(ViewBag.SelectedCategory as string, StringComparison.OrdinalIgnoreCase);
+                        <li>
+                            <a class="dropdown-item @(isSelected ? "active fw-bold" : "")"
+                               href="@Url.Action("Index", "Product", new { area = "Admin", status = ViewBag.SelectedStatus, category = catName, page = 1 })">
+                                @catName
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 w-100 text-body bg-transparent">
+                <thead class="text-uppercase text-muted" style="font-size: 0.78rem; letter-spacing: 0.6px;">
+                    <tr class="border-bottom border-secondary-subtle">
+                        <th class="ps-3 py-2" style="width: 60px;">#</th>
+                        <th class="py-2" style="width: 140px;">Image</th>
+                        <th class="py-2" style="width: 150px;">Category</th>
+                        <th class="py-2" style="width: 130px;">Price</th>
+                        <th class="py-2">Title</th>
+                        <th class="py-2" style="width: 120px;">Status</th>
+                        <th class="text-end pe-3 py-2" style="width: 110px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            count++;
+                            <tr class="border-bottom border-secondary-subtle hover-row">
+                                <th class="ps-3 text-muted fw-normal">@count</th>
+                                <td>
+                                    <img src="@item.ImageUrl" class="rounded border border-secondary-subtle shadow-sm" style="width: 110px; height: 70px; object-fit: cover;" alt="" />
+                                </td>
+                                <td class="fw-semibold text-body">@item.Category</td>
+                                <td class="text-muted fw-medium">@item.Price.ToString("C0", new System.Globalization.CultureInfo("en-US"))</td>
+                                <td class="text-muted text-wrap" style="max-width: 300px;">@item.Title</td>
+                                <td>
+                                    @switch (item.Status.ToString())
+                                    {
+                                        case "Active":
+                                            <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Active</span>
+                                            break;
+                                        case "Sold":
+                                            <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">Sold</span>
+                                            break;
+                                        case "Rented":
+                                            <span class="badge bg-info-subtle text-info px-3 py-2 rounded-pill">Rented</span>
+                                            break;
+                                        case "Archived":
+                                            <span class="badge bg-secondary-subtle text-secondary px-3 py-2 rounded-pill">Archived</span>
+                                            break;
+                                        default:
+                                            <span class="badge bg-light text-dark px-3 py-2 rounded-pill">@item.Status</span>
+                                            break;
+                                    }
+                                </td>
+                                <td class="text-end pe-3 text-nowrap">
+                                    <a asp-area="Admin" asp-controller="Product" asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-light border text-warning px-2.5 py-1.5 me-1" title="Details & Update">
+                                        <i class="bi bi-pencil-square fs-6"></i>
+                                    </a>
+                                    <a asp-area="Admin" asp-controller="Product" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-light border text-danger px-2.5 py-1.5" title="Delete">
+                                        <i class="bi bi-trash3 fs-6"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-5 w-100 border-0">
+                                <div class="my-5">
+                                    <i class="bi bi-folder-x display-3 text-secondary opacity-50 d-block mb-3"></i>
+                                    <span class="fs-5 fw-semibold d-block mb-1 text-body">No product data available.</span>
+                                    <span class="text-muted small">Click the button above to create a new product.</span>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card-footer bg-transparent d-flex justify-content-between align-items-center py-3 border-top border-secondary-subtle px-0">
+        <span class="text-muted small">
+            Showing Page <strong>@ViewBag.CurrentPage</strong>
+        </span>
+        <nav aria-label="Page navigation">
+            <ul class="pagination pagination-sm m-0">
+                <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-area="Admin" asp-controller="Product" asp-action="Index"
+                       asp-route-page="@(ViewBag.CurrentPage - 1)"
+                       asp-route-status="@ViewBag.SelectedStatus"
+                       asp-route-category="@ViewBag.SelectedCategory">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+                @for (int i = Math.Max(1, ViewBag.CurrentPage - 2); i <= ViewBag.CurrentPage + 2; i++)
+                {
+                    <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" asp-area="Admin" asp-controller="Product" asp-action="Index"
+                           asp-route-page="@i"
+                           asp-route-status="@ViewBag.SelectedStatus"
+                           asp-route-category="@ViewBag.SelectedCategory">@i</a>
+                    </li>
+                }
+                <li class="page-item">
+                    <a class="page-link" asp-area="Admin" asp-controller="Product" asp-action="Index"
+                       asp-route-page="@(ViewBag.CurrentPage + 1)"
+                       asp-route-status="@ViewBag.SelectedStatus"
+                       asp-route-category="@ViewBag.SelectedCategory">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

@@ -20,11 +20,6 @@ namespace VillaAgency.Business.Concrete
             _logger = logger;
         }
 
-        public async Task<int> TCountAsync()
-        {
-            return await _genericDal.CountAsync();
-        }
-
         public async Task TCreateAsync(CreateContactDto dto)
         {
             if(dto is null)

@@ -14,7 +14,6 @@ namespace VillaAgency.Business.Abstract
         Task TUpdateAsync(UpdateContactDto dto);
         Task TDeleteAsync(ObjectId id);
 
-        Task<int> TCountAsync();
         Task<List<ResultContactDto>> TGetFilteredListAsync(Expression<Func<Contact, bool>> predicate);
     }
 }

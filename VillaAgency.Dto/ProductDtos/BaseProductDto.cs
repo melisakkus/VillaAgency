@@ -11,5 +11,15 @@
         public int? Area { get; set; }
         public int? Floor { get; set; }
         public int? ParkingCount { get; set; }
+
+        public ProductStatusDto Status { get; set; }
+    }
+
+    public enum ProductStatusDto
+    {
+        Active,
+        Sold,
+        Rented,
+        Archived
     }
 }

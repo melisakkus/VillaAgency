@@ -14,8 +14,8 @@ namespace VillaAgency.Business.Abstract
         Task<List<ResultProductDto>> TGetListAsync();
         Task<UpdateProductDto> TGetByIdAsync(ObjectId id);
 
-        Task<int> TCountAsync();
+        Task<List<ResultProductDto>> TGetPagedFilteredListAsync(int pageNumber, int pageSize, Expression<Func<Product, bool>> predicate = null);
+        Task<List<string>> TGetUniqueCategoriesAsync();
 
-        Task<List<ResultProductDto>> TGetFilteredListAsync(Expression<Func<Product, bool>> predicate);
     }
 }

@@ -14,8 +14,6 @@ namespace VillaAgency.Business.Abstract
         Task<List<ResultBannerDto>> TGetListAsync();
         Task<UpdateBannerDto> TGetByIdAsync(ObjectId id);
 
-        Task<int> TCountAsync();
-
         Task<List<ResultBannerDto>> TGetFilteredListAsync(Expression<Func<Banner, bool>> predicate);
     }
 }

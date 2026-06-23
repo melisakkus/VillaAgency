@@ -1,4 +1,6 @@
-﻿using VillaAgency.Entity.Common;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using VillaAgency.Entity.Common;
 
 namespace VillaAgency.Entity.Entities
 {
@@ -14,15 +16,16 @@ namespace VillaAgency.Entity.Entities
         public int? Floor { get; set; }
         public int? ParkingCount { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedDate { get; set; }
+
+        [BsonRepresentation(BsonType.String)]
         public ProductStatus Status { get; set; }
     }
 
     public enum ProductStatus
     {
         Active,
-        Pending,
         Sold,
         Rented,
         Archived

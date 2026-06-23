@@ -1,0 +1,39 @@
+﻿/* /wwwroot/css/custom_product.css */
+
+.css-segmented-control {
+    background-color: rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease-in-out;
+}
+
+[data-bs-theme="dark"] .css-segmented-control {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.css-nav-active {
+    background-color: #ffffff !important;
+    color: #0d6efd !important; 
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12) !important;
+    border: 1px solid rgba(13, 110, 253, 0.15) !important;
+}
+[data-bs-theme="dark"] .css-nav-active {
+    background-color: #2d3748 !important;
+    color: #38bdf8 !important; 
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid rgba(56, 189, 248, 0.15) !important;
+}
+
+.css-nav-passive {
+    color: var(--bs-secondary-color) !important;
+    background: transparent !important;
+    transition: all 0.2s ease-in-out;
+}
+
+    .css-nav-passive:hover {
+        color: var(--bs-body-color) !important;
+        background-color: rgba(0, 0, 0, 0.04) !important;
+    }
+
+[data-bs-theme="dark"] .css-nav-passive:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
