@@ -1,34 +1,38 @@
 using FluentValidation.AspNetCore;
+using Serilog;
 using VillaAgency.Business.Extension;
-using VillaAgency.Business.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. SERVICES
+Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger();
+
+// Instruct .NET to use Serilog as the logging provider
+builder.Host.UseSerilog();
+
+// Services registration
 builder.Services.AddControllersWithViews();
-
 builder.Services.AddFluentValidationAutoValidation();
-
 builder.Services.AddMemoryCache();
-
 builder.Services.AddBusinessServices(builder.Configuration);
 
 var app = builder.Build();
 
-// 2. MIDDLEWARE PIPELINE
-// Configure the HTTP request pipeline.
+// Ensure logs are safely flushed and closed when the application shuts down
+app.Lifetime.ApplicationStopping.Register(Log.CloseAndFlush);
+
+// Middleware pipeline 
 app.UseExceptionHandler("/Home/Error");
-
 app.UseHsts();
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseRouting();
+// Enables automatic logging of all HTTP requests (page requests, API calls, etc.)
+app.UseSerilogRequestLogging();
 
+app.UseRouting();
 app.UseAuthorization();
 
-// 3. ROUTING & ENDPOINTS
+// Routing & Endpoints 
 app.MapControllerRoute(
   name: "areas",
   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"

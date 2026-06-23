@@ -1,21 +1,30 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using MongoDB.Driver;
+using Microsoft.Extensions.Logging;
 using VillaAgency.Business.Abstract;
 
 namespace VillaAgency.Business.Concrete
 {
+    /// <summary>
+    /// Implements In-Memory caching operations.
+    /// Abstracted via 'ICacheService' to decouple the presentation layer (Controllers) from the specific caching infrastructure (Loose Coupling).
+    /// This design allows seamless migration to distributed caching systems like Redis without modifying existing controller logic (Open/Closed Principle), 
+    /// while centralizing cross-cutting concerns (DRY).
+    /// </summary>
     public class CacheManager : ICacheService
     {
         private readonly IMemoryCache _memoryCache;
+        private readonly ILogger<CacheManager> _logger;
 
-        public CacheManager(IMemoryCache memoryCache)
+        public CacheManager(IMemoryCache memoryCache, ILogger<CacheManager> logger)
         {
             _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
+            _logger = logger;
         }
 
         public void Remove(string cacheKey)
         {
             _memoryCache.Remove(cacheKey);
+            _logger.LogInformation("Cache Removed: {CacheKey}", cacheKey);
         }
 
         public void Set<T>(string cacheKey, T value, TimeSpan absoluteExpiration, TimeSpan slidingExpiration)
@@ -27,22 +36,26 @@ namespace VillaAgency.Business.Concrete
             };
 
             _memoryCache.Set(cacheKey, value, cacheOptions);
+
+            _logger.LogDebug(
+                "Cache SET: {CacheKey}, AbsoluteExpiration: {Absolute}, SlidingExpiration: {Sliding}",
+                cacheKey,
+                absoluteExpiration,
+                slidingExpiration
+            );
         }
 
         public bool TryGet<T>(string cacheKey, out T value)
         {
-            return _memoryCache.TryGetValue(cacheKey, out value);
+            if (_memoryCache.TryGetValue(cacheKey, out value))
+            {
+                return true;
+            }
+            else
+            {
+                _logger.LogInformation("Cache Miss: {CacheKey}", cacheKey);
+                return false;
+            }
         }
     }
 }
-
-
-//`ICacheService` soyutlamasını kullanmak; sunum katmanını (Controller) belirli bir teknolojiye sıkı sıkıya bağlamayarak (**Tight Coupling**) projenin bağımlılık mimarisini esnek tutmamızı sağlar. Bu yaklaşım sayesinde, ileride artan trafik yükü sebebiyle In-Memory Cache yerine merkezi bir dağıtık önbellek altyapısına (**Redis**) geçiş kararı alındığında, Controller tarafındaki tek bir satır koda dahi dokunmadan sadece ilgili servis sınıfının (`CacheManager`) içini değiştirerek tüm projeyi ölçeklememize imkan tanır (**Open/Closed Principle**). Ayrıca önbelleğe alma süreçlerine dair loglama, hata yönetimi veya Unit Test simülasyonları (Mocking) gibi kurumsal ihtiyaçların tek bir merkezden, kod tekrarı olmadan (DRY) kolayca yönetilmesini mümkün kılar.
-
-// ### ⚡ Architectural Decision: Why `ICacheService` Abstraction Over Native `IMemoryCache`?
-
-//Instead of tightly coupling the presentation layer by directly injecting .NET's native `IMemoryCache` into the Controllers, an abstract **`ICacheService`** wrapper has been architected. This architectural pattern delivers several enterprise-grade benefits:
-
-//* **Loose Coupling:**The presentation layer(Controllers) is completely isolated from the underlying caching technology.Controllers interact strictly with the predefined contracts (`TryGet`, `Set`, `Remove`), remaining unaware of how or where the data is stored.
-//* **Open/Closed Principle (SOLID):**If horizontal scaling demands shifting from a volatile single-server infrastructure (In-Memory) to a distributed caching solution like **Redis**, **not a single line of code in the presentation layer will be altered.** The migration can be completed seamlessly by merely injecting a new `RedisCacheManager` implementation via the IoC Container.
-//* **Centralized Governance & Robustness (DRY):**Cross - cutting concerns such as logging cache hits/misses, implementing global fallback exception handling, or mocking dependencies for Unit Testing are consolidated within a single operational hub (`CacheManager`), eliminating code duplication.

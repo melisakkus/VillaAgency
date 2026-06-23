@@ -1,5 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path="&amp; Loglama Mimarisi.txt" />
+    <File Path="explanations.txt" />
     <File Path="text.txt" />
   </Folder>
   <Project Path="../VillaAgency.Business/VillaAgency.Business.csproj" />

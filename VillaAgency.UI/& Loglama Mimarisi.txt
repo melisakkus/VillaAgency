@@ -1,0 +1,118 @@
+﻿## 🛠️ Global Hata Yönetimi (Global Exception Handling) & Loglama Mimarisi
+
+Bu projede; uygulamanın kararlılığını sağlamak, oluşan hataları merkezi bir noktadan yakalamak ve sistem hareketlerini izlenebilir kılmak amacıyla **Serilog** entegrasyonlu ve **Merkezi Hata Yakalama (Middleware/Controller tabanlı)** destekli bir mimari kurulmuştur.
+
+### 📝 1. Loglama Sistemi Yapısı (Serilog)
+
+Uygulamada, .NET'in varsayılan loglama altyapısı yerine daha esnek, performanslı ve yapılandırılabilir olan **Serilog** kütüphanesi tercih edilmiştir.
+
+* **Yapılandırma (`Program.cs` & `appsettings.json`):** Serilog ayarları kod kalabalığı yaratmaması adına tamamen `appsettings.json` üzerinden yönetilmektedir (`ReadFrom.Configuration()`).
+* **Log Hedefleri (Sinks):** Loglar eş zamanlı olarak hem **Geliştirme Konsoluna (Console)** hem de **Fiziksel Dosyaya (File)** yazılır.
+* **Dosya Yönetimi (Rolling File):** `Logs/log-.txt` şablonuyla günlük (Day) olarak yeni log dosyaları oluşturulur. Böylece dosya boyutlarının kontrolsüz büyümesi engellenir.
+* **Log Filtreleme:** Sistem kirliliğini önlemek amacıyla `Microsoft` ve `System` kütüphanelerinden gelen log seviyeleri `Warning` (Uyarı) düzeyine çekilmiş, uygulamanın kendi logları ise `Information` düzeyinde tutulmuştur.
+* **HTTP İstek Loglaması:** `app.UseSerilogRequestLogging()` middleware'i sayesinde gelen tüm HTTP istekleri (Path, Status Code, Response Time vb.) otomatik ve performanslı bir şekilde loglanır.
+* **Güvenli Kapanış:** Uygulama sonlandığında logların bellekte kalıp kaybolmaması için `app.Lifetime.ApplicationStopping` event'ine `Log.CloseAndFlush` bağlanmıştır.
+
+---
+
+### 🚨 2. Merkezi Hata Yönetimi (Global Exception Handler)
+
+Uygulama içerisinde try-catch blokları ile yakalanmayan (unhandled) bir hata oluştuğunda, sistem çökmek yerine hatayı zarif bir şekilde karşılar.
+
+```
+[Gelen İstek] ──> [Hata Oluştu] ──> [UseExceptionHandler] ──> [HomeController/Error] ──> [Serilog Kaydı & Hata Sayfası]
+
+```
+
+* **Çalışma Mantığı:** `Program.cs` üzerinde tanımlanan `app.UseExceptionHandler("/Home/Error")` middleware'i, runtime sırasında oluşan tüm beklenmedik hataları yakalayarak isteği `HomeController` altındaki `Error` aksiyonuna yönlendirir.
+* **Detaylı Hata Analizi:** `HomeController.Error` içerisinde `HttpContext.Features.Get<IExceptionHandlerPathFeature>()` kullanılarak hatanın **türü, mesajı ve hangi URL yolunda (Path)** gerçekleştiği tespit edilir.
+* **Yapılandırılmış Loglama (Structured Logging):** Yakalanan exception nesnesi, Serilog'un `_logger.LogError(...)` metoduyla hatanın oluştuğu yol parametrik olarak verilerek log dosyasına stack trace bilgisiyle birlikte kaydedilir.
+* **Kullanıcı Deneyimi:** Kullanıcıya teknik hata detayları (kod satırları vb.) gösterilmez; bunun yerine güvenli ve kurumsal bir "Hata Sayfası" (`Error.cshtml`) render edilir.
+
+---
+
+### 🏛️ 3. Katmanlı Mimaride Loglama Pratikleri (Business/Manager Örneği)
+
+Loglama sadece hataları değil, başarılı iş süreçlerini (audit trails) izlemek için de servis katmanında (`BannerManager`) aktif olarak kullanılmaktadır. Yapılandırılmış loglama (Structured Logging) pratiklerine uygun olarak süreçler şu şekilde izlenir:
+
+* **Bilgilendirme Logları (`LogInformation`):** Kritik bir süreç başladığında ve başarıyla bittiğinde tetiklenir. Örn: Yeni bir banner eklenirken başlığı (`Title`) ile, eklendiğinde ise veri tabanından dönen benzersiz `Id` değeriyle loglanır.
+* **Uyarı Logları (`LogWarning`):** Bir hata olmamakla birlikte beklenen durum gerçekleşmediğinde tetiklenir. Örn: Veri tabanında aranan `Id`ye ait bir banner bulunamadığında (`entity is null`), bu durum bir uyarı logu olarak kaydedilir.
+* **Performans ve Arama Kolaylığı:** Log mesajları yazılırken string interpolation (`$""`) yerine **Serilog şablonları** (`"Creating banner. Title: {Title}"`) kullanılmıştır. Bu sayede log yönetim panellerinde (Elasticsearch, Seq vb.) `{Title}` veya `{Id}` alanlarına göre indeksleme ve hızlı filtreleme yapılabilmektedir.
+
+---
+
+### 📊 Log Çıktı Şablonu Örneği
+
+Dosyaya yazılan loglar, `appsettings.json` içerisindeki `outputTemplate` tanımına uygun olarak milisaniye ve zaman dilimi (timezone) hassasiyetinde şu formatta kaydedilir:
+
+```text
+2026-06-23 11:45:12.384 +03:00 [INF] Creating banner. Title: Yaz Fırsatları Villa Kampanyası
+2026-06-23 11:45:12.410 +03:00 [INF] Banner created successfully. Id: 6494edc5f8123a4b9c123456
+2026-06-23 11:47:01.115 +03:00 [WRN] Banner not found. Id: 6494edc5f8123a4b9c654321
+2026-06-23 11:50:22.002 +03:00 [ERR] An unhandled exception occurred while processing the request. Path: /Banner/Details
+System.NullReferenceException: Object reference not set to an instance of an object...
+
+```
+
+
+
+
+Here is the English version of the architectural explanation, formatted beautifully with markdown and optimized to be directly pasted into your **README.md** file:
+
+---
+
+## 🛠️ Global Exception Handling & Logging Architecture
+
+To ensure application stability, centralize error monitoring, and maintain full traceability of system behaviors, this project implements a robust architecture combining **Serilog** and a **Centralized Middleware/Controller-based Exception Handling** mechanism.
+
+### 📝 1. Logging System Structure (Serilog)
+
+Instead of the default .NET logging provider, **Serilog** was chosen for its flexibility, high performance, and advanced configuration capabilities.
+
+* **Configuration (`Program.cs` & `appsettings.json`):** To maintain clean code structure, Serilog is configured entirely via `appsettings.json` using `ReadFrom.Configuration()`.
+* **Log Sinks:** Logs are written simultaneously to both the **Development Console** and **Physical Files**.
+* **Rolling File Management:** Utilizing the `Logs/log-.txt` pattern, log files roll over daily (`rollingInterval: "Day"`). This prevents individual log files from growing uncontrollably.
+* **Log Filtering:** To eliminate system noise, log levels for framework namespaces (`Microsoft` and `System`) are restricted to `Warning`, while the application's internal logs are kept at the `Information` level.
+* **HTTP Request Logging:** The `app.UseSerilogRequestLogging()` middleware automatically captures and logs all incoming HTTP requests (including Paths, Status Codes, and Execution Time) efficiently.
+* **Graceful Shutdown:** To guarantee that buffered logs are flushed safely to disk when the application stops, `Log.CloseAndFlush` is registered to the `app.Lifetime.ApplicationStopping` event.
+
+---
+
+### 🚨 2. Centralized Error Management (Global Exception Handler)
+
+When an unhandled exception occurs anywhere within the application runtime, the system handles it gracefully instead of crashing or exposing sensitive stack traces.
+
+```
+[Incoming Request] ──> [Exception Thrown] ──> [UseExceptionHandler] ──> [HomeController/Error] ──> [Serilog Log & Error View]
+
+```
+
+* **Workflow:** The `app.UseExceptionHandler("/Home/Error")` middleware catches any unhandled exception in the pipeline and reroutes the request internally to the `Error` action of the `HomeController`.
+* **Diagnostic Extraction:** Inside `HomeController.Error`, the `HttpContext.Features.Get<IExceptionHandlerPathFeature>()` is utilized to extract precise diagnostic metadata, such as the **exact exception object** and the **offending request path**.
+* **Structured Logging:** The captured exception along with its stack trace is recorded via `_logger.LogError(...)` where the request path is passed as a structured parameter.
+* **User Experience:** Technical details are shielded from the end-user. Instead of raw code dumps, a clean, generic, and user-friendly error page (`Error.cshtml`) is rendered.
+
+---
+
+### 🏛️ 3. Logging Best Practices in the Business Layer
+
+Logging is not just for errors; it is also heavily leveraged as an audit trail within service implementations (e.g., `BannerManager`). Structured logging practices are strictly followed:
+
+* **Information Logs (`LogInformation`):** Triggered at critical milestones of a business workflow. For example, a process logs the `Title` when initiating a banner creation, and captures the generated database `Id` once successfully completed.
+* **Warning Logs (`LogWarning`):** Triggered when an operation executes successfully but yields unexpected or empty results. For instance, if a record lookup by `Id` returns no data (`entity is null`), it is captured as a warning rather than an exception.
+* **Performance & Searchability:** Logs are written using **Serilog Message Templates** (`"Creating banner. Title: {Title}"`) instead of standard string interpolation (`$""`). This ensures properties like `{Title}` or `{Id}` remain structured tokens, allowing log management tools (e.g., Elasticsearch, Seq) to index and query them instantly.
+
+---
+
+### 📊 Log Output Sample
+
+According to the configured `outputTemplate` in `appsettings.json`, logs are generated with millisecond precision and timezone offsets in the following format:
+
+```text
+2026-06-23 11:45:12.384 +03:00 [INF] Creating banner. Title: Summer Deals Villa Campaign
+2026-06-23 11:45:12.410 +03:00 [INF] Banner created successfully. Id: 6494edc5f8123a4b9c123456
+2026-06-23 11:47:01.115 +03:00 [WRN] Banner not found. Id: 6494edc5f8123a4b9c654321
+2026-06-23 11:50:22.002 +03:00 [ERR] An unhandled exception occurred while processing the request. Path: /Banner/Details
+System.NullReferenceException: Object reference not set to an instance of an object...
+
+```

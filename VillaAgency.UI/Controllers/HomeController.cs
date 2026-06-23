@@ -1,6 +1,5 @@
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using VillaAgency.WebUI.Models;
 
 namespace VillaAgency.WebUI.Controllers
 {
@@ -26,7 +25,12 @@ namespace VillaAgency.WebUI.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+            if (exceptionFeature?.Error != null)
+            {
+                _logger.LogError(exceptionFeature.Error, "An unhandled exception occurred while processing the request. Path: {Path}", exceptionFeature.Path); 
+            }
+            return View();
         }
     }
 }
