@@ -70,6 +70,7 @@ namespace VillaAgency.Business.Concrete
 
             entity.Status = ProductStatus.Archived;
             entity.UpdatedDate = DateTime.UtcNow;
+
             await _genericDal.UpdateAsync(entity);
             _logger.LogInformation("Product archived successfully. Id: {Id}", id);
         }
@@ -87,6 +88,7 @@ namespace VillaAgency.Business.Concrete
                 _logger.LogWarning("Product not found. Id: {Id}", id);
                 throw new KeyNotFoundException($"Product with Id {id} was not found.");
             }
+
             _logger.LogInformation("Fetched product by Id: {Id}", id);
             return value.Adapt<UpdateProductDto>();
         }
