@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using VillaAgency.Business.Abstract;
 using VillaAgency.Business.Constants;
 using VillaAgency.Dto.ProductDtos;
@@ -58,8 +59,10 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
             return View(products);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
+            ViewBag.Categories = await _productService.TGetUniqueCategoriesAsync();
+            ViewBag.Statuses = Enum.GetValues<ProductStatusDto>();
             return View();
         }
 
@@ -76,15 +79,17 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Delete(dynamic id)
+        public async Task<IActionResult> Delete(ObjectId id)
         {
             await _productService.TDeleteAsync(id);
             _cacheService.Remove(CacheKeys.ProductsUiCacheKey);
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Update(dynamic id)
+        public async Task<IActionResult> Update(ObjectId id)
         {
+            ViewBag.Categories = await _productService.TGetUniqueCategoriesAsync();
+            ViewBag.Statuses = Enum.GetValues<ProductStatusDto>();
             var value = await _productService.TGetByIdAsync(id);
             return View(value);
         }

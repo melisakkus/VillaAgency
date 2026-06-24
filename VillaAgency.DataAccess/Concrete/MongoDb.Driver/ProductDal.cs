@@ -18,6 +18,7 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
         {
             var filter = predicate ?? Builders<Product>.Filter.Empty;
             return await _productCollection.Find(filter)
+                                        .SortByDescending(x=>x.CreatedAt)
                                         .Skip((pageNumber - 1) * pageSize)
                                         .Limit(pageSize)
                                         .ToListAsync();

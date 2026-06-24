@@ -1,0 +1,171 @@
+﻿@model CreateProductDto
+@{
+    ViewData["Title"] = "Create Product";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card bg-transparent border-0 shadow-none w-100 m-0 mb-auto">
+
+    <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-3 border-bottom border-secondary-subtle px-0">
+        <div class="d-flex align-items-center gap-2">
+            <span class="bg-primary rounded-pill" style="width: 4px; height: 18px;"></span>
+            <h5 class="m-0 fw-bold text-body" style="letter-spacing: 0.6px; font-size: 0.95rem;">
+                CREATE NEW PRODUCT
+            </h5>
+        </div>
+        <a asp-action="Index" class="btn btn-sm btn-outline-secondary px-3 shadow-sm fs-7 fw-medium">
+            <i class="bi bi-arrow-left me-1"></i> Back to List
+        </a>
+    </div>
+
+    <div class="card-body px-0 pt-4">
+        <form method="post" id="productForm">
+            <div class="row g-4">
+
+                <div class="col-lg-4 col-xl-3">
+                    <label class="text-uppercase text-muted fw-bold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">
+                        <i class="bi bi-image me-1"></i> Image Preview
+                    </label>
+                    <div id="imagePreviewContainer" class="rounded border border-secondary-subtle d-flex align-items-center justify-content-center overflow-hidden bg-light-subtle shadow-sm"
+                         style="height: 220px; background-color: rgba(0,0,0,0.03);">
+                        <div id="previewPlaceholder" class="text-center py-4">
+                            <i class="bi bi-camera text-secondary opacity-50 display-6 d-block mb-2"></i>
+                            <span class="text-muted small d-block">Preview</span>
+                        </div>
+                        <img id="imagePreviewImg" src="#" alt="Preview" class="img-fluid d-none" style="height: 100%; width: 100%; object-fit: cover;">
+                    </div>
+                </div>
+
+                <div class="col-lg-8 col-xl-9">
+                    <div class="row g-3">
+                        <!-- Image URL -->
+                        <div class="col-12">
+                            <label asp-for="ImageUrl" class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem;">Image URL</label>
+                            <input asp-for="ImageUrl" id="imageUrlInput" class="form-control bg-transparent border-secondary-subtle shadow-none py-2 fs-7" placeholder="https://..." />
+                            <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Title -->
+                        <div class="col-md-8">
+                            <label asp-for="Title" class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem;">Product Title</label>
+                            <input asp-for="Title" class="form-control bg-transparent border-secondary-subtle shadow-none py-2 fs-7" placeholder="Villa Name..." />
+                        </div>
+
+                        <!-- Price -->
+                        <div class="col-md-4">
+                            <label asp-for="Price" class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem;">Price</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent border-secondary-subtle border-end-0 text-muted fs-7">$</span>
+                                <input asp-for="Price" type="number" class="form-control bg-transparent border-secondary-subtle border-start-0 shadow-none py-2 fs-7" />
+                            </div>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="col-md-6">
+                            <label asp-for="Category" class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem;">Category</label>
+                            <select asp-for="Category" class="form-select bg-transparent border-secondary-subtle shadow-none py-2 fs-7 cursor-pointer">
+                                <option value="" disabled selected>Select Category</option>
+                                @if (ViewBag.Categories != null)
+                                {
+                                    foreach (var category in ViewBag.Categories)
+                                    {
+                                        <option value="@category">@category</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6">
+                            <label asp-for="Status" class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem;">Status</label>
+                            <select asp-for="Status" class="form-select bg-transparent border-secondary-subtle shadow-none py-2 fs-7 cursor-pointer">
+                                <option value="" disabled selected>Select Status</option>
+                                @if (ViewBag.Statuses != null)
+                                {
+                                    foreach (var status in ViewBag.Statuses)
+                                    {
+                                        <option value="@status">@status</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Property Specs Section Divider -->
+                <div class="col-12 mt-4 mb-1">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="bg-secondary rounded-pill" style="width: 3px; height: 14px;"></span>
+                        <span class="fw-bold text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Property Specifications</span>
+                        <div class="flex-grow-1 border-bottom border-secondary-subtle opacity-50 ms-2"></div>
+                    </div>
+                </div>
+
+                <!-- Property Specs Inputs -->
+                <div class="col-12">
+                    <div class="row row-cols-2 row-cols-md-5 g-2">
+
+                        <div class="col">
+                            <div class="p-2 rounded border text-center bg-light-subtle">
+                                <label class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Bedrooms</label>
+                                <input asp-for="BedroomCount"
+                                       class="form-control form-control-sm text-center border-0 bg-transparent fw-bold shadow-none fs-7" />
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="p-2 rounded border text-center bg-light-subtle">
+                                <label class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Bathrooms</label>
+                                <input asp-for="BathroomCount"
+                                       class="form-control form-control-sm text-center border-0 bg-transparent fw-bold shadow-none fs-7" />
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="p-2 rounded border text-center bg-light-subtle">
+                                <label class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Parking</label>
+                                <input asp-for="ParkingCount"
+                                       class="form-control form-control-sm text-center border-0 bg-transparent fw-bold shadow-none fs-7" />
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="p-2 rounded border text-center bg-light-subtle">
+                                <label class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Area (m²)</label>
+                                <input asp-for="Area"
+                                       class="form-control form-control-sm text-center border-0 bg-transparent fw-bold shadow-none fs-7" />
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="p-2 rounded border text-center bg-light-subtle">
+                                <label class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Floor</label>
+                                <input asp-for="Floor"
+                                       class="form-control form-control-sm text-center border-0 bg-transparent fw-bold shadow-none fs-7" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="col-12 mt-4 pt-3 border-top border-secondary-subtle">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted fs-7 italic">Review the details before saving.</span>
+                        <div class="d-flex gap-2">
+                            <a asp-action="Index" class="btn btn-sm btn-light border px-4 py-2 fw-medium fs-7">Cancel</a>
+                            <button type="submit" class="btn btn-sm btn-primary px-4 py-2 fw-bold shadow-sm fs-7">
+                                <i class="bi bi-cloud-arrow-up me-1"></i> SAVE PRODUCT
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<link rel="stylesheet" href="~/css/custom_product.css" />
+<link rel="stylesheet" href="~/css/custom_admin_product_create.css" />
+<script src="~/js/custom_admin_product_create.js"></script>

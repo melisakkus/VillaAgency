@@ -1,0 +1,17 @@
+﻿.fs-7 {
+    font-size: 0.82rem !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.bg-light-subtle {
+    background-color: rgba(var(--bs-emphasis-color-rgb), 0.03) !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--bs-primary) !important;
+    background-color: transparent !important;
+    box-shadow: none;
+}
