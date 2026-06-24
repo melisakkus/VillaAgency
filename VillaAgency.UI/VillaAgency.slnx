@@ -3,6 +3,7 @@
     <File Path="&amp; Loglama Mimarisi.txt" />
     <File Path="explanations.txt" />
     <File Path="text.txt" />
+    <File Path="whereami.txt" />
   </Folder>
   <Project Path="../VillaAgency.Business/VillaAgency.Business.csproj" />
   <Project Path="../VillaAgency.DataAccess/VillaAgency.DataAccess.csproj" />
