@@ -33,14 +33,14 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
         }
 
 
-        public async Task<IActionResult> Delete(ObjectId id)
+        public async Task<IActionResult> Delete(string id)
         {
             await _contactService.TDeleteAsync(id);
             return RedirectToAction("Index");
         }
 
 
-        public async Task<IActionResult> Update(ObjectId id)
+        public async Task<IActionResult> Update(string id)
         {
             var dto = await _contactService.TGetByIdAsync(id);
             return View(dto);

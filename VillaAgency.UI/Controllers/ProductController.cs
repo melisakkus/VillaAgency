@@ -7,7 +7,7 @@ namespace VillaAgency.WebUI.Controllers
     {
         private readonly IProductService _productService;
 
-        public ProductController(IProductService productService, ICacheService cacheService)
+        public ProductController(IProductService productService)
         {
             _productService = productService ?? throw new ArgumentNullException(nameof(productService));
         }

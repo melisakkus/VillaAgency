@@ -9,10 +9,10 @@ namespace VillaAgency.Business.Abstract
     {
         Task TCreateAsync(CreateProductDto dto);
         Task TUpdateAsync(UpdateProductDto dto);
-        Task TDeleteAsync(ObjectId id);
+        Task TDeleteAsync(string id);
 
         Task<List<ResultProductDto>> TGetListAsync();
-        Task<UpdateProductDto> TGetByIdAsync(ObjectId id);
+        Task<UpdateProductDto> TGetByIdAsync(string id);
 
         Task<List<ResultProductDto>> TGetPagedFilteredListAsync(int pageNumber, int pageSize, Expression<Func<Product, bool>> predicate = null);
         Task<List<string>> TGetUniqueCategoriesAsync();

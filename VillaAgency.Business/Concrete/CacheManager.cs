@@ -5,10 +5,21 @@ using VillaAgency.Business.Abstract;
 namespace VillaAgency.Business.Concrete
 {
     /// <summary>
-    /// Implements In-Memory caching operations.
-    /// Abstracted via 'ICacheService' to decouple the presentation layer (Controllers) from the specific caching infrastructure (Loose Coupling).
-    /// This design allows seamless migration to distributed caching systems like Redis without modifying existing controller logic (Open/Closed Principle), 
-    /// while centralizing cross-cutting concerns (DRY).
+    /// Generic caching abstraction.
+    ///
+    /// NOTE:
+    /// This service is currently not used in the application.
+    /// During early development, In-Memory caching was implemented to reduce
+    /// database access for product listings.
+    ///
+    /// Later, the application was redesigned to use server-side pagination
+    /// and filtering. Since only a small subset of data is fetched per request,
+    /// the performance gain from caching became negligible compared to the added
+    /// cache invalidation complexity.
+    ///
+    /// The abstraction is intentionally preserved for future scalability needs,
+    /// allowing an easy transition to MemoryCache, Redis, or other distributed
+    /// caching providers without affecting higher application layers.
     /// </summary>
     public class CacheManager : ICacheService
     {

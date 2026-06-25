@@ -10,8 +10,7 @@ namespace VillaAgency.Business.Validators.BannerValidators
             RuleFor(x => x.City)
                 .NotEmpty().WithMessage("City information is required.")
                 .MinimumLength(3).WithMessage("City name must be at least 3 characters long.")
-                .MaximumLength(50).WithMessage("City name cannot exceed 50 characters.")
-                .Matches(@"^[a-zA-Z\s]*$").WithMessage("City name can only contain letters and spaces.");
+                .MaximumLength(50).WithMessage("City name cannot exceed 50 characters.");
 
             RuleFor(x => x.Title)
                 .NotEmpty().WithMessage("Banner title is required.")

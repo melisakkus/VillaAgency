@@ -76,13 +76,13 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Delete(ObjectId id)
+        public async Task<IActionResult> Delete(string id)
         {
             await _productService.TDeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Update(ObjectId id)
+        public async Task<IActionResult> Update(string id)
         {
             ViewBag.Categories = await _productService.TGetUniqueCategoriesAsync();
             ViewBag.Statuses = Enum.GetValues<ProductStatusDto>();

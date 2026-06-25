@@ -4,7 +4,7 @@ namespace VillaAgency.Dto.ProductDtos
 {
     public class UpdateProductDto : BaseProductDto
     {
-        public ObjectId Id { get; set; }
+        public string Id { get; set; }
 
     }
 }

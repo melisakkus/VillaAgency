@@ -4,6 +4,6 @@ namespace VillaAgency.Dto.ProductDtos
 {
     public class ResultProductDto : BaseProductDto
     {
-        public ObjectId Id { get; set; }
+        public string Id { get; set; }
     }
 }

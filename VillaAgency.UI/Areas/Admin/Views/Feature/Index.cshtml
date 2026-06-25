@@ -1,0 +1,151 @@
+﻿@model List<ResultFeatureDto>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    int chunkSize = Model != null && Model.Count > 2 ? 2 : (Model?.Count ?? 1);
+}
+
+<div class="card bg-transparent border-0 shadow-none w-100 m-0 mb-auto feature-page">
+    <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-3 border-bottom border-secondary-subtle px-0 mb-4">
+        <div class="d-flex align-items-center gap-2">
+            <span class="section-mark"></span>
+            <h5 class="section-title m-0">FEATURE MANAGEMENT</h5>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            @if (Model != null && Model.Count > 2)
+            {
+                <button class="btn btn-sm btn-custom-carousel-nav" type="button" data-bs-target="#featureCarousel" data-bs-slide="prev">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <button class="btn btn-sm btn-custom-carousel-nav" type="button" data-bs-target="#featureCarousel" data-bs-slide="next">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            }
+
+            <a asp-area="Admin" asp-controller="Feature" asp-action="Create" class="btn btn-sm btn-primary px-3 shadow-sm fw-semibold">
+                <i class="bi bi-plus-lg me-1"></i> Add New
+            </a>
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        @if (Model != null && Model.Any())
+        {
+            var chunks = Model.Select((value, index) => new { value, index })
+            .GroupBy(x => x.index / chunkSize)
+            .Select(g => g.Select(x => x.value).ToList())
+            .ToList();
+
+            <div id="featureCarousel" class="carousel slide custom-carousel-container" data-bs-ride="carousel" data-bs-interval="5000">
+                <div class="carousel-inner h-100">
+                    @for (int i = 0; i < chunks.Count; i++)
+                    {
+                        <div class="carousel-item @(i == 0 ? "active" : "") h-100">
+                            <div class="row row-cols-1 row-cols-sm-2 @(Model.Count == 1 ? "row-cols-md-1 justify-content-center" : "row-cols-md-2 d-flex align-items-stretch") g-4 mx-0">
+                                @foreach (var item in chunks[i])
+                                {
+                                    <div class="col" @(Model.Count == 1 ? "style=max-width:600px;" : "")>
+                                        <div class="card h-100 border border-secondary-subtle bg-transparent shadow-sm overflow-hidden custom-premium-card d-flex flex-column">
+                                            <div class="position-relative flex-shrink-0" style="height: 220px;">
+                                                <img src="@item.ImageUrl" class="w-100 h-100 object-fit-cover" alt="@item.Title" />
+                                                <div class="position-absolute top-0 end-0 m-3">
+                                                    <span class="badge @(item.IsActive ? "bg-success" : "bg-danger") px-3 py-2 fw-semibold status-badge">
+                                                        @(item.IsActive ? "ACTIVE" : "PASSIVE")
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div class="p-3 text-center border-bottom border-secondary-subtle">
+                                                <h5 class="item-title m-0">@item.Title</h5>
+                                            </div>
+
+                                            <div class="feature-card-body flex-grow-1 d-flex flex-column">
+                                                <div>
+                                                    <div class="section-header">FEATURE DETAILS</div>
+                                                    <div class="p-3 border-bottom border-secondary-subtle">
+                                                        @if (item.FeatureDetails != null && item.FeatureDetails.Any())
+                                                        {
+                                                            <div class="d-flex flex-wrap gap-2">
+                                                                @foreach (var detail in item.FeatureDetails)
+                                                                {
+                                                                    <div class="feature-detail-badge border border-secondary-subtle rounded-2">
+                                                                        <i class="@detail.Icon text-primary fs-6 flex-shrink-0"></i>
+                                                                        <span class="detail-label">@detail.Title:</span>
+                                                                        <span class="detail-value">@detail.SubTitle</span>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="text-center py-1">
+                                                                <span class="text-secondary small" style="font-style: italic; opacity: 0.7;">
+                                                                    No feature details have been added yet.
+                                                                </span>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                                @if (item.FAQs != null && item.FAQs.Any())
+                                                {
+                                                    <div class="flex-grow-1 d-flex flex-column">
+                                                        <div class="section-header">FREQUENTLY ASKED QUESTIONS</div>
+
+                                                        <div class="accordion accordion-flush custom-faq-accordion" id="faq-@item.Id">
+                                                            @for (int f = 0; f < item.FAQs.Count; f++)
+                                                            {
+                                                                var faq = item.FAQs[f];
+                                                                <div class="accordion-item bg-transparent border-bottom border-secondary-subtle">
+                                                                    <h2 class="accordion-header">
+                                                                        <button class="accordion-button collapsed faq-question" type="button"
+                                                                                data-bs-toggle="collapse" data-bs-target="#collapse-@item.Id-@f">
+                                                                            <i class="bi bi-question-circle text-primary me-2"></i>
+                                                                            @faq.Question
+                                                                        </button>
+                                                                    </h2>
+                                                                    <div id="collapse-@item.Id-@f" class="accordion-collapse collapse" data-bs-parent="#faq-@item.Id">
+                                                                        <div class="accordion-body faq-answer border-top border-secondary-subtle">
+                                                                            @faq.Answer
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+
+                                            <div class="p-3 mt-auto border-top border-secondary-subtle d-flex justify-content-end gap-2">
+                                                <a asp-area="Admin" asp-controller="Feature" asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning px-3 py-1 fw-semibold">
+                                                    <i class="bi bi-pencil-square me-1"></i>Edit
+                                                </a>
+                                                <a asp-area="Admin" asp-controller="Feature" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger px-3 py-1 fw-semibold">
+                                                    <i class="bi bi-trash me-1"></i>Delete
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                @if (Model.Count > 2)
+                {
+                    <div class="carousel-indicators custom-indicators">
+                        @for (int i = 0; i < chunks.Count; i++)
+                        {
+                            <button type="button" data-bs-target="#featureCarousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i + 1)"></button>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<link rel="stylesheet" href="~/css/custom_admin_feature_index.css"/>               

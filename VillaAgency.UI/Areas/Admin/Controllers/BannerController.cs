@@ -37,14 +37,14 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
         }
 
 
-        public async Task<IActionResult> DeleteBanner(ObjectId id) 
+        public async Task<IActionResult> DeleteBanner(string id) 
         {
             await _bannerService.TDeleteAsync(id);
             return RedirectToAction("Index");
         }
 
 
-        public async Task<IActionResult> UpdateBanner(ObjectId id)
+        public async Task<IActionResult> UpdateBanner(string id)
         {
             var dto = await _bannerService.TGetByIdAsync(id);
             return View(dto);

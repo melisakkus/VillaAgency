@@ -4,7 +4,7 @@ namespace VillaAgency.Dto.BannerDtos
 {
     public class ResultBannerDto : BaseBannerDto
     {
-        public ObjectId Id { get; set; }
+        public string Id { get; set; }
 
     }
 }

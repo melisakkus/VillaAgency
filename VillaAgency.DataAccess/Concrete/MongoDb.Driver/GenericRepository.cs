@@ -30,7 +30,7 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
             }
         }
 
-        public async Task DeleteAsync(ObjectId id)
+        public async Task DeleteAsync(string id)
         {
             await _collection.DeleteOneAsync(x => x.Id == id);
         }
@@ -39,10 +39,11 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
             return await _collection.Find(Builders<T>.Filter.Empty).ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(ObjectId id)
+        public async Task<T> GetByIdAsync(string id)
         {
-            var filter = Builders<T>.Filter.Eq("_id",id);
-            return await _collection.Find(filter).FirstOrDefaultAsync();
+            return await _collection
+                .Find(x => x.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<List<T>> GetFilteredListAsync(Expression<Func<T, bool>> predicate)

@@ -42,11 +42,11 @@ namespace VillaAgency.Business.Concrete
             _logger.LogInformation("Product created successfully. Id: {Id}", entity.Id);
         }
 
-        public async Task TDeleteAsync(ObjectId id)
+        public async Task TDeleteAsync(string id)
         {
-            if(id == ObjectId.Empty)
+            if (!ObjectId.TryParse(id, out _))
             {
-                throw new ArgumentException("Invalid Id (Empty ObjectId).", nameof(id));
+                throw new ArgumentException("Invalid ObjectId.", nameof(id));
             }
 
             var entity = await _productDal.GetByIdAsync(id);
@@ -70,11 +70,11 @@ namespace VillaAgency.Business.Concrete
             _logger.LogInformation("Product archived successfully. Id: {Id}", id);
         }
 
-        public async Task<UpdateProductDto> TGetByIdAsync(ObjectId id)
+        public async Task<UpdateProductDto> TGetByIdAsync(string id)
         {
-            if(id == ObjectId.Empty)
+            if (!ObjectId.TryParse(id, out _))
             {
-                throw new ArgumentException("Invalid Id (Empty ObjectId).", nameof(id));
+                throw new ArgumentException("Invalid ObjectId.", nameof(id));
             }
 
             var value = await _productDal.GetByIdAsync(id);
@@ -94,9 +94,9 @@ namespace VillaAgency.Business.Concrete
             {
                 throw new ArgumentNullException(nameof(dto), "Dto cannot be null.");
             }
-            if (dto.Id == ObjectId.Empty)
+            if (!ObjectId.TryParse(dto.Id, out _))
             {
-                throw new ArgumentException("Entity to be updated must have a valid Id.");
+                throw new ArgumentException("Invalid ObjectId.", nameof(dto.Id));
             }
 
             var entity = await _productDal.GetByIdAsync(dto.Id);

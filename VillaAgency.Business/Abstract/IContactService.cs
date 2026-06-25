@@ -8,11 +8,11 @@ namespace VillaAgency.Business.Abstract
     public interface IContactService
     {
         Task<List<ResultContactDto>> TGetAllAsync();
-        Task<UpdateContactDto> TGetByIdAsync(ObjectId id);
+        Task<UpdateContactDto> TGetByIdAsync(string id);
 
         Task TCreateAsync(CreateContactDto dto);
         Task TUpdateAsync(UpdateContactDto dto);
-        Task TDeleteAsync(ObjectId id);
+        Task TDeleteAsync(string id);
 
         Task<List<ResultContactDto>> TGetFilteredListAsync(Expression<Func<Contact, bool>> predicate);
     }

@@ -9,10 +9,10 @@ namespace VillaAgency.Business.Abstract
     {
         Task TCreateAsync(CreateBannerDto dto);
         Task TUpdateAsync(UpdateBannerDto dto);
-        Task TDeleteAsync(ObjectId id);
+        Task TDeleteAsync(string id);
 
         Task<List<ResultBannerDto>> TGetListAsync();
-        Task<UpdateBannerDto> TGetByIdAsync(ObjectId id);
+        Task<UpdateBannerDto> TGetByIdAsync(string id);
 
         Task<List<ResultBannerDto>> TGetFilteredListAsync(Expression<Func<Banner, bool>> predicate);
     }

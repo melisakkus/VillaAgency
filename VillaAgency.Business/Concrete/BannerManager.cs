@@ -25,16 +25,17 @@ namespace VillaAgency.Business.Concrete
             if (dto is null)
                 throw new ArgumentNullException(nameof(dto), "Dto cannot be null.");
 
-            _logger.LogInformation("Creating banner. Title: {Title}", dto.Title);            
             var entity = dto.Adapt<Banner>();
             await _genericDal.CreateAsync(entity);
             _logger.LogInformation("Banner created successfully. Id: {Id}", entity.Id);
         }
 
-        public async Task TDeleteAsync(ObjectId id)
+        public async Task TDeleteAsync(string id)
         {
-            if(id == ObjectId.Empty)
-                throw new ArgumentException("Invalid Id (Empty ObjectId).", nameof(id));
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new ArgumentException("Invalid ObjectId.", nameof(id));
+            }
 
             var entity = await _genericDal.GetByIdAsync(id);
             if (entity is null)
@@ -47,11 +48,11 @@ namespace VillaAgency.Business.Concrete
             _logger.LogInformation("Banner deleted successfully. Id: {Id}", id);
         }
 
-        public async Task<UpdateBannerDto> TGetByIdAsync(ObjectId id)
+        public async Task<UpdateBannerDto> TGetByIdAsync(string id)
         {
-            if(id == ObjectId.Empty)
+            if (!ObjectId.TryParse(id, out _))
             {
-                throw new ArgumentException("Invalid Id (Empty ObjectId).", nameof(id));
+                throw new ArgumentException("Invalid ObjectId.", nameof(id));
             }
 
             var entity = await _genericDal.GetByIdAsync(id);
@@ -89,12 +90,13 @@ namespace VillaAgency.Business.Concrete
             {
                 throw new ArgumentNullException(nameof(dto), "Dto cannot be null.");
             }
-            if(dto.Id == ObjectId.Empty)
+            if (!ObjectId.TryParse(dto.Id, out _))
             {
-                throw new ArgumentException("Entity to be updated must have a valid Id.");
+                throw new ArgumentException("Invalid ObjectId.", nameof(dto.Id));
             }
 
             var entity = await _genericDal.GetByIdAsync(dto.Id);
+
             if (entity is null)
             {
                 _logger.LogWarning("Banner to update not found. Id: {Id}", dto.Id);
