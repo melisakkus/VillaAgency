@@ -12,7 +12,6 @@ builder.Host.UseSerilog();
 // Services registration
 builder.Services.AddControllersWithViews();
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddMemoryCache();
 builder.Services.AddBusinessServices(builder.Configuration);
 
 var app = builder.Build();

@@ -11,12 +11,10 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
-        private readonly ICacheService _cacheService;
 
-        public ProductController(IProductService productService, ICacheService cacheService)
+        public ProductController(IProductService productService)
         {
             _productService = productService ?? throw new ArgumentNullException(nameof(productService));
-            _cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
         }
 
         public async Task<IActionResult> Index(string status = "All", string category = "All", int page = 1)
@@ -75,14 +73,12 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
             }
 
             await _productService.TCreateAsync(dto);
-            _cacheService.Remove(CacheKeys.ProductsUiCacheKey);
             return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(ObjectId id)
         {
             await _productService.TDeleteAsync(id);
-            _cacheService.Remove(CacheKeys.ProductsUiCacheKey);
             return RedirectToAction(nameof(Index));
         }
 
@@ -103,7 +99,6 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
             }
 
             await _productService.TUpdateAsync(dto);
-            _cacheService.Remove(CacheKeys.ProductsUiCacheKey);
             return RedirectToAction(nameof(Index));
         }
 
