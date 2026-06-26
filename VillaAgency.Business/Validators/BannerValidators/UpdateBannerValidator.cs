@@ -9,9 +9,9 @@ namespace VillaAgency.Business.Validators.BannerValidators
         public UpdateBannerValidator() 
         {
             RuleFor(x => x.Id)
-                .NotEmpty()
+                .NotEmpty().WithMessage("Id information is required.")
                 .Must(id => ObjectId.TryParse(id?.ToString(), out _))
-                .WithMessage("Invalid feature id.");
+                .WithMessage("Invalid banner id format (Must be a valid ObjectId).");
         }
     }
 }

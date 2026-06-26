@@ -11,7 +11,6 @@ namespace VillaAgency.Entity.Entities
 
         public DateTime MessageDate { get; set; }
         public bool IsRead { get; set; }
-        public bool IsDeleted { get; set; }
 
     }
 }

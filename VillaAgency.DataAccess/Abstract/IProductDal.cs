@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using VillaAgency.DataAccess.Abstract.Common;
 using VillaAgency.Entity.Entities;
 
 namespace VillaAgency.DataAccess.Abstract

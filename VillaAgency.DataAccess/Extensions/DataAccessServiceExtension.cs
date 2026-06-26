@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VillaAgency.DataAccess.Abstract;
+using VillaAgency.DataAccess.Abstract.Common;
 using VillaAgency.DataAccess.Concrete.MongoDb.Driver;
+using VillaAgency.DataAccess.Concrete.MongoDb.Driver.Common;
 using VillaAgency.DataAccess.Configurations;
 using VillaAgency.DataAccess.Context;
 
@@ -21,6 +23,7 @@ namespace VillaAgency.DataAccess.Extension
             services.AddScoped(typeof(IGenericDal<>), typeof(GenericRepository<>));
             services.AddScoped<ICounterDal, CounterDal>();
             services.AddScoped<IProductDal, ProductDal>();
+            services.AddScoped<IMessageDal, MessageDal>();
 
             return services;
         }

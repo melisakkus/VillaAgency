@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using System.Linq.Expressions;
 using VillaAgency.Business.Abstract;
-using VillaAgency.DataAccess.Abstract;
+using VillaAgency.DataAccess.Abstract.Common;
 using VillaAgency.Dto.FeatureDtos;
 using VillaAgency.Entity.Entities;
 
@@ -34,17 +34,8 @@ namespace VillaAgency.Business.Concrete
 
         public async Task TDeleteAsync(string id)
         {
-            if (!ObjectId.TryParse(id,out _))
-            {
-                throw new ArgumentException("Invalid ObjectId.", nameof(id));
-            }
-
-            var entity = await _genericDal.GetByIdAsync(id);
-            if (entity is null)
-            {
-                _logger.LogWarning("Feature to delete not found. Id: {Id}", id);
-                throw new KeyNotFoundException($"Feature with Id {id} was not found.");
-            }
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentNullException(nameof(id));
 
             await _genericDal.DeleteAsync(id);
             _logger.LogInformation("Feature deleted successfully. Id: {Id}", id);
@@ -59,10 +50,8 @@ namespace VillaAgency.Business.Concrete
 
         public async Task<UpdateFeatureDto> TGetByIdAsync(string id)
         {
-            if (!ObjectId.TryParse(id, out _))
-            {
-                throw new ArgumentException("Invalid ObjectId.", nameof(id));
-            }
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentNullException(nameof(id));
 
             var entity = await _genericDal.GetByIdAsync(id);
 
@@ -89,24 +78,10 @@ namespace VillaAgency.Business.Concrete
         public async Task TUpdateAsync(UpdateFeatureDto dto)
         {
             if (dto is null)
-            {
-                throw new ArgumentNullException(nameof(dto), "Dto cannot be null.");
-            }
-            if (!ObjectId.TryParse(dto.Id, out _))
-            {
-                throw new ArgumentException("Invalid ObjectId.", nameof(dto.Id));
-            }
+                throw new ArgumentNullException(nameof(dto));
 
-            var entity = await _genericDal.GetByIdAsync(dto.Id);
-
-            if (entity is null)
-            {
-                _logger.LogWarning("Feature to update not found. Id: {Id}", dto.Id);
-                throw new KeyNotFoundException($"Feature with Id {dto.Id} was not found.");
-            }
-
-            dto.Adapt(entity);
-            await _genericDal.UpdateAsync(entity);
+            var value = dto.Adapt<FeatureSection>();
+            await _genericDal.UpdateAsync(value);
             _logger.LogInformation("Feature updated successfully. Id: {Id}", dto.Id);
         }
     }

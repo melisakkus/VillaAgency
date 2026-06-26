@@ -9,9 +9,9 @@ namespace VillaAgency.Business.Validators.ProductValidators
         public UpdateProductValidator()
         {
             RuleFor(x => x.Id)
-                            .NotEmpty()
-                            .Must(id => ObjectId.TryParse(id?.ToString(), out _))
-                            .WithMessage("Invalid feature id.");
+                .NotEmpty().WithMessage("Id information is required.")
+                .Must(id => ObjectId.TryParse(id, out _))
+                .WithMessage("Invalid product id format (Must be a valid ObjectId).");
         }
     }
 }

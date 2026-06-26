@@ -28,6 +28,10 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateContactDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
             await _contactService.TCreateAsync(dto);
             return RedirectToAction("Index");
         }
@@ -49,6 +53,10 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(UpdateContactDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
             await _contactService.TUpdateAsync(dto);
             return RedirectToAction("Index");
         }

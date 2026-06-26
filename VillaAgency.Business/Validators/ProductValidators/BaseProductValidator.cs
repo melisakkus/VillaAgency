@@ -5,7 +5,7 @@ namespace VillaAgency.Business.Validators.ProductValidators
 {
     public class BaseProductValidator<T> : AbstractValidator<T> where T : BaseProductDto
     {
-        public BaseProductValidator() 
+        public BaseProductValidator()
         {
             RuleFor(x => x.ImageUrl)
               .NotEmpty().WithMessage("ImageUrl is required.")
@@ -21,6 +21,9 @@ namespace VillaAgency.Business.Validators.ProductValidators
                 .GreaterThan(0)
                 .WithMessage("Price must be greater than 0");
 
+            RuleFor(x => x.Status)
+                .NotEmpty().WithMessage("Status is required.")
+                .IsInEnum().WithMessage("Please select a valid status.");
 
             RuleFor(x => x.Title)
                 .NotEmpty().WithMessage("Title is required.")

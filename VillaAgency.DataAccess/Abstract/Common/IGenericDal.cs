@@ -1,8 +1,7 @@
-﻿using MongoDB.Bson;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using VillaAgency.Entity.Common;
 
-namespace VillaAgency.DataAccess.Abstract
+namespace VillaAgency.DataAccess.Abstract.Common
 {
     public interface IGenericDal<T> where T : BaseEntity
     {

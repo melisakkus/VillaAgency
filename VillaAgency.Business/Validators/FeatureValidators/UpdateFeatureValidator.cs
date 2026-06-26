@@ -9,9 +9,9 @@ namespace VillaAgency.Business.Validators.FeatureValidators
         public UpdateFeatureValidator()
         {
             RuleFor(x => x.Id)
-                            .NotEmpty()
-                            .Must(id => ObjectId.TryParse(id?.ToString(), out _)) 
-                            .WithMessage("Invalid feature id.");
+                            .NotEmpty().WithMessage("Id information is required.")
+                            .Must(id => ObjectId.TryParse(id?.ToString(), out _))
+                            .WithMessage("Invalid feature id format (Must be a valid ObjectId).");
 
             RuleFor(x => x.Title)
                 .NotEmpty().WithMessage("Title is required.")

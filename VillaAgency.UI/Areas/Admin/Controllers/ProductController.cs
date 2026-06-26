@@ -57,10 +57,9 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
             return View(products);
         }
 
-        public async Task<IActionResult> CreateAsync()
+        public async Task<IActionResult> Create()
         {
-            ViewBag.Categories = await _productService.TGetUniqueCategoriesAsync();
-            ViewBag.Statuses = Enum.GetValues<ProductStatusDto>();
+            await GetViewBagCategoriesAndStatuses();
             return View();
         }
 
@@ -69,6 +68,7 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
+                await GetViewBagCategoriesAndStatuses();
                 return View(dto);
             }
 
@@ -84,8 +84,7 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
 
         public async Task<IActionResult> Update(string id)
         {
-            ViewBag.Categories = await _productService.TGetUniqueCategoriesAsync();
-            ViewBag.Statuses = Enum.GetValues<ProductStatusDto>();
+            await GetViewBagCategoriesAndStatuses();
             var value = await _productService.TGetByIdAsync(id);
             return View(value);
         }
@@ -95,11 +94,19 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
+                await GetViewBagCategoriesAndStatuses();
                 return View(dto);
             }
 
             await _productService.TUpdateAsync(dto);
             return RedirectToAction(nameof(Index));
+        }
+
+
+        private async Task GetViewBagCategoriesAndStatuses() 
+        {
+            ViewBag.Categories = await _productService.TGetUniqueCategoriesAsync();
+            ViewBag.Statuses = Enum.GetValues<ProductStatusDto>();
         }
 
     }

@@ -1,6 +1,5 @@
 ﻿using Mapster;
 using Microsoft.Extensions.Logging;
-using MongoDB.Bson;
 using System.Linq.Expressions;
 using VillaAgency.Business.Abstract;
 using VillaAgency.DataAccess.Abstract;
@@ -44,10 +43,8 @@ namespace VillaAgency.Business.Concrete
 
         public async Task TDeleteAsync(string id)
         {
-            if (!ObjectId.TryParse(id, out _))
-            {
-                throw new ArgumentException("Invalid ObjectId.", nameof(id));
-            }
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentNullException(nameof(id));
 
             var entity = await _productDal.GetByIdAsync(id);
 
@@ -72,10 +69,8 @@ namespace VillaAgency.Business.Concrete
 
         public async Task<UpdateProductDto> TGetByIdAsync(string id)
         {
-            if (!ObjectId.TryParse(id, out _))
-            {
-                throw new ArgumentException("Invalid ObjectId.", nameof(id));
-            }
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentNullException(nameof(id));
 
             var value = await _productDal.GetByIdAsync(id);
             if (value == null)
@@ -91,25 +86,10 @@ namespace VillaAgency.Business.Concrete
         public async Task TUpdateAsync(UpdateProductDto dto)
         {
             if (dto is null)
-            {
-                throw new ArgumentNullException(nameof(dto), "Dto cannot be null.");
-            }
-            if (!ObjectId.TryParse(dto.Id, out _))
-            {
-                throw new ArgumentException("Invalid ObjectId.", nameof(dto.Id));
-            }
+                throw new ArgumentNullException(nameof(dto));
 
-            var entity = await _productDal.GetByIdAsync(dto.Id);
-            if (entity == null)
-            {
-                _logger.LogWarning("Product to update not found. Id: {Id}", dto.Id);
-                throw new KeyNotFoundException($"Product with Id {dto.Id} was not found.");
-            }
-
-            dto.Adapt(entity);
-            entity.UpdatedDate = DateTime.UtcNow;
-
-            await _productDal.UpdateAsync(entity);
+            var value = dto.Adapt<Product>();
+            await _productDal.UpdateAsync(value);
             _logger.LogInformation("Product updated successfully. Id: {Id}", dto.Id);
         }
 

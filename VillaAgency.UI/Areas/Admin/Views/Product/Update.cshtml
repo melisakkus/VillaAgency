@@ -50,6 +50,7 @@
                         <div class="col-md-8">
                             <label asp-for="Title" class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem;">Product Title</label>
                             <input asp-for="Title" class="form-control bg-transparent border-secondary-subtle shadow-none py-2 fs-7" placeholder="Villa Name..." />
+                            <span asp-validation-for="Title" class="text-danger small"></span>
                         </div>
 
                         <!-- Price -->
@@ -57,14 +58,15 @@
                             <label asp-for="Price" class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem;">Price</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-transparent border-secondary-subtle border-end-0 text-muted fs-7">$</span>
-                                <input asp-for="Price" type="number" class="form-control bg-transparent border-secondary-subtle border-start-0 shadow-none py-2 fs-7" />
+                                <input asp-for="Price" type="number" class="form-control bg-body text-body border-secondary-subtle border-start-0 shadow-none py-2 fs-7" />
+                                <span asp-validation-for="Price" class="text-danger small"></span>
                             </div>
                         </div>
 
                         <!-- Category -->
                         <div class="col-md-6">
                             <label asp-for="Category" class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem;">Category</label>
-                            <select asp-for="Category" class="form-select bg-transparent border-secondary-subtle shadow-none py-2 fs-7 cursor-pointer">
+                            <select asp-for="Category" class="form-select bg-body text-body border-secondary-subtle shadow-none py-2 fs-7 cursor-pointer">
                                 <option value="" disabled selected>Select Category</option>
                                 @if (ViewBag.Categories != null)
                                 {
@@ -74,6 +76,7 @@
                                     }
                                 }
                             </select>
+                            <span asp-validation-for="Category" class="text-danger small"></span>
                         </div>
 
                         <!-- Status -->
@@ -89,6 +92,7 @@
                                     }
                                 }
                             </select>
+                            <span asp-validation-for="Status" class="text-danger small"></span>
                         </div>
                     </div>
                 </div>

@@ -10,7 +10,11 @@ Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configurat
 builder.Host.UseSerilog();
 
 // Services registration
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{   //Disables .NET's automatic [Required] validation for non-nullable reference types (like string) via MvcOptions
+    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+    });
+
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddBusinessServices(builder.Configuration);
 

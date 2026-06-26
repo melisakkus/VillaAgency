@@ -27,6 +27,7 @@
                     <input asp-for="MapUrl"
                            class="form-control form-control-lg"
                            placeholder="Enter map url " />
+                    <span asp-validation-for="MapUrl" class="text-danger small"></span>
                 </div>
 
                 <div class="mb-3">
@@ -34,6 +35,7 @@
                     <input asp-for="PhoneNumber" type="tel"
                            class="form-control form-control-lg"
                            placeholder="Enter phone number" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                 </div>
 
                 <div class="mb-4">
@@ -41,6 +43,7 @@
                     <input asp-for="Email" type="email"
                            class="form-control form-control-lg"
                            placeholder="Enter email" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
                 </div>
 
                 <div class="d-flex justify-content-center gap-3">
