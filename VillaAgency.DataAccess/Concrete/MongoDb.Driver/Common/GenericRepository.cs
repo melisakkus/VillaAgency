@@ -35,9 +35,12 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver.Common
             if (result.DeletedCount == 0)
                 throw new KeyNotFoundException($"Entity not found. Id: {id}");
         }
-       public async Task<List<T>> GetListAsync()
+        public async Task<List<T>> GetListAsync()
         {
-            return await _collection.Find(Builders<T>.Filter.Empty).ToListAsync();
+            return await _collection
+                           .Find(Builders<T>.Filter.Empty)
+                           .Sort(Builders<T>.Sort.Descending(x => x.Id))
+                           .ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(string id)
@@ -49,7 +52,9 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver.Common
 
         public async Task<List<T>> GetFilteredListAsync(Expression<Func<T, bool>> predicate)
         {
-            return await _collection.Find(predicate).ToListAsync();
+            return await _collection.Find(predicate)
+                        .Sort(Builders<T>.Sort.Descending(x => x.Id))
+                        .ToListAsync();
         }
     }
 }

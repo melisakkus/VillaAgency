@@ -1,0 +1,289 @@
+﻿@model CreateMessageDto
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    :root {
+        --card-bg: #ffffff;
+        --card-border: #e2e8f0;
+        --text-main: #0f172a;
+        --text-sub: #475569; /* Etiketleri silik grilikten kurtarmak için daha canlı antrasit */
+        --input-bg: #f8fafc; /* İnput içine hafif premium bir ton */
+        --input-border: #cbd5e1;
+        --btn-primary: #3b82f6;
+        --input-focus: #3b82f6;
+        --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    }
+
+    [data-bs-theme="dark"], .dark-theme, body.dark {
+        --card-bg: #151c2e;
+        --card-border: #222b40;
+        --text-main: #ffffff;
+        --text-sub: #94a3b8;
+        --input-bg: #111625;
+        --input-border: #222b40;
+        --btn-primary: #3b82f6;
+        --input-focus: #3b82f6;
+        --shadow: none;
+    }
+
+    /* Üstteki devasa boşluğu yok edip kartı dikeyde kusursuzca ortalayan alan */
+    .create-message-wrapper {
+        min-height: calc(100vh - 170px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 0;
+    }
+
+    .create-message-container {
+        width: 100%;
+        max-width: 1000px;
+    }
+
+    .custom-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .card-form-header {
+        padding: 20px 30px;
+        border-bottom: 1px solid var(--card-border);
+        background: linear-gradient(to right, rgba(59, 130, 246, 0.01), transparent);
+    }
+
+    .card-form-body {
+        padding: 30px;
+    }
+
+    .form-grid-layout {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 25px;
+    }
+
+    .form-left-side {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .form-right-side {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group-custom {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .form-group-custom.fill-height {
+            flex: 1;
+        }
+
+        .form-group-custom label {
+            display: block;
+            font-weight: 700; /* Font kalınlığı artırılarak canlandırıldı */
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+    /* İKONYALARI ÖNE ÇIKARAN WRAPPER DÜZELTMESİ */
+    .input-icon-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+
+        .input-icon-wrapper.textarea-wrapper {
+            flex: 1;
+            align-items: stretch;
+        }
+
+        /* İkonların inputun üstünde görünmesini garanti altına alan z-index */
+        .input-icon-wrapper i {
+            position: absolute;
+            left: 16px;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .input-icon-wrapper:not(.textarea-wrapper) i {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .input-icon-wrapper.textarea-wrapper i {
+            top: 15px;
+        }
+
+    .form-input-custom {
+        width: 100%;
+        background-color: var(--input-bg);
+        border: 1px solid var(--input-border);
+        color: var(--text-main) !important;
+        border-radius: 8px;
+        padding: 11px 15px 11px 44px; /* Sol boşluk ikon için sabitlendi */
+        font-size: 0.92rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+    }
+
+        .form-input-custom.textarea-custom {
+            padding-top: 14px;
+            resize: none;
+            height: 100%;
+            min-height: 220px;
+        }
+
+        /* İnputa odaklanınca ikon rengini de maviye boyayan modern efekt */
+        .form-input-custom:focus {
+            outline: none;
+            background-color: var(--card-bg);
+            border-color: var(--btn-primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+            .form-input-custom:focus ~ i {
+                color: var(--btn-primary);
+            }
+
+    .form-action-footer {
+        padding-top: 20px;
+        border-top: 1px solid var(--card-border);
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+
+    .btn-submit-message {
+        background-color: var(--btn-primary);
+        color: white;
+        font-weight: 600;
+        padding: 11px 26px;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.92rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+    }
+
+        .btn-submit-message:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px -1px rgba(59, 130, 246, 0.3);
+            color: white;
+        }
+
+    .btn-cancel-message {
+        background-color: transparent;
+        color: var(--text-sub);
+        font-weight: 600;
+        padding: 11px 22px;
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+        font-size: 0.92rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+        .btn-cancel-message:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+            color: var(--text-main);
+        }
+</style>
+
+<div class="container-fluid">
+    <div class="create-message-wrapper">
+        <div class="create-message-container">
+
+            <div class="mb-3 pl-1">
+                <a asp-area="Admin" asp-controller="Message" asp-action="Index" class="btn btn-sm btn-link p-0" style="color: var(--btn-primary); text-decoration: none; font-size: 0.85rem; font-weight: 600;">
+                    <i class="fas fa-arrow-left mr-1"></i> Back to Inbox
+                </a>
+            </div>
+
+            <div class="custom-card">
+                <div class="card-form-header">
+                    <h4 class="m-0 font-weight-bold" style="color: var(--text-main); font-size: 1.2rem;">
+                        <i class="fas fa-paper-plane mr-2" style="color: var(--btn-primary);"></i> Create New Message
+                    </h4>
+                    <p class="m-0 mt-1 small" style="color: var(--text-sub);">Fill out the fields below to create and store a message record.</p>
+                </div>
+
+                <div class="card-form-body">
+                    <form method="post" asp-area="Admin" asp-controller="Message" asp-action="Create">
+
+                        <div class="form-grid-layout">
+                            <div class="form-left-side">
+                                <div class="form-group-custom">
+                                    <label asp-for="Name">Full Name</label>
+                                    <div class="input-icon-wrapper">
+                                        <input asp-for="Name" class="form-input-custom" placeholder="John Doe" autocomplete="off" />
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <span asp-validation-for="Name" class="text-danger small mt-1"></span>
+                                </div>
+
+                                <div class="form-group-custom">
+                                    <label asp-for="Email">Email Address</label>
+                                    <div class="input-icon-wrapper">
+                                        <input asp-for="Email" class="form-input-custom" placeholder="johndoe@example.com" autocomplete="off" />
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <span asp-validation-for="Email" class="text-danger small mt-1"></span>
+                                </div>
+
+                                <div class="form-group-custom">
+                                    <label asp-for="Subject">Subject</label>
+                                    <div class="input-icon-wrapper">
+                                        <input asp-for="Subject" class="form-input-custom" placeholder="Inquiry about Villa Sunlight..." autocomplete="off" />
+                                        <i class="fas fa-heading"></i>
+                                    </div>
+                                    <span asp-validation-for="Subject" class="text-danger small mt-1"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-right-side">
+                                <div class="form-group-custom fill-height">
+                                    <label asp-for="Content">Message Content</label>
+                                    <div class="input-icon-wrapper textarea-wrapper">
+                                        <textarea asp-for="Content" class="form-input-custom textarea-custom" placeholder="Type your detailed message here..."></textarea>
+                                        <i class="fas fa-comment-alt"></i>
+                                    </div>
+                                    <span asp-validation-for="Content" class="text-danger small mt-1"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-action-footer">
+                            <a asp-area="Admin" asp-controller="Message" asp-action="Index" class="btn-cancel-message" style="text-decoration: none;">Cancel</a>
+                            <button type="submit" class="btn-submit-message">
+                                <i class="fas fa-check mr-1"></i> Create Message
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
