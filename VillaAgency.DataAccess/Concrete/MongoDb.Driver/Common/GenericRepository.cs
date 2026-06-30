@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using System.Linq.Expressions;
 using VillaAgency.DataAccess.Abstract.Common;
 using VillaAgency.DataAccess.Context;
@@ -21,7 +22,10 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver.Common
 
         public async Task UpdateAsync(T entity)
         {
-            var result = await _collection.ReplaceOneAsync(x => x.Id == entity.Id, entity);
+            var filter = Builders<T>.Filter.Eq("_id", ObjectId.Parse(entity.Id));
+
+            var result = await _collection.ReplaceOneAsync(filter, entity);
+
             if (result.MatchedCount == 0)
             {
                 throw new KeyNotFoundException($"Update failed because no data was found. Id: {entity.Id}");

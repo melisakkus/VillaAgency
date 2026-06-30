@@ -115,25 +115,54 @@
                                 <td class="text-muted fw-medium">@item.Price.ToString("C0", new System.Globalization.CultureInfo("en-US"))</td>
                                 <td class="text-muted text-wrap" style="max-width: 300px;">@item.Title</td>
                                 <td>
-                                    @switch (item.Status.ToString())
-                                    {
-                                        case "Active":
-                                            <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Active</span>
-                                            break;
-                                        case "Sold":
-                                            <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">Sold</span>
-                                            break;
-                                        case "Rented":
-                                            <span class="badge bg-info-subtle text-info px-3 py-2 rounded-pill">Rented</span>
-                                            break;
-                                        case "Archived":
-                                            <span class="badge bg-secondary-subtle text-secondary px-3 py-2 rounded-pill">Archived</span>
-                                            break;
-                                        default:
-                                            <span class="badge bg-light text-dark px-3 py-2 rounded-pill">@item.Status</span>
-                                            break;
-                                    }
+                                    <div class="dropdown">
+                                        @{
+                                            // Mevcut duruma göre rengi belirliyoruz
+                                            string badgeClass = item.Status.ToString() switch
+                                            {
+                                                "Active" => "bg-success-subtle text-success",
+                                                "Sold" => "bg-danger-subtle text-danger",
+                                                "Rented" => "bg-info-subtle text-info",
+                                                "Archived" => "bg-secondary-subtle text-secondary",
+                                                _ => "bg-light text-dark"
+                                            };
+                                        }
+
+                                        <button class="badge @badgeClass px-3 py-2 rounded-pill dropdown-toggle border-0 cursor-pointer"
+                                                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            @item.Status
+                                        </button>
+
+                                        <ul class="dropdown-menu dropdown-menu-dark shadow border border-secondary-subtle" style="font-size: 0.85rem;">
+                                            <li><h6 class="dropdown-header text-muted small">Change Status</h6></li>
+                                            <li>
+                                                <a class="dropdown-item @(item.Status.ToString() == "Active" ? "active" : "")"
+                                                   asp-area="Admin" asp-controller="Product" asp-action="ChangeStatus" asp-route-id="@item.Id" asp-route-status="Active">
+                                                    Active
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item @(item.Status.ToString() == "Sold" ? "active" : "")"
+                                                   asp-area="Admin" asp-controller="Product" asp-action="ChangeStatus" asp-route-id="@item.Id" asp-route-status="Sold">
+                                                    Sold
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item @(item.Status.ToString() == "Rented" ? "active" : "")"
+                                                   asp-area="Admin" asp-controller="Product" asp-action="ChangeStatus" asp-route-id="@item.Id" asp-route-status="Rented">
+                                                    Rented
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item @(item.Status.ToString() == "Archived" ? "active" : "")"
+                                                   asp-area="Admin" asp-controller="Product" asp-action="ChangeStatus" asp-route-id="@item.Id" asp-route-status="Archived">
+                                                    Archived
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </td>
+
                                 <td class="text-end pe-3 text-nowrap">
                                     <a asp-area="Admin" asp-controller="Product" asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-light border text-warning px-2.5 py-1.5 me-1" title="Details & Update">
                                         <i class="bi bi-pencil-square fs-6"></i>

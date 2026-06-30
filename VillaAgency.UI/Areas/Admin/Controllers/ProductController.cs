@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 using VillaAgency.Business.Abstract;
-using VillaAgency.Business.Constants;
 using VillaAgency.Dto.ProductDtos;
 using VillaAgency.Entity.Entities;
 
@@ -101,12 +99,18 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
             await _productService.TUpdateAsync(dto);
             return RedirectToAction(nameof(Index));
         }
-
+        
 
         private async Task GetViewBagCategoriesAndStatuses() 
         {
             ViewBag.Categories = await _productService.TGetUniqueCategoriesAsync();
             ViewBag.Statuses = Enum.GetValues<ProductStatusDto>();
+        }
+
+        public async Task<IActionResult> ChangeStatus(string id, string status)
+        {
+            await _productService.TChangeStatusAsync(id,status);
+            return RedirectToAction(nameof(Index));
         }
 
     }

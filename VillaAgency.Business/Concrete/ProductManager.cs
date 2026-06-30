@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 using VillaAgency.Business.Abstract;
 using VillaAgency.DataAccess.Abstract;
-using VillaAgency.DataAccess.Abstract.Common;
 using VillaAgency.Dto.ProductDtos;
 using VillaAgency.Entity.Entities;
 
@@ -37,7 +36,7 @@ namespace VillaAgency.Business.Concrete
             var entity = dto.Adapt<Product>();
             entity.CreatedAt = DateTime.UtcNow;
             entity.UpdatedDate = null;
-            entity.Status = ProductStatus.Active;
+            entity.Floor ??= 0;
             await _productDal.CreateAsync(entity);
             _logger.LogInformation("Product created successfully. Id: {Id}", entity.Id);
         }
@@ -97,7 +96,7 @@ namespace VillaAgency.Business.Concrete
             }
 
             dto.Adapt(entity);
-
+            entity.UpdatedDate = DateTime.UtcNow;
             await _productDal.UpdateAsync(entity);
             _logger.LogInformation("Product updated successfully. Id: {Id}", dto.Id);
         }
@@ -112,6 +111,16 @@ namespace VillaAgency.Business.Concrete
         public async Task<List<string>> TGetUniqueCategoriesAsync()
         {
             return await _productDal.GetUniqueCategoriesAsync();
+        }
+
+        public async Task TChangeStatusAsync(string id, string status)
+        {
+            if (!Enum.TryParse<ProductStatus>(status, true, out var enumStatus))
+            {
+                throw new ArgumentException("Invalid status value.", nameof(status));
+            }
+
+            await _productDal.ChangeStatusAsync(id, enumStatus);
         }
     }
 }

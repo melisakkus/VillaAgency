@@ -62,10 +62,9 @@
                             <span asp-validation-for="Price" class="text-danger small"></span>
                         </div>
 
-                        <!-- Category -->
                         <div class="col-md-6">
                             <label asp-for="Category" class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem;">Category</label>
-                            <select asp-for="Category" class="form-select bg-body text-body border-secondary-subtle shadow-none py-2 fs-7 cursor-pointer">
+                            <select asp-for="Category" class="form-select custom-dark-select border-secondary-subtle shadow-none py-2 fs-7 cursor-pointer">
                                 <option value="" disabled selected>Select Category</option>
                                 @if (ViewBag.Categories != null)
                                 {
@@ -78,16 +77,23 @@
                             <span asp-validation-for="Category" class="text-danger small"></span>
                         </div>
 
-                        <!-- Status -->
                         <div class="col-md-6">
                             <label asp-for="Status" class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem;">Status</label>
-                            <select asp-for="Status" class="form-select bg-body text-body border-secondary-subtle shadow-none py-2 fs-7 cursor-pointer">
-                                <option value="" disabled selected>Select Status</option>
+                            <select asp-for="Status" class="form-select custom-dark-select border-secondary-subtle shadow-none py-2 fs-7 cursor-pointer">
+                                <option value="">Select Status</option>
+
                                 @if (ViewBag.Statuses != null)
                                 {
                                     foreach (var status in ViewBag.Statuses)
                                     {
-                                        <option value="@status">@status</option>
+                                        if (Model != null && Model.Status != null && Model.Status.ToString() == status.ToString())
+                                        {
+                                            <option value="@status" selected="selected">@status</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@status">@status</option>
+                                        }
                                     }
                                 }
                             </select>

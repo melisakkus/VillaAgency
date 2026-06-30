@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using VillaAgency.Dto.ProductDtos;
 using VillaAgency.Entity.Entities;
 
@@ -16,6 +15,6 @@ namespace VillaAgency.Business.Abstract
 
         Task<List<ResultProductDto>> TGetPagedFilteredListAsync(int pageNumber, int pageSize, Expression<Func<Product, bool>> predicate = null);
         Task<List<string>> TGetUniqueCategoriesAsync();
-
+        Task TChangeStatusAsync(string id, string status);
     }
 }

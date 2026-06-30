@@ -13,6 +13,21 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
         {
         }
 
+        public async Task ChangeStatusAsync(string id, ProductStatus status)
+        {
+            var filter = Builders<Product>.Filter.Eq(x => x.Id, id);
+            var update = Builders<Product>.Update
+                  .Set(x => x.Status, status)
+                  .Set(x => x.UpdatedDate, DateTime.UtcNow);
+
+            var result = await _collection.UpdateOneAsync(filter, update);
+
+            if (result.MatchedCount == 0)
+            {
+                throw new KeyNotFoundException($"Product with Id {id} not found.");
+            }
+        }
+
         public async Task<List<Product>> GetPagedFilteredListAsync(int pageNumber, int pageSize, Expression<Func<Product, bool>> predicate = null)
         {
             var filter = predicate ?? Builders<Product>.Filter.Empty;

@@ -49,6 +49,10 @@ namespace VillaAgency.Business.Validators.ProductValidators
             RuleFor(x => x.ParkingCount)
                 .GreaterThanOrEqualTo(0).WithMessage("Parking count cannot be negative.")
                 .When(x => x.ParkingCount.HasValue);
+
+            RuleFor(x => x.Status)
+                .NotNull()
+                .WithMessage("Status is required.");
         }
     }
 }
