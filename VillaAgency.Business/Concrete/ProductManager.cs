@@ -36,7 +36,11 @@ namespace VillaAgency.Business.Concrete
             var entity = dto.Adapt<Product>();
             entity.CreatedAt = DateTime.UtcNow;
             entity.UpdatedDate = null;
+            entity.BathroomCount ??= 0;
+            entity.BedroomCount ??= 0;
             entity.Floor ??= 0;
+            entity.Area ??= 0;
+            entity.ParkingCount ??= 0;
             await _productDal.CreateAsync(entity);
             _logger.LogInformation("Product created successfully. Id: {Id}", entity.Id);
         }

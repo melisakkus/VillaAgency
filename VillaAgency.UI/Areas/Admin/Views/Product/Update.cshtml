@@ -21,8 +21,6 @@
     <div class="card-body px-0 pt-4">
         <form method="post" id="productForm">
             <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="Price" />
-
             <div class="row g-4">
 
                 <div class="col-lg-4 col-xl-3">
@@ -51,6 +49,15 @@
                             <label asp-for="Title" class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem;">Product Title</label>
                             <input asp-for="Title" class="form-control bg-transparent border-secondary-subtle shadow-none py-2 fs-7" placeholder="Villa Name..." />
                             <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="Price" class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem;">Price</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent border-secondary-subtle border-end-0 text-muted fs-7">$</span>
+                                <input asp-for="Price" type="number" class="form-control bg-transparent border-secondary-subtle border-start-0 shadow-none py-2 fs-7" />
+                            </div>
+                            <span asp-validation-for="Price" class="text-danger small"></span>
                         </div>
 
                         <div class="col-md-6">
@@ -94,6 +101,7 @@
                                 <label class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Bedrooms</label>
                                 <input asp-for="BedroomCount" class="form-control form-control-sm text-center border-0 bg-transparent fw-bold shadow-none fs-7" />
                             </div>
+                            <span asp-validation-for="BedroomCount" class="text-danger small"></span>
                         </div>
 
                         <div class="col">
@@ -101,6 +109,7 @@
                                 <label class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Bathrooms</label>
                                 <input asp-for="BathroomCount" class="form-control form-control-sm text-center border-0 bg-transparent fw-bold shadow-none fs-7" />
                             </div>
+                            <span asp-validation-for="BathroomCount" class="text-danger small"></span>
                         </div>
 
                         <div class="col">
@@ -108,6 +117,7 @@
                                 <label class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Parking</label>
                                 <input asp-for="ParkingCount" class="form-control form-control-sm text-center border-0 bg-transparent fw-bold shadow-none fs-7" />
                             </div>
+                            <span asp-validation-for="ParkingCount" class="text-danger small"></span>
                         </div>
 
                         <div class="col">
@@ -115,6 +125,7 @@
                                 <label class="text-uppercase text-muted fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">Area (m²)</label>
                                 <input asp-for="Area" class="form-control form-control-sm text-center border-0 bg-transparent fw-bold shadow-none fs-7" />
                             </div>
+                            <span asp-validation-for="Area" class="text-danger small"></span>
                         </div>
 
                         <div class="col">

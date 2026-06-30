@@ -31,7 +31,8 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
             else if (isCategoryFiltered)
             {
                 products = await _productService.TGetPagedFilteredListAsync(page, pageSize,
-                    p => p.Category.Equals(category, StringComparison.OrdinalIgnoreCase));
+                            p => p.Category.Equals(category, StringComparison.OrdinalIgnoreCase)
+                            && p.Status != ProductStatus.Archived);
             }
             else if (isStatusFiltered && Enum.TryParse<ProductStatus>(status, true, out statusEnum))
             {
@@ -39,7 +40,10 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
             }
             else if (!isStatusFiltered && !isCategoryFiltered)
             {
-                products = await _productService.TGetPagedFilteredListAsync(page, pageSize);
+                products = await _productService.TGetPagedFilteredListAsync(
+                    page,
+                    pageSize,
+                    p => p.Status != ProductStatus.Archived);
             }
             else
             {

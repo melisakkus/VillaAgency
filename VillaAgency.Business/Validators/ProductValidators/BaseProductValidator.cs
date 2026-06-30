@@ -8,10 +8,13 @@ namespace VillaAgency.Business.Validators.ProductValidators
         public BaseProductValidator()
         {
             RuleFor(x => x.ImageUrl)
-              .NotEmpty().WithMessage("ImageUrl is required.")
-              .Matches(@"^https?://.*").WithMessage("Please enter a valid URL.")
-              .Must(url => string.IsNullOrEmpty(url) || url.EndsWith(".jpg") || url.EndsWith(".png") || url.EndsWith(".jpeg"))
-              .WithMessage("Image URL must end with .jpg, .jpeg or .png");
+                            .NotEmpty().WithMessage("ImageUrl is required.")
+                            .Matches(@"^https?://.*").WithMessage("Please enter a valid URL.")
+                            .Must(url => string.IsNullOrEmpty(url) ||
+                                         url.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                                         url.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                                         url.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
+                            .WithMessage("Image URL must end with .jpg, .jpeg or .png");
 
             RuleFor(x => x.Category)
                 .NotEmpty().WithMessage("Category is required.")
@@ -31,23 +34,24 @@ namespace VillaAgency.Business.Validators.ProductValidators
                 .MaximumLength(100).WithMessage("Title cannot exceed 100 characters.");
 
             RuleFor(x => x.BedroomCount)
-                .InclusiveBetween(0, 20).WithMessage("Bedroom count must be between 0 and 20.")
-                .When(x => x.BedroomCount.HasValue);
+                 .InclusiveBetween(0, 20).WithMessage("Bedroom count must be between 0 and 20.")
+                 .When(x => x.BedroomCount.HasValue);
 
             RuleFor(x => x.BathroomCount)
-                .GreaterThanOrEqualTo(0).WithMessage("Bathroom count cannot be negative.")
+                .InclusiveBetween(0, 10).WithMessage("Bathroom count must be between 0 and 10.")
                 .When(x => x.BathroomCount.HasValue);
 
             RuleFor(x => x.Area)
-                .GreaterThanOrEqualTo(10).WithMessage("Area must be at least 10 square meters.")
-                .When(x => x.Area.HasValue);
+                  .Must(area => area == 0 || area >= 10)
+                  .WithMessage("Area must be 0 (not specified) or at least 10 square meters.")
+                  .When(x => x.Area.HasValue);
 
             RuleFor(x => x.Floor)
                 .InclusiveBetween(-2, 150).WithMessage("Floor must be between -2 and 150.")
                 .When(x => x.Floor.HasValue);
 
             RuleFor(x => x.ParkingCount)
-                .GreaterThanOrEqualTo(0).WithMessage("Parking count cannot be negative.")
+                .InclusiveBetween(0, 10).WithMessage("Parking count must be between 0 and 10.")
                 .When(x => x.ParkingCount.HasValue);
 
             RuleFor(x => x.Status)
