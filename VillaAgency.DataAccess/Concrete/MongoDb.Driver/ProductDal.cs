@@ -32,10 +32,11 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
         {
             var filter = predicate ?? Builders<Product>.Filter.Empty;
             return await _collection.Find(filter)
-                                        .SortByDescending(x=>x.CreatedAt)
-                                        .Skip((pageNumber - 1) * pageSize)
-                                        .Limit(pageSize)
-                                        .ToListAsync();
+                                            .SortByDescending(x => x.UpdatedDate) 
+                                            .ThenByDescending(x => x.CreatedAt)   
+                                            .Skip((pageNumber - 1) * pageSize)
+                                            .Limit(pageSize)
+                                            .ToListAsync();
         }
 
         public async Task<List<string>> GetUniqueCategoriesAsync()
