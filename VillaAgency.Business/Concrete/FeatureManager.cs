@@ -79,8 +79,16 @@ namespace VillaAgency.Business.Concrete
             if (dto is null)
                 throw new ArgumentNullException(nameof(dto));
 
-            var value = dto.Adapt<FeatureSection>();
-            await _genericDal.UpdateAsync(value);
+            var entity = await _genericDal.GetByIdAsync(dto.Id);
+            if (entity is null)
+            {
+                _logger.LogWarning("Feature not found. Id: {Id}", dto.Id);
+                throw new KeyNotFoundException($"Feature with Id {dto.Id} was not found.");
+            }
+
+            dto.Adapt(entity);
+
+            await _genericDal.UpdateAsync(entity);
             _logger.LogInformation("Feature updated successfully. Id: {Id}", dto.Id);
         }
     }

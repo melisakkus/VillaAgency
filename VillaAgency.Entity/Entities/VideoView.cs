@@ -5,5 +5,6 @@ namespace VillaAgency.Entity.Entities
     public class VideoView : BaseEntity
     {
         public string VideoUrl { get; set; }
+        public bool IsActive { get; set; }
     }
 }

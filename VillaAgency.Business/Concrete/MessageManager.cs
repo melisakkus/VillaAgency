@@ -56,7 +56,7 @@ namespace VillaAgency.Business.Concrete
                 throw new ArgumentNullException(nameof(id));
             }
             await _messageDal.MarkAsNotReadAsync(id);
-            _logger.LogInformation("Message marked as read. Id: {Id}", id);
+            _logger.LogInformation("Message marked as not read. Id: {Id}", id);
         }
 
         public async Task<List<ResultMessageDto>> TGetFilteredListAsync(Expression<Func<Message, bool>> predicate)

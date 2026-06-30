@@ -24,6 +24,7 @@ namespace VillaAgency.DataAccess.Extension
             services.AddScoped<ICounterDal, CounterDal>();
             services.AddScoped<IProductDal, ProductDal>();
             services.AddScoped<IMessageDal, MessageDal>();
+            services.AddScoped<IVideoDal, VideoDal>();
 
             return services;
         }

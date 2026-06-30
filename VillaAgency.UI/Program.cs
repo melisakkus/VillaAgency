@@ -1,4 +1,5 @@
 using FluentValidation.AspNetCore;
+using Mapster;
 using Serilog;
 using VillaAgency.Business.Extension;
 
@@ -8,6 +9,9 @@ Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configurat
 
 // Instruct .NET to use Serilog as the logging provider
 builder.Host.UseSerilog();
+
+// Prevents null values in DTOs from overwriting existing valid data in target entities during mapping
+TypeAdapterConfig.GlobalSettings.Default.IgnoreNullValues(true);
 
 // Services registration
 builder.Services.AddControllersWithViews(options =>

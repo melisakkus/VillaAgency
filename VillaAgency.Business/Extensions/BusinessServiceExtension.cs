@@ -21,8 +21,10 @@ namespace VillaAgency.Business.Extension
             services.AddScoped<ICounterService, CounterManager>();
             services.AddScoped<IFeatureService, FeatureManager>();
             services.AddScoped<IMessageService, MessageManager>();
+            services.AddScoped<IQuestionService, QuestionManager>();
+            services.AddScoped<IVideoService, VideoManager>();
 
-            services.AddSingleton<ICacheService, CacheManager>();
+            //services.AddSingleton<ICacheService, CacheManager>();
 
             services.AddValidatorsFromAssemblyContaining<CreateBannerValidator>();
 

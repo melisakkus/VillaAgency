@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 using VillaAgency.Business.Abstract;
 using VillaAgency.DataAccess.Abstract;
+using VillaAgency.DataAccess.Abstract.Common;
 using VillaAgency.Dto.ProductDtos;
 using VillaAgency.Entity.Entities;
 
@@ -88,8 +89,16 @@ namespace VillaAgency.Business.Concrete
             if (dto is null)
                 throw new ArgumentNullException(nameof(dto));
 
-            var value = dto.Adapt<Product>();
-            await _productDal.UpdateAsync(value);
+            var entity = await _productDal.GetByIdAsync(dto.Id);
+            if (entity is null)
+            {
+                _logger.LogWarning("Product not found. Id: {Id}", dto.Id);
+                throw new KeyNotFoundException($"Product with Id {dto.Id} was not found.");
+            }
+
+            dto.Adapt(entity);
+
+            await _productDal.UpdateAsync(entity);
             _logger.LogInformation("Product updated successfully. Id: {Id}", dto.Id);
         }
 

@@ -78,8 +78,16 @@ namespace VillaAgency.Business.Concrete
             if (dto is null)
                 throw new ArgumentNullException(nameof(dto));
 
-            var value = dto.Adapt<Contact>();
-            await _genericDal.UpdateAsync(value);
+            var entity = await _genericDal.GetByIdAsync(dto.Id);
+            if (entity is null)
+            {
+                _logger.LogWarning("Contact not found. Id: {Id}", dto.Id);
+                throw new KeyNotFoundException($"Contact with Id {dto.Id} was not found.");
+            }
+
+            dto.Adapt(entity);
+
+            await _genericDal.UpdateAsync(entity);
             _logger.LogInformation("Contact updated successfully. Id: {Id}", dto.Id);
         }
     }
