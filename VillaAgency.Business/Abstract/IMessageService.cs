@@ -13,11 +13,14 @@ namespace VillaAgency.Business.Abstract
         Task<List<ResultMessageDto>> TGetListAsync();
         Task<UpdateMessageDto> TGetByIdAsync(string id);
 
-        Task<List<ResultMessageDto>> TGetFilteredListAsync(Expression<Func<Message, bool>> predicate);
         Task TMarkAsReadAsync(string id);
         Task TMarkAsNotReadAsync(string id);
         Task TMarkAsDeletedAsync(string id);
         Task TMarkAsNotDeletedAsync(string id);
         Task<int> TGetCountAsync(Expression<Func<Message, bool>> filter);
+        Task<List<ResultMessageDto>> TGetFilteredListAsync(
+                    Expression<Func<Message, bool>> predicate,
+                    int? page = null,
+                    int? pageSize = null);
     }
 }

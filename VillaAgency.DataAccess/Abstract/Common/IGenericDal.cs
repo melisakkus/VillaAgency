@@ -11,6 +11,9 @@ namespace VillaAgency.DataAccess.Abstract.Common
         Task<List<T>> GetListAsync();
         Task<T> GetByIdAsync(string id);
 
-        Task<List<T>> GetFilteredListAsync(Expression<Func<T,bool>> predicate);
+        Task<List<T>> GetFilteredListAsync(
+            Expression<Func<T, bool>> predicate,
+            int? page = null,
+            int? pageSize = null);
     }
 }

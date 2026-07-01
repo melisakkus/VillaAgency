@@ -54,11 +54,18 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver.Common
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<T>> GetFilteredListAsync(Expression<Func<T, bool>> predicate)
+        public async Task<List<T>> GetFilteredListAsync(Expression<Func<T, bool>> predicate,
+                                                                int? page = null,
+                                                                int? pageSize = null)
         {
-            return await _collection.Find(predicate)
-                        .Sort(Builders<T>.Sort.Descending(x => x.Id))
-                        .ToListAsync();
+            var query = _collection.Find(predicate).Sort(Builders<T>.Sort.Descending(x => x.Id));
+
+            if (page.HasValue && pageSize.HasValue && page.Value > 0 && pageSize.Value > 0)
+            {
+                query = query.Skip((page.Value - 1) * pageSize.Value).Limit(pageSize.Value);
+            }
+
+            return await query.ToListAsync();
         }
     }
 }

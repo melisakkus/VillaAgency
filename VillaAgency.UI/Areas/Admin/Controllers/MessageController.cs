@@ -14,18 +14,65 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
             _messageService = messageService;
         }
 
-        public async Task<IActionResult> Index(string activeTab = "all-messages")
+        //public async Task<IActionResult> Index(string activeTab = "all-messages")
+        //{
+        //    ViewBag.ActiveTab = activeTab;
+        //    var model = new MessageIndexViewModel
+        //    {
+        //        AllMessages = await _messageService.TGetFilteredListAsync(x => !x.IsDeleted),
+        //        UnreadMessages = await _messageService.TGetFilteredListAsync(x => !x.IsRead && !x.IsDeleted),
+        //        DeletedMessages = await _messageService.TGetFilteredListAsync(x => x.IsDeleted),
+        //        AllCount = await _messageService.TGetCountAsync(x => !x.IsDeleted),
+        //        UnreadCount = await _messageService.TGetCountAsync(x => !x.IsDeleted && !x.IsRead),
+        //        DeletedCount = await _messageService.TGetCountAsync(x => x.IsDeleted)
+        //    };
+        //    return View(model);
+        //}
+
+        public async Task<IActionResult> Index(string activeTab = "all-messages", int page = 1)
         {
+            if (page < 1) page = 1;
+            int pageSize = 10;
+
             ViewBag.ActiveTab = activeTab;
+            ViewBag.CurrentPage = page;
+
+            var allCount = await _messageService.TGetCountAsync(x => !x.IsDeleted);
+            var unreadCount = await _messageService.TGetCountAsync(x => !x.IsDeleted && !x.IsRead);
+            var deletedCount = await _messageService.TGetCountAsync(x => x.IsDeleted);
+
+            int targetCount = activeTab switch
+            {
+                "unread-messages" => unreadCount,
+                "deleted-messages" => deletedCount,
+                _ => allCount
+            };
+
+            int totalPages = (int)Math.Ceiling((double)targetCount / pageSize);
+            if (totalPages == 0) totalPages = 1;
+
             var model = new MessageIndexViewModel
             {
-                AllMessages = await _messageService.TGetFilteredListAsync(x => !x.IsDeleted),
-                UnreadMessages = await _messageService.TGetFilteredListAsync(x => !x.IsRead && !x.IsDeleted),
-                DeletedMessages = await _messageService.TGetFilteredListAsync(x => x.IsDeleted),
-                AllCount = await _messageService.TGetCountAsync(x => !x.IsDeleted),
-                UnreadCount = await _messageService.TGetCountAsync(x => !x.IsDeleted && !x.IsRead),
-                DeletedCount = await _messageService.TGetCountAsync(x => x.IsDeleted)
+                AllCount = allCount,
+                UnreadCount = unreadCount,
+                DeletedCount = deletedCount,
+                CurrentPage = page,
+                TotalPages = totalPages,
+                PageSize = pageSize,
+
+                AllMessages = activeTab == "all-messages"
+                    ? await _messageService.TGetFilteredListAsync(x => !x.IsDeleted, page, pageSize)
+                    : new List<ResultMessageDto>(),
+
+                UnreadMessages = activeTab == "unread-messages"
+                    ? await _messageService.TGetFilteredListAsync(x => !x.IsRead && !x.IsDeleted, page, pageSize)
+                    : new List<ResultMessageDto>(),
+
+                DeletedMessages = activeTab == "deleted-messages"
+                    ? await _messageService.TGetFilteredListAsync(x => x.IsDeleted, page, pageSize)
+                    : new List<ResultMessageDto>()
             };
+
             return View(model);
         }
 

@@ -117,7 +117,6 @@
                                 <td>
                                     <div class="dropdown">
                                         @{
-                                            // Mevcut duruma göre rengi belirliyoruz
                                             string badgeClass = item.Status.ToString() switch
                                             {
                                                 "Active" => "bg-success-subtle text-success",
@@ -164,10 +163,12 @@
                                 </td>
 
                                 <td class="text-end pe-3 text-nowrap">
-                                    <a asp-area="Admin" asp-controller="Product" asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-light border text-warning px-2.5 py-1.5 me-1" title="Details & Update">
+                                    <a asp-area="Admin" asp-controller="Product" asp-action="Update" asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-action-custom border text-warning px-2.5 py-1.5 me-1" title="Details & Update">
                                         <i class="bi bi-pencil-square fs-6"></i>
                                     </a>
-                                    <a asp-area="Admin" asp-controller="Product" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-light border text-danger px-2.5 py-1.5" title="Delete">
+                                    <a asp-area="Admin" asp-controller="Product" asp-action="Delete" asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-action-custom border text-danger px-2.5 py-1.5" title="Delete">
                                         <i class="bi bi-trash3 fs-6"></i>
                                     </a>
                                 </td>

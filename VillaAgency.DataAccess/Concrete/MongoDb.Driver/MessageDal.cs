@@ -43,5 +43,6 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
             var count = await _collection.CountDocumentsAsync(filter);
             return (int)count;
         }
+
     }
 }

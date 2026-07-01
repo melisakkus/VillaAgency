@@ -59,14 +59,13 @@ namespace VillaAgency.Business.Concrete
             _logger.LogInformation("Message marked as not read. Id: {Id}", id);
         }
 
-        public async Task<List<ResultMessageDto>> TGetFilteredListAsync(Expression<Func<Message, bool>> predicate)
+        public async Task<List<ResultMessageDto>> TGetFilteredListAsync(Expression<Func<Message, bool>> predicate,int? page=null,int?pageSize=null)
         {
             if (predicate == null)
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            var values = await _messageDal.GetFilteredListAsync(predicate);
-            _logger.LogInformation("Messages retrieved. Count: {Count}", values.Count);
+            var values = await _messageDal.GetFilteredListAsync(predicate, page, pageSize);
             return values.Adapt<List<ResultMessageDto>>();
         }
 
@@ -91,7 +90,6 @@ namespace VillaAgency.Business.Concrete
             return entity.Adapt<UpdateMessageDto>();
 
         }
-
         public async Task<List<ResultMessageDto>> TGetListAsync()
         {
             var values = await _messageDal.GetListAsync();
