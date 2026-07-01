@@ -48,7 +48,7 @@
                         <div class="mb-4">
                             <label asp-for="ImageUrl" class="form-label fw-semibold text-body small">Image URL</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light text-muted border-secondary-subtle"><i class="bi bi-link-45deg"></i></span>
+                                <span class="input-group-text text-muted border-secondary-subtle"><i class="bi bi-link-45deg"></i></span>
                                 <input asp-for="ImageUrl"
                                        id="inputImageUrl"
                                        class="form-control"
@@ -142,3 +142,43 @@
         updatePreview();
     });
 </script>
+
+
+
+<style>
+    /* Sadece Dark Mode aktifken çalışır */
+    [data-bs-theme="dark"] .card {
+        --bs-card-bg: #1a2235; /* Kartların iç rengi - Koyu Mavi */
+        --bs-card-border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    [data-bs-theme="dark"] .bg-body {
+        background-color: #1a2235 !important;
+    }
+
+    [data-bs-theme="dark"] .bg-light-subtle {
+        background-color: #111827 !important; /* Preview alanı için daha koyu bir mavi/siyah */
+    }
+
+    [data-bs-theme="dark"] .input-group-text {
+        background-color: #2d3748;
+        border-color: #4a5568;
+        color: #e2e8f0;
+    }
+
+    [data-bs-theme="dark"] .form-control {
+        background-color: #111827;
+        border-color: #2d3748;
+        color: #f8fafc;
+    }
+
+        [data-bs-theme="dark"] .form-control:focus {
+            background-color: #0f172a;
+            border-color: #3b82f6;
+        }
+
+    /* Light modda gri görünen input-group-text için düzeltme */
+    .input-group-text {
+        transition: all 0.3s ease;
+    }
+</style>
