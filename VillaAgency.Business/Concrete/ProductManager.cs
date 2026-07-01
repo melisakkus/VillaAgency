@@ -105,10 +105,10 @@ namespace VillaAgency.Business.Concrete
             _logger.LogInformation("Product updated successfully. Id: {Id}", dto.Id);
         }
 
-        public async Task<List<ResultProductDto>> TGetPagedFilteredListAsync(int pageNumber, int pageSize, Expression<Func<Product, bool>> predicate = null)
+        public async Task<List<ResultProductDto>> TGetFilteredListAsync(Expression<Func<Product, bool>> predicate, int? page = null, int? pageSize = null)
         {
-            var entities = await _productDal.GetPagedFilteredListAsync(pageNumber, pageSize, predicate);
-            _logger.LogInformation("Retrieved products for page {PageNumber}. Count: {Count}", pageNumber, entities.Count);
+            var entities = await _productDal.GetFilteredListAsync(predicate, page, pageSize);
+            _logger.LogInformation("Retrieved products for page {PageNumber}. Count: {Count}", page, entities.Count);
             return entities.Adapt<List<ResultProductDto>>();
         }
 

@@ -28,17 +28,6 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
             }
         }
 
-        public async Task<List<Product>> GetPagedFilteredListAsync(int pageNumber, int pageSize, Expression<Func<Product, bool>> predicate = null)
-        {
-            var filter = predicate ?? Builders<Product>.Filter.Empty;
-            return await _collection.Find(filter)
-                                            .SortByDescending(x => x.UpdatedDate) 
-                                            .ThenByDescending(x => x.CreatedAt)   
-                                            .Skip((pageNumber - 1) * pageSize)
-                                            .Limit(pageSize)
-                                            .ToListAsync();
-        }
-
         public async Task<List<string>> GetUniqueCategoriesAsync()
         {
             var distinctCategories = await _collection

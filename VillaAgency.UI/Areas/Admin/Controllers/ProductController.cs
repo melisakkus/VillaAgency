@@ -25,25 +25,20 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
 
             if (isStatusFiltered && isCategoryFiltered && Enum.TryParse<ProductStatus>(status, true, out var statusEnum))
             {
-                products = await _productService.TGetPagedFilteredListAsync(page, pageSize,
-                    p => p.Status == statusEnum && p.Category.Equals(category, StringComparison.OrdinalIgnoreCase));
+                products = await _productService.TGetFilteredListAsync(p => p.Status == statusEnum && p.Category.Equals(category,           StringComparison.OrdinalIgnoreCase), page, pageSize);
             }
             else if (isCategoryFiltered)
             {
-                products = await _productService.TGetPagedFilteredListAsync(page, pageSize,
-                            p => p.Category.Equals(category, StringComparison.OrdinalIgnoreCase)
-                            && p.Status != ProductStatus.Archived);
+                products = await _productService.TGetFilteredListAsync(p => p.Category.Equals(category, StringComparison.OrdinalIgnoreCase)
+                            && p.Status != ProductStatus.Archived,page, pageSize);
             }
             else if (isStatusFiltered && Enum.TryParse<ProductStatus>(status, true, out statusEnum))
             {
-                products = await _productService.TGetPagedFilteredListAsync(page, pageSize, p => p.Status == statusEnum);
+                products = await _productService.TGetFilteredListAsync(p => p.Status == statusEnum,page, pageSize);
             }
             else if (!isStatusFiltered && !isCategoryFiltered)
             {
-                products = await _productService.TGetPagedFilteredListAsync(
-                    page,
-                    pageSize,
-                    p => p.Status != ProductStatus.Archived);
+                products = await _productService.TGetFilteredListAsync(p => p.Status != ProductStatus.Archived, page, pageSize);
             }
             else
             {

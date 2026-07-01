@@ -6,7 +6,6 @@ namespace VillaAgency.DataAccess.Abstract
 {
     public interface IProductDal : IGenericDal<Product>
     {
-        Task<List<Product>> GetPagedFilteredListAsync(int pageNumber, int pageSize, Expression<Func<Product, bool>> predicate = null);
         Task<List<string>> GetUniqueCategoriesAsync();
         Task ChangeStatusAsync(string id, ProductStatus status);
     }
