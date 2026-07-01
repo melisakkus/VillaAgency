@@ -5,158 +5,218 @@
 }
 
 <div class="container-fluid py-4">
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- Üst Başlık Alanı -->
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary-subtle">
         <div class="d-flex align-items-center gap-2">
-            <span class="bg-primary rounded-circle" style="width:10px;height:10px;"></span>
-            <h5 class="mb-0 fw-bold text-uppercase tracking-wider text-body" style="font-size: 1.1rem;">Update Feature</h5>
+            <span class="bg-primary rounded-pill" style="width: 4px; height: 18px;"></span>
+            <h5 class="mb-0 fw-bold text-body" style="letter-spacing: 0.6px; font-size: 0.95rem; text-transform: uppercase;">
+                Update Feature
+            </h5>
         </div>
-        <a asp-controller="Feature" asp-action="Index" class="btn btn-sm btn-outline-secondary px-3 rounded-2 shadow-sm">
-            ← Back
+        <a asp-controller="Feature" asp-action="Index" class="btn btn-sm btn-outline-secondary px-3 shadow-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back to List
         </a>
     </div>
 
-    <div class="row">
-        <div class="col-12 col-xl-11 mx-auto">
+    <form method="post" id="updateFeatureForm">
+        <input type="hidden" asp-for="Id" />
 
-            <form method="post" id="updateFeatureForm">
-                <input type="hidden" asp-for="Id" />
+        <div class="row g-4">
+            <!-- SOL KOLON: FORM GİRİŞLERİ -->
+            <div class="col-12 col-lg-7">
+                <div class="card border border-secondary-subtle shadow-sm bg-body">
+                    <div class="card-body p-4">
 
-                <div class="row g-4 align-items-start">
-
-                    <div class="col-12 col-lg-6">
-                        <div class="card border-0 shadow-sm rounded-3 p-4 bg-card">
-
-                            <h6 class="text-muted fw-bold mb-4 text-uppercase small tracking-wide text-center">General Information</h6>
-
-                            <div class="mb-4">
-                                <label asp-for="Title" class="form-label small fw-semibold text-secondary">Title</label>
-                                <input asp-for="Title" class="form-control" placeholder="Enter title" />
-                                <span asp-validation-for="Title" class="text-danger" style="font-size: 12px;"></span>
-                            </div>
-
-                            <div class="mb-3">
-                                <label asp-for="ImageUrl" class="form-label small fw-semibold text-secondary">Image URL</label>
-                                <div class="input-group">
-                                    <span class="input-group-text text-muted border-end-0"><i class="bi bi-link-45deg"></i></span>
-                                    <input asp-for="ImageUrl" id="imageUrlInput" class="form-control border-start-0" placeholder="https://..." />
-                                </div>
-                                <span asp-validation-for="ImageUrl" class="text-danger" style="font-size: 12px;"></span>
-                            </div>
-
-                            <div class="mb-4 text-center">
-                                <div id="previewContainer" class="d-none mx-auto p-2 border rounded-3 bg-light-preview d-flex align-items-center justify-content-center" style="max-width: 240px; min-height: 140px;">
-                                    <img id="imagePreview" src="#" alt="Feature Preview" class="img-fluid rounded-2 shadow-sm" style="max-height: 130px; object-fit: contain;" />
+                        <!-- Temel Bilgiler -->
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label asp-for="Title" class="form-label fw-semibold text-body small">Title</label>
+                                    <input asp-for="Title" class="form-control" id="inputTitle" placeholder="Feature title..." />
+                                    <span asp-validation-for="Title" class="text-danger small"></span>
                                 </div>
                             </div>
-
-                            <div class="mb-2 d-flex flex-column align-items-center text-center">
-                                <label asp-for="IsActive" class="form-label small fw-semibold text-secondary">Status</label>
-                                <select asp-for="IsActive" class="form-select text-center" style="width: 180px;">
-                                    <option value="true">🟢 Active</option>
-                                    <option value="false">🔴 Inactive</option>
-                                </select>
-                                <div class="form-text mt-1 text-muted small">Choose visibility status for this feature.</div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label asp-for="IsActive" class="form-label fw-semibold text-body small">Status</label>
+                                    <select asp-for="IsActive" class="form-select">
+                                        <option value="true">Active</option>
+                                        <option value="false">Inactive</option>
+                                    </select>
+                                </div>
                             </div>
-
                         </div>
-                    </div>
 
-                    <div class="col-12 col-lg-6">
-                        <div class="d-flex flex-column gap-4">
+                        <div class="mb-4">
+                            <label asp-for="ImageUrl" class="form-label fw-semibold text-body small">Image URL</label>
+                            <div class="input-group">
+                                <span class="input-group-text border-secondary-subtle"><i class="bi bi-link-45deg"></i></span>
+                                <input asp-for="ImageUrl" id="imageUrlInput" class="form-control" placeholder="https://example.com/image.jpg" />
+                            </div>
+                            <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                        </div>
 
-                            @* FAQs  *@
-                            <div class="card border-0 shadow-sm rounded-3 p-4 bg-card">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h6 class="text-muted fw-bold mb-0 text-uppercase small tracking-wide">FAQs</h6>
-                                    <button type="button" class="btn btn-sm btn-outline-primary border fw-semibold rounded-2 px-2 py-1" onclick="addFaq()">
-                                        + Add FAQ
-                                    </button>
-                                </div>
-
-                                <div id="faqContainer">
-                                    @for (int i = 0; i < Model.FAQs.Count; i++)
-                                    {
-                                        <div class="row g-2 mb-3 faq-item align-items-start">
-                                            <div class="col-5">
-                                                <input name="FAQs[@i].Question" value="@Model.FAQs[i].Question" class="form-control form-control-sm" placeholder="Question" />
-                                                <span class="text-danger d-block mt-1" data-valmsg-for="FAQs[@i].Question" data-valmsg-replace="true" style="font-size: 11px;">
-                                                    @Html.ValidationMessage($"FAQs[{i}].Question")
-                                                </span>
-                                            </div>
-                                            <div class="col-6">
-                                                <input name="FAQs[@i].Answer" value="@Model.FAQs[i].Answer" class="form-control form-control-sm" placeholder="Answer" />
-                                                <span class="text-danger d-block mt-1" data-valmsg-for="FAQs[@i].Answer" data-valmsg-replace="true" style="font-size: 11px;">
-                                                    @Html.ValidationMessage($"FAQs[{i}].Answer")
-                                                </span>
-                                            </div>
-                                            <div class="col-1 text-end pt-1">
-                                                <button type="button" class="btn btn-sm text-danger p-0 border-0 lh-1" onclick="removeItem(this, 'faq-item', 'FAQs')">
-                                                    <i class="bi bi-trash3-fill"></i>
-                                                </button>
-                                            </div>
+                        <!-- FAQs Bölümü -->
+                        <div class="mt-4 pt-3 border-top border-secondary-subtle">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0 fw-bold text-body small text-uppercase">FAQs</h6>
+                                <button type="button" class="btn btn-xs btn-outline-primary py-1 px-2" onclick="addFaq()">+ Add FAQ</button>
+                            </div>
+                            <div id="faqContainer">
+                                @for (int i = 0; i < Model.FAQs.Count; i++)
+                                {
+                                    <div class="row g-2 mb-3 faq-item align-items-start">
+                                        <div class="col-5">
+                                            <input name="FAQs[@i].Question" value="@Model.FAQs[i].Question" class="form-control form-control-sm" placeholder="Question" />
                                         </div>
-                                    }
-                                </div>
-                                <span asp-validation-for="FAQs" class="text-danger small mt-1 d-block"></span>
-                            </div>
-
-                            @* FEATURE DETAILS *@
-                            <div class="card border-0 shadow-sm rounded-3 p-4 bg-card">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h6 class="text-muted fw-bold mb-0 text-uppercase small tracking-wide">Feature Details</h6>
-                                    <button type="button" class="btn btn-sm btn-outline-primary border fw-semibold rounded-2 px-2 py-1" onclick="addDetail()">
-                                        + Add Detail
-                                    </button>
-                                </div>
-
-                                <div id="detailContainer">
-                                    @for (int i = 0; i < Model.FeatureDetails.Count; i++)
-                                    {
-                                        <div class="row g-2 mb-3 detail-item align-items-start">
-                                            <input type="hidden" name="FeatureDetails[@i].Icon" value="@Model.FeatureDetails[i].Icon" />
-
-                                            <div class="col-5">
-                                                <input name="FeatureDetails[@i].Title" value="@Model.FeatureDetails[i].Title" class="form-control form-control-sm" placeholder="Title (e.g. Area)" />
-                                                <span class="text-danger d-block mt-1" data-valmsg-for="FeatureDetails[@i].Title" data-valmsg-replace="true" style="font-size: 11px;">
-                                                    @Html.ValidationMessage($"FeatureDetails[{i}].Title")
-                                                </span>
-                                            </div>
-                                            <div class="col-6">
-                                                <input name="FeatureDetails[@i].SubTitle" value="@Model.FeatureDetails[i].SubTitle" class="form-control form-control-sm" placeholder="SubTitle (e.g. 250 m²)" />
-                                                <span class="text-danger d-block mt-1" data-valmsg-for="FeatureDetails[@i].SubTitle" data-valmsg-replace="true" style="font-size: 11px;">
-                                                    @Html.ValidationMessage($"FeatureDetails[{i}].SubTitle")
-                                                </span>
-                                            </div>
-                                            <div class="col-1 text-end pt-1">
-                                                <button type="button" class="btn btn-sm text-danger p-0 border-0 lh-1" onclick="removeItem(this, 'detail-item', 'FeatureDetails')">
-                                                    <i class="bi bi-trash3-fill"></i>
-                                                </button>
-                                            </div>
+                                        <div class="col-6">
+                                            <input name="FAQs[@i].Answer" value="@Model.FAQs[i].Answer" class="form-control form-control-sm" placeholder="Answer" />
                                         </div>
-                                    }
-                                </div>
-                                <span asp-validation-for="FeatureDetails" class="text-danger small mt-1 d-block"></span>
+                                        <div class="col-1 text-end">
+                                            <button type="button" class="btn btn-sm text-danger border-0" onclick="removeItem(this, 'faq-item', 'FAQs')">✕</button>
+                                        </div>
+                                    </div>
+                                }
                             </div>
+                        </div>
 
+                        <!-- Details Bölümü -->
+                        <div class="mt-4 pt-3 border-top border-secondary-subtle">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0 fw-bold text-body small text-uppercase">Feature Details</h6>
+                                <button type="button" class="btn btn-xs btn-outline-primary py-1 px-2" onclick="addDetail()">+ Add Detail</button>
+                            </div>
+                            <div id="detailContainer">
+                                @for (int i = 0; i < Model.FeatureDetails.Count; i++)
+                                {
+                                    <div class="row g-2 mb-3 detail-item align-items-start">
+                                        <input type="hidden" name="FeatureDetails[@i].Icon" value="@Model.FeatureDetails[i].Icon" />
+                                        <div class="col-5">
+                                            <input name="FeatureDetails[@i].Title" value="@Model.FeatureDetails[i].Title" class="form-control form-control-sm" placeholder="Title" />
+                                        </div>
+                                        <div class="col-6">
+                                            <input name="FeatureDetails[@i].SubTitle" value="@Model.FeatureDetails[i].SubTitle" class="form-control form-control-sm" placeholder="SubTitle" />
+                                        </div>
+                                        <div class="col-1 text-end">
+                                            <button type="button" class="btn btn-sm text-danger border-0" onclick="removeItem(this, 'detail-item', 'FeatureDetails')">✕</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Butonlar -->
+                        <div class="d-flex justify-content-end gap-2 pt-3 mt-4 border-top border-secondary-subtle">
+                            <a asp-controller="Feature" asp-action="Index" class="btn btn-sm btn-outline-secondary px-4">Cancel</a>
+                            <button type="submit" class="btn btn-sm btn-primary px-4 shadow-sm">Save Changes</button>
                         </div>
                     </div>
-
-                    <div class="col-12 mt-2">
-                        <div class="d-flex justify-content-end gap-2 pe-1">
-                            <a asp-controller="Feature" asp-action="Index" class="btn btn-light border px-4 rounded-2 fw-medium text-secondary">Cancel</a>
-                            <button type="submit" class="btn btn-primary px-5 rounded-2 fw-medium shadow-sm">Save Feature</button>
-                        </div>
-                    </div>
-
                 </div>
-            </form>
+            </div>
 
+            <!-- SAĞ KOLON: LIVE PREVIEW -->
+            <div class="col-12 col-lg-5">
+                <div class="card border border-secondary-subtle shadow-sm bg-body h-100">
+                    <div class="card-header bg-transparent border-bottom border-secondary-subtle py-3">
+                        <h6 class="m-0 fw-semibold text-muted small text-uppercase">
+                            <i class="bi bi-eye me-1 text-primary"></i> Current Preview
+                        </h6>
+                    </div>
+                    <div class="card-body d-flex align-items-center justify-content-center bg-light-subtle p-4" style="min-height: 300px;">
+
+                        <!-- Önizleme Kartı -->
+                        <div id="previewCard" class="card border border-secondary-subtle shadow-sm overflow-hidden bg-body w-100 d-none" style="max-width: 400px;">
+                            <img id="imagePreview" src="#" class="card-img-top" style="height: 220px; object-fit: cover;" alt="Preview" />
+                            <div class="card-body">
+                                <h6 id="previewTitle" class="card-title fw-bold text-body mb-0">Feature Title</h6>
+                            </div>
+                        </div>
+
+                        <!-- Placeholder -->
+                        <div id="previewPlaceholder" class="text-center py-5 text-muted">
+                            <i class="bi bi-image display-4 opacity-25 d-block mb-3"></i>
+                            <span class="small fw-medium">Checking current image...</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
+    </form>
 </div>
 
+<style>
+    /* Dark Mode - Senin Koyu Mavi Temanla Uyumlu */
+    [data-bs-theme="dark"] .card {
+        --bs-card-bg: #1a2235;
+        --bs-card-border-color: rgba(255, 255, 255, 0.1);
+    }
 
-<link rel="stylesheet" href="~/css/custom_admin_feature_update.css" />
+    [data-bs-theme="dark"] .bg-body {
+        background-color: #1a2235 !important;
+    }
+
+    [data-bs-theme="dark"] .bg-light-subtle {
+        background-color: #111827 !important;
+    }
+
+    [data-bs-theme="dark"] .form-control, [data-bs-theme="dark"] .form-select {
+        background-color: #111827;
+        border-color: #2d3748;
+        color: #f8fafc;
+    }
+
+    [data-bs-theme="dark"] .input-group-text {
+        background-color: #2d3748;
+        border-color: #2d3748;
+        color: #cbd5e1;
+    }
+
+    .btn-xs {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+</style>
+
+<!-- Kendi JS dosyalarından önce Preview script'ini koyabilirsin -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const inputTitle = document.getElementById("inputTitle");
+        const imageUrlInput = document.getElementById("imageUrlInput");
+
+        const previewCard = document.getElementById("previewCard");
+        const imagePreview = document.getElementById("imagePreview");
+        const previewTitle = document.getElementById("previewTitle");
+        const previewPlaceholder = document.getElementById("previewPlaceholder");
+
+        function updatePreview() {
+            const url = imageUrlInput.value.trim();
+            const title = inputTitle.value.trim();
+
+            if (url && url !== "") {
+                imagePreview.src = url;
+                previewTitle.textContent = title || "Feature Title";
+
+                previewCard.classList.remove("d-none");
+                previewPlaceholder.classList.add("d-none");
+            } else {
+                previewCard.classList.add("d-none");
+                previewPlaceholder.classList.remove("d-none");
+            }
+        }
+
+        // Değişiklikleri dinle
+        imageUrlInput.addEventListener("input", updatePreview);
+        inputTitle.addEventListener("input", updatePreview);
+
+        imagePreview.addEventListener("error", function() {
+            previewCard.classList.add("d-none");
+            previewPlaceholder.classList.remove("d-none");
+        });
+
+        // Sayfa açıldığında mevcut veriyi göster
+        updatePreview();
+    });
+</script>
+
 <script src="~/js/custom_admin_feature_update.js"></script>
