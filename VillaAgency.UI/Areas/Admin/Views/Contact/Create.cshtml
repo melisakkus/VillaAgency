@@ -6,54 +6,156 @@
 
 <div class="container-fluid py-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary-subtle">
         <div class="d-flex align-items-center gap-2">
-            <span class="bg-primary rounded-circle" style="width:10px;height:10px;"></span>
-            <h5 class="mb-0 fw-semibold">CREATE NEW CONTACT</h5>
+            <span class="bg-primary rounded-pill" style="width: 4px; height: 18px;"></span>
+            <h5 class="mb-0 fw-bold text-body" style="letter-spacing: 0.6px; font-size: 0.95rem; text-transform: uppercase;">
+                Create New Contact Info
+            </h5>
         </div>
-
-        <a asp-controller="Contact" asp-action="Index" class="btn btn-sm btn-outline-secondary"> ← Back </a>
-
+        <a asp-controller="Contact" asp-action="Index" class="btn btn-sm btn-outline-secondary px-3 shadow-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back to List
+        </a>
     </div>
 
-    <div class="row">
-        <div class="col-12 col-lg-10 col-xl-10 mx-auto">
+    <form method="post">
+        <div class="row g-4">
 
-            <form method="post">
+            <div class="col-12 col-lg-7">
+                <div class="card border border-secondary-subtle shadow-sm bg-body">
+                    <div class="card-body p-4">
 
-                <div class="mb-3">
-                    <label asp-for="MapUrl" class="form-label fw-semibold">Map Url</label>
-                    <input asp-for="MapUrl"
-                           class="form-control form-control-lg"
-                           placeholder="Enter map url " />
-                    <span asp-validation-for="MapUrl" class="text-danger small"></span>
+                        <div class="mb-4">
+                            <label asp-for="MapUrl" class="form-label fw-semibold text-body small">Google Maps Embed URL</label>
+                            <div class="input-group">
+                                <span class="input-group-text border-secondary-subtle"><i class="bi bi-geo-alt"></i></span>
+                                <input asp-for="MapUrl" id="mapUrlInput" class="form-control" placeholder="Paste the iframe src URL here..." />
+                            </div>
+                            <div class="form-text small opacity-75">Paste only the 'src' link from the Google Maps share code.</div>
+                            <span asp-validation-for="MapUrl" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="PhoneNumber" class="form-label fw-semibold text-body small">Phone Number</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text border-secondary-subtle"><i class="bi bi-telephone"></i></span>
+                                        <input asp-for="PhoneNumber" type="tel" class="form-control" placeholder="+90 5xx xxx xx xx" />
+                                    </div>
+                                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Email" class="form-label fw-semibold text-body small">Email Address</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text border-secondary-subtle"><i class="bi bi-envelope"></i></span>
+                                        <input asp-for="Email" type="email" class="form-control" placeholder="info@villaagency.com" />
+                                    </div>
+                                    <span asp-validation-for="Email" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 pt-3 mt-4 border-top border-secondary-subtle">
+                            <a asp-controller="Contact" asp-action="Index" class="btn btn-sm btn-outline-secondary px-4">Cancel</a>
+                            <button type="submit" class="btn btn-sm btn-primary px-4 shadow-sm">Save Contact</button>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <div class="mb-3">
-                    <label asp-for="PhoneNumber" class="form-label fw-semibold">Phone Number</label>
-                    <input asp-for="PhoneNumber" type="tel"
-                           class="form-control form-control-lg"
-                           placeholder="Enter phone number" />
-                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+            <div class="col-12 col-lg-5">
+                <div class="card border border-secondary-subtle shadow-sm bg-body h-100">
+                    <div class="card-header bg-transparent border-bottom border-secondary-subtle py-3">
+                        <h6 class="m-0 fw-semibold text-muted small text-uppercase">
+                            <i class="bi bi-map me-1 text-primary"></i> Map Preview
+                        </h6>
+                    </div>
+                    <div class="card-body p-0 position-relative" style="min-height: 300px;">
+
+                        <iframe id="mapPreview" src="" class="w-100 h-100 d-none" style="border:0; min-height: 300px;" allowfullscreen="" loading="lazy"></iframe>
+
+                        <div id="mapPlaceholder" class="d-flex flex-column align-items-center justify-content-center h-100 text-center p-4">
+                            <i class="bi bi-geo display-4 opacity-25 mb-3"></i>
+                            <span class="text-muted small fw-medium">Enter a Map URL to see the live preview</span>
+                        </div>
+
+                    </div>
                 </div>
-
-                <div class="mb-4">
-                    <label asp-for="Email" class="form-label fw-semibold">Email</label>
-                    <input asp-for="Email" type="email"
-                           class="form-control form-control-lg"
-                           placeholder="Enter email" />
-                    <span asp-validation-for="Email" class="text-danger small"></span>
-                </div>
-
-                <div class="d-flex justify-content-center gap-3">
-                    <a asp-controller="Contact" asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
-                    <button type="submit" class="btn btn-primary px-4"> Save Contact </button>
-                </div>
-
-            </form>
-
+            </div>
         </div>
-    </div>
-
+    </form>
 </div>
+
+<style>
+    [data-bs-theme="dark"] .card {
+        --bs-card-bg: #1a2235;
+        --bs-card-border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    [data-bs-theme="dark"] .bg-body {
+        background-color: #1a2235 !important;
+    }
+
+    [data-bs-theme="dark"] .form-control {
+        background-color: #111827;
+        border-color: #2d3748;
+        color: #f8fafc;
+    }
+
+    [data-bs-theme="dark"] .input-group-text {
+        background-color: #2d3748;
+        border-color: #2d3748;
+        color: #cbd5e1;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const mapUrlInput = document.getElementById("mapUrlInput");
+        const mapPreview = document.getElementById("mapPreview");
+        const mapPlaceholder = document.getElementById("mapPlaceholder");
+
+        function updateMapPreview() {
+            let url = mapUrlInput.value.trim();
+
+            if (url.includes('<iframe')) {
+                const match = url.match(/src="([^"]+)"/);
+                if (match && match[1]) {
+                    url = match[1];
+                    mapUrlInput.value = url;
+                }
+            }
+
+            if (url && url.startsWith('http')) {
+                if (url.includes('/embed') || url.includes('google.com/maps/embed')) {
+                    mapPreview.src = url;
+                    mapPreview.classList.remove("d-none");
+                    mapPlaceholder.classList.add("d-none");
+                }
+                else {
+
+                    mapPreview.classList.add("d-none");
+                    mapPlaceholder.classList.remove("d-none");
+                    mapPlaceholder.innerHTML = `
+                        <div class="p-3">
+                            <i class="bi bi-info-circle display-6 text-info mb-3 d-block"></i>
+                            <span class="text-body small fw-bold d-block">Short Link Detected</span>
+                            <span class="text-muted small">Google doesn't allow live preview for short links.
+                            But don't worry, it will work fine for users!</span>
+                            <br>
+                            <a href="${url}" target="_blank" class="btn btn-xs btn-link mt-2">Test Link <i class="bi bi-box-arrow-up-right"></i></a>
+                        </div>`;
+                }
+            } else {
+                mapPreview.classList.add("d-none");
+                mapPlaceholder.classList.remove("d-none");
+            }
+        }
+
+        mapUrlInput.addEventListener("input", updateMapPreview);
+        updateMapPreview();
+    });
+</script>
