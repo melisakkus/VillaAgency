@@ -13,22 +13,6 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
         {
             _messageService = messageService;
         }
-
-        //public async Task<IActionResult> Index(string activeTab = "all-messages")
-        //{
-        //    ViewBag.ActiveTab = activeTab;
-        //    var model = new MessageIndexViewModel
-        //    {
-        //        AllMessages = await _messageService.TGetFilteredListAsync(x => !x.IsDeleted),
-        //        UnreadMessages = await _messageService.TGetFilteredListAsync(x => !x.IsRead && !x.IsDeleted),
-        //        DeletedMessages = await _messageService.TGetFilteredListAsync(x => x.IsDeleted),
-        //        AllCount = await _messageService.TGetCountAsync(x => !x.IsDeleted),
-        //        UnreadCount = await _messageService.TGetCountAsync(x => !x.IsDeleted && !x.IsRead),
-        //        DeletedCount = await _messageService.TGetCountAsync(x => x.IsDeleted)
-        //    };
-        //    return View(model);
-        //}
-
         public async Task<IActionResult> Index(string activeTab = "all-messages", int page = 1)
         {
             if (page < 1) page = 1;

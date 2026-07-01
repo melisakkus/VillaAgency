@@ -1,4 +1,82 @@
-﻿const urlInput = document.getElementById('imageUrlInput');
+﻿// custom_admin_feature.js
+
+//update
+document.addEventListener("DOMContentLoaded", function () {
+    const inputTitle = document.getElementById("inputTitle");
+    const imageUrlInput = document.getElementById("imageUrlInput");
+
+    const previewCard = document.getElementById("previewCard");
+    const imagePreview = document.getElementById("imagePreview");
+    const previewTitle = document.getElementById("previewTitle");
+    const previewPlaceholder = document.getElementById("previewPlaceholder");
+
+    function updatePreview() {
+        const url = imageUrlInput.value.trim();
+        const title = inputTitle.value.trim();
+
+        if (url && url !== "") {
+            imagePreview.src = url;
+            previewTitle.textContent = title || "Feature Title";
+
+            previewCard.classList.remove("d-none");
+            previewPlaceholder.classList.add("d-none");
+        } else {
+            previewCard.classList.add("d-none");
+            previewPlaceholder.classList.remove("d-none");
+        }
+    }
+
+    // Değişiklikleri dinle
+    imageUrlInput.addEventListener("input", updatePreview);
+    inputTitle.addEventListener("input", updatePreview);
+
+    imagePreview.addEventListener("error", function () {
+        previewCard.classList.add("d-none");
+        previewPlaceholder.classList.remove("d-none");
+    });
+
+    // Sayfa açıldığında mevcut veriyi göster
+    updatePreview();
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const inputTitle = document.getElementById("inputTitle");
+    const imageUrlInput = document.getElementById("imageUrlInput");
+
+    const previewCard = document.getElementById("previewCard");
+    const imagePreview = document.getElementById("imagePreview");
+    const previewTitle = document.getElementById("previewTitle");
+    const previewPlaceholder = document.getElementById("previewPlaceholder");
+
+    function updatePreview() {
+        const url = imageUrlInput.value.trim();
+        const title = inputTitle.value.trim();
+
+        if (url) {
+            imagePreview.src = url;
+            previewTitle.textContent = title || "Feature Title";
+
+            previewCard.classList.remove("d-none");
+            previewPlaceholder.classList.add("d-none");
+        } else {
+            previewCard.classList.add("d-none");
+            previewPlaceholder.classList.remove("d-none");
+        }
+    }
+
+    imageUrlInput.addEventListener("input", updatePreview);
+    inputTitle.addEventListener("input", updatePreview);
+
+    imagePreview.addEventListener("error", function () {
+        previewCard.classList.add("d-none");
+        previewPlaceholder.classList.remove("d-none");
+    });
+});
+
+
+// update
+const urlInput = document.getElementById('imageUrlInput');
 const previewContainer = document.getElementById('previewContainer');
 const imgPreview = document.getElementById('imagePreview');
 const form = document.getElementById('updateFeatureForm');

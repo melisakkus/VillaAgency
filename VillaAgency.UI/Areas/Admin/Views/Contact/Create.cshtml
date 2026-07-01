@@ -4,6 +4,8 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
+<link rel="stylesheet" href="~/css/custom_admin_contact.css" />
+
 <div class="container-fluid py-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary-subtle">
@@ -89,73 +91,5 @@
     </form>
 </div>
 
-<style>
-    [data-bs-theme="dark"] .card {
-        --bs-card-bg: #1a2235;
-        --bs-card-border-color: rgba(255, 255, 255, 0.1);
-    }
 
-    [data-bs-theme="dark"] .bg-body {
-        background-color: #1a2235 !important;
-    }
-
-    [data-bs-theme="dark"] .form-control {
-        background-color: #111827;
-        border-color: #2d3748;
-        color: #f8fafc;
-    }
-
-    [data-bs-theme="dark"] .input-group-text {
-        background-color: #2d3748;
-        border-color: #2d3748;
-        color: #cbd5e1;
-    }
-</style>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const mapUrlInput = document.getElementById("mapUrlInput");
-        const mapPreview = document.getElementById("mapPreview");
-        const mapPlaceholder = document.getElementById("mapPlaceholder");
-
-        function updateMapPreview() {
-            let url = mapUrlInput.value.trim();
-
-            if (url.includes('<iframe')) {
-                const match = url.match(/src="([^"]+)"/);
-                if (match && match[1]) {
-                    url = match[1];
-                    mapUrlInput.value = url;
-                }
-            }
-
-            if (url && url.startsWith('http')) {
-                if (url.includes('/embed') || url.includes('google.com/maps/embed')) {
-                    mapPreview.src = url;
-                    mapPreview.classList.remove("d-none");
-                    mapPlaceholder.classList.add("d-none");
-                }
-                else {
-
-                    mapPreview.classList.add("d-none");
-                    mapPlaceholder.classList.remove("d-none");
-                    mapPlaceholder.innerHTML = `
-                        <div class="p-3">
-                            <i class="bi bi-info-circle display-6 text-info mb-3 d-block"></i>
-                            <span class="text-body small fw-bold d-block">Short Link Detected</span>
-                            <span class="text-muted small">Google doesn't allow live preview for short links.
-                            But don't worry, it will work fine for users!</span>
-                            <br>
-                            <a href="${url}" target="_blank" class="btn btn-xs btn-link mt-2">Test Link <i class="bi bi-box-arrow-up-right"></i></a>
-                        </div>`;
-                }
-            } else {
-                mapPreview.classList.add("d-none");
-                mapPlaceholder.classList.remove("d-none");
-            }
-        }
-
-        mapUrlInput.addEventListener("input", updateMapPreview);
-        updateMapPreview();
-    });
-</script>
+<script src="~/js/custom_admin_contact.js"></script>

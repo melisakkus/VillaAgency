@@ -4,6 +4,8 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
+<link rel="stylesheet" href="~/css/custom_admin_videoview.css" />
+
 <div class="card bg-transparent border-0 shadow-none w-100 m-0 d-flex flex-column" style="min-height: calc(100vh - 180px);">
 
     <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-2 border-bottom border-secondary-subtle px-0 flex-shrink-0">
@@ -50,6 +52,26 @@
                             <span asp-validation-for="VideoUrl" class="text-danger small fw-medium mt-1 d-block"></span>
                         </div>
 
+                        <div id="liveVideoPreviewContainer" class="mb-4 d-none">
+                            <label class="form-label fw-bold text-body small mb-2 text-uppercase" style="letter-spacing: 0.5px;">
+                                <i class="bi bi-eye text-primary me-1"></i> Video Preview
+                            </label>
+                            <div class="card bg-dark border border-secondary-subtle rounded-3 overflow-hidden shadow-sm shadow-sm position-relative" style="height: 220px;">
+
+                                <div id="liveVideoPreviewBg" class="position-absolute top-0 start-0 w-100 h-100" style="background-size: cover; background-position: center;"></div>
+
+                                <div class="d-flex align-items-center justify-content-center position-absolute top-0 start-0 w-100 h-100 bg-black bg-opacity-20">
+                                    <button type="button" class="btn btn-primary rounded-circle shadow p-3 d-flex align-items-center justify-content-center"
+                                            id="livePreviewPlayBtn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#videoPlayerModal"
+                                            data-video-src="">
+                                        <i class="bi bi-play-fill fs-4" style="margin-left: 2px;"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="p-3 rounded-3 custom-info-box border border-secondary-subtle border-start-3 border-start-primary mb-4">
                             <div class="d-flex gap-3 align-items-center">
                                 <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 32px; height: 32px;">
@@ -80,61 +102,17 @@
     </div>
 </div>
 
-<style>
-    .custom-premium-card {
-        transition: background-color 0.2s ease;
-    }
+<div class="modal fade" id="videoPlayerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 overflow-hidden rounded-3 shadow-lg bg-dark">
+            <div class="modal-header border-0 bg-transparent py-2 px-3 position-absolute top-0 end-0 z-3">
+                <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0 bg-black">
+                <div class="ratio ratio-16x9" id="modalVideoContainer"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    [data-bs-theme="light"] .custom-premium-card,
-    html:not([data-bs-theme="dark"]) .custom-premium-card {
-        background-color: #ffffff !important;
-    }
-
-    [data-bs-theme="dark"] .custom-premium-card {
-        background-color: rgba(255, 255, 255, 0.03) !important;
-    }
-
-    .custom-input {
-        background-color: rgba(var(--bs-text-color-rgb), 0.02) !important;
-        border: 1px solid var(--bs-border-color) !important;
-        color: var(--bs-body-color) !important;
-        font-size: 0.9rem;
-    }
-
-        .custom-input:focus {
-            background-color: transparent !important;
-            border-color: var(--bs-primary) !important;
-            box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.05) !important;
-        }
-
-        .custom-input::placeholder {
-            font-size: 0.85rem;
-            opacity: 0.4;
-            font-style: italic;
-        }
-
-    .input-group-text {
-        border-right: none !important;
-    }
-
-    .custom-input {
-        border-left: none !important;
-    }
-
-    .border-start-3 {
-        border-left-width: 3px !important;
-    }
-
-    .border-start-primary {
-        border-left-color: var(--bs-primary) !important;
-    }
-
-    [data-bs-theme="light"] .custom-info-box,
-    html:not([data-bs-theme="dark"]) .custom-info-box {
-        background-color: rgba(var(--bs-primary-rgb), 0.03) !important;
-    }
-
-    [data-bs-theme="dark"] .custom-info-box {
-        background-color: rgba(255, 255, 255, 0.02) !important;
-    }
-</style>
+<script src="~/js/custom_admin_videoview.js"></script>

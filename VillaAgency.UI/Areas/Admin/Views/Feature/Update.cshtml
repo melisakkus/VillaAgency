@@ -4,8 +4,10 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
+<link rel="stylesheet" href="~/css/custom_admin_feature.css" />
+
 <div class="container-fluid py-4">
-    <!-- Üst Başlık Alanı -->
+
     <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary-subtle">
         <div class="d-flex align-items-center gap-2">
             <span class="bg-primary rounded-pill" style="width: 4px; height: 18px;"></span>
@@ -22,12 +24,11 @@
         <input type="hidden" asp-for="Id" />
 
         <div class="row g-4">
-            <!-- SOL KOLON: FORM GİRİŞLERİ -->
+
             <div class="col-12 col-lg-7">
                 <div class="card border border-secondary-subtle shadow-sm bg-body">
                     <div class="card-body p-4">
 
-                        <!-- Temel Bilgiler -->
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="mb-3">
@@ -41,7 +42,7 @@
                                     <label asp-for="IsActive" class="form-label fw-semibold text-body small">Status</label>
                                     <select asp-for="IsActive" class="form-select">
                                         <option value="true">Active</option>
-                                        <option value="false">Inactive</option>
+                                        <option value="false">Passive</option>
                                     </select>
                                 </div>
                             </div>
@@ -56,7 +57,6 @@
                             <span asp-validation-for="ImageUrl" class="text-danger small"></span>
                         </div>
 
-                        <!-- FAQs Bölümü -->
                         <div class="mt-4 pt-3 border-top border-secondary-subtle">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h6 class="mb-0 fw-bold text-body small text-uppercase">FAQs</h6>
@@ -80,7 +80,6 @@
                             </div>
                         </div>
 
-                        <!-- Details Bölümü -->
                         <div class="mt-4 pt-3 border-top border-secondary-subtle">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h6 class="mb-0 fw-bold text-body small text-uppercase">Feature Details</h6>
@@ -105,7 +104,6 @@
                             </div>
                         </div>
 
-                        <!-- Butonlar -->
                         <div class="d-flex justify-content-end gap-2 pt-3 mt-4 border-top border-secondary-subtle">
                             <a asp-controller="Feature" asp-action="Index" class="btn btn-sm btn-outline-secondary px-4">Cancel</a>
                             <button type="submit" class="btn btn-sm btn-primary px-4 shadow-sm">Save Changes</button>
@@ -114,7 +112,6 @@
                 </div>
             </div>
 
-            <!-- SAĞ KOLON: LIVE PREVIEW -->
             <div class="col-12 col-lg-5">
                 <div class="card border border-secondary-subtle shadow-sm bg-body h-100">
                     <div class="card-header bg-transparent border-bottom border-secondary-subtle py-3">
@@ -124,7 +121,6 @@
                     </div>
                     <div class="card-body d-flex align-items-center justify-content-center bg-light-subtle p-4" style="min-height: 300px;">
 
-                        <!-- Önizleme Kartı -->
                         <div id="previewCard" class="card border border-secondary-subtle shadow-sm overflow-hidden bg-body w-100 d-none" style="max-width: 400px;">
                             <img id="imagePreview" src="#" class="card-img-top" style="height: 220px; object-fit: cover;" alt="Preview" />
                             <div class="card-body">
@@ -132,7 +128,6 @@
                             </div>
                         </div>
 
-                        <!-- Placeholder -->
                         <div id="previewPlaceholder" class="text-center py-5 text-muted">
                             <i class="bi bi-image display-4 opacity-25 d-block mb-3"></i>
                             <span class="small fw-medium">Checking current image...</span>
@@ -145,78 +140,4 @@
     </form>
 </div>
 
-<style>
-    /* Dark Mode - Senin Koyu Mavi Temanla Uyumlu */
-    [data-bs-theme="dark"] .card {
-        --bs-card-bg: #1a2235;
-        --bs-card-border-color: rgba(255, 255, 255, 0.1);
-    }
-
-    [data-bs-theme="dark"] .bg-body {
-        background-color: #1a2235 !important;
-    }
-
-    [data-bs-theme="dark"] .bg-light-subtle {
-        background-color: #111827 !important;
-    }
-
-    [data-bs-theme="dark"] .form-control, [data-bs-theme="dark"] .form-select {
-        background-color: #111827;
-        border-color: #2d3748;
-        color: #f8fafc;
-    }
-
-    [data-bs-theme="dark"] .input-group-text {
-        background-color: #2d3748;
-        border-color: #2d3748;
-        color: #cbd5e1;
-    }
-
-    .btn-xs {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.75rem;
-    }
-</style>
-
-<!-- Kendi JS dosyalarından önce Preview script'ini koyabilirsin -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const inputTitle = document.getElementById("inputTitle");
-        const imageUrlInput = document.getElementById("imageUrlInput");
-
-        const previewCard = document.getElementById("previewCard");
-        const imagePreview = document.getElementById("imagePreview");
-        const previewTitle = document.getElementById("previewTitle");
-        const previewPlaceholder = document.getElementById("previewPlaceholder");
-
-        function updatePreview() {
-            const url = imageUrlInput.value.trim();
-            const title = inputTitle.value.trim();
-
-            if (url && url !== "") {
-                imagePreview.src = url;
-                previewTitle.textContent = title || "Feature Title";
-
-                previewCard.classList.remove("d-none");
-                previewPlaceholder.classList.add("d-none");
-            } else {
-                previewCard.classList.add("d-none");
-                previewPlaceholder.classList.remove("d-none");
-            }
-        }
-
-        // Değişiklikleri dinle
-        imageUrlInput.addEventListener("input", updatePreview);
-        inputTitle.addEventListener("input", updatePreview);
-
-        imagePreview.addEventListener("error", function() {
-            previewCard.classList.add("d-none");
-            previewPlaceholder.classList.remove("d-none");
-        });
-
-        // Sayfa açıldığında mevcut veriyi göster
-        updatePreview();
-    });
-</script>
-
-<script src="~/js/custom_admin_feature_update.js"></script>
+<script src="~/js/custom_admin_feature.js"></script>

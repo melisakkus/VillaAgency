@@ -6,7 +6,23 @@
 
 @{
     int count = 0;
+
+    string FormatPhone(string p)
+    {
+        if (string.IsNullOrEmpty(p)) return string.Empty;
+        string num = new string(p.Where(char.IsDigit).ToArray());
+
+        return num switch
+        {
+            { Length: 12 } when num.StartsWith("90") => $"+90 ({num[2..5]}) {num[5..8]} {num[8..10]} {num[10..12]}",
+            { Length: 11 } when num.StartsWith("0") => $"+90 ({num[1..4]}) {num[4..7]} {num[7..9]} {num[9..11]}",
+            { Length: 10 } => $"+90 ({num[0..3]}) {num[3..6]} {num[6..8]} {num[8..10]}",
+            _ => p
+        };
+    }
 }
+
+<link rel="stylesheet" href="~/css/custom_admin_contact.css" />
 
 <div class="card bg-transparent border-0 shadow-none w-100 m-0 mb-auto">
 
@@ -57,9 +73,9 @@
                                 </td>
 
                                 <td>
-                                    <a href="tel:@item.PhoneNumber" class="text-body text-decoration-none link-primary">
-                                        <i class="bi bi-telephone-fill me-1 text-primary opacity-75"></i>
-                                        @item.PhoneNumber
+                                    <a href="tel:@item.PhoneNumber" class="text-body text-decoration-none link-primary font-monospace small">
+                                        <i class="bi bi-telephone-fill me-2 text-primary opacity-75"></i>
+                                        @FormatPhone(item.PhoneNumber)
                                     </a>
                                 </td>
 
@@ -115,51 +131,5 @@
     </div>
 </div>
 
-<script>
-    function handleMapModal(url) {
-        const iframe = document.getElementById('modalIframe');
-        const placeholder = document.getElementById('modalPlaceholder');
-        const externalLink = document.getElementById('modalExternalLink');
+<script src="~/js/custom_admin_contact.js"></script>
 
-        // Check if the URL is an embeddable Google Maps URL
-        const isEmbeddable = url.includes("/embed") || url.includes("google.com/maps/embed");
-
-        if (isEmbeddable) {
-            // Show Iframe and Hide Placeholder
-            iframe.src = url;
-            iframe.classList.remove('d-none');
-            placeholder.classList.add('d-none');
-        } else {
-            // Short link detected: Hide Iframe (Google blocks it) and Show Placeholder
-            iframe.src = "";
-            iframe.classList.add('d-none');
-            placeholder.classList.remove('d-none');
-            externalLink.href = url;
-        }
-
-        // Trigger the Modal
-        const myModal = new bootstrap.Modal(document.getElementById('mapModal'));
-        myModal.show();
-    }
-
-    // Reset iframe on modal close to prevent background processing
-    document.getElementById('mapModal').addEventListener('hidden.bs.modal', function () {
-        document.getElementById('modalIframe').src = '';
-    });
-</script>
-
-<style>
-    /* Dark Mode Theme Adjustments (Custom Dark Blue) */
-    [data-bs-theme="dark"] .modal-content {
-        background-color: #1a2235 !important;
-    }
-
-    [data-bs-theme="dark"] .btn-close {
-        filter: invert(1) grayscale(100%) brightness(200%);
-    }
-
-    /* Row Hover Effect */
-    .hover-row:hover {
-        background-color: rgba(var(--bs-primary-rgb), 0.02);
-    }
-</style>

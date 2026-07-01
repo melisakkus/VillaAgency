@@ -4,6 +4,8 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
+<link rel="stylesheet" href="~/css/custom_admin_feature.css" />
+
 <div class="container-fluid py-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary-subtle">
@@ -117,76 +119,4 @@
     </form>
 </div>
 
-<script src="~/js/custom_admin_feature_create.js"></script>
-
-<style>
-    [data-bs-theme="dark"] .card {
-        --bs-card-bg: #1a2235;
-        --bs-card-border-color: rgba(255, 255, 255, 0.1);
-    }
-
-    [data-bs-theme="dark"] .bg-body {
-        background-color: #1a2235 !important;
-    }
-
-    [data-bs-theme="dark"] .bg-light-subtle {
-        background-color: #111827 !important;
-    }
-
-    [data-bs-theme="dark"] .form-control {
-        background-color: #111827;
-        border-color: #2d3748;
-        color: #f8fafc;
-    }
-
-    [data-bs-theme="dark"] .input-group-text {
-        background-color: #2d3748;
-        border-color: #2d3748;
-        color: #cbd5e1;
-    }
-
-    .btn-xs {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.75rem;
-    }
-
-    #previewPlaceholder i {
-        transition: all 0.3s ease;
-    }
-</style>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const inputTitle = document.getElementById("inputTitle");
-        const imageUrlInput = document.getElementById("imageUrlInput");
-
-        const previewCard = document.getElementById("previewCard");
-        const imagePreview = document.getElementById("imagePreview");
-        const previewTitle = document.getElementById("previewTitle");
-        const previewPlaceholder = document.getElementById("previewPlaceholder");
-
-        function updatePreview() {
-            const url = imageUrlInput.value.trim();
-            const title = inputTitle.value.trim();
-
-            if (url) {
-                imagePreview.src = url;
-                previewTitle.textContent = title || "Feature Title";
-
-                previewCard.classList.remove("d-none");
-                previewPlaceholder.classList.add("d-none");
-            } else {
-                previewCard.classList.add("d-none");
-                previewPlaceholder.classList.remove("d-none");
-            }
-        }
-
-        imageUrlInput.addEventListener("input", updatePreview);
-        inputTitle.addEventListener("input", updatePreview);
-
-        imagePreview.addEventListener("error", function() {
-            previewCard.classList.add("d-none");
-            previewPlaceholder.classList.remove("d-none");
-        });
-    });
-</script>
+<script src="~/js/custom_admin_feature.js"></script>

@@ -1,0 +1,297 @@
+﻿/* ==========================================================================
+   1. INDEX SAYFASI STİLLERİ
+   ========================================================================== */
+.text-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.subject-clickable {
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+    .subject-clickable:hover {
+        transform: scale(1.02);
+        opacity: 0.9;
+    }
+
+/* Index - Dark Mode */
+[data-bs-theme='dark'] .card,
+[data-bs-theme='dark'] .modal-content {
+    background-color: #1a233a !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-bs-theme='dark'] .table-light,
+[data-bs-theme='dark'] .table thead th {
+    background-color: #242f4d !important;
+    color: #e2e8f0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-bs-theme='dark'] .table-hover tbody tr:hover > td {
+    background-color: #2d3a5a !important;
+    color: #ffffff !important;
+}
+
+[data-bs-theme='dark'] .bg-light-subtle {
+    background-color: #242f4d !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-bs-theme='dark'] .modal-header {
+    background-color: #1a233a !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+    [data-bs-theme='dark'] .modal-header .btn-close {
+        filter: invert(1) grayscale(1) brightness(2);
+    }
+
+[data-bs-theme='dark'] .modal-body .bg-light {
+    background-color: #242f4d !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-bs-theme='dark'] #modalMessageDate {
+    background-color: #334155 !important;
+    color: #ffffff !important;
+}
+
+[data-bs-theme='dark'] .modal-footer .btn-secondary {
+    background-color: #334155 !important;
+    border-color: #475569 !important;
+}
+
+[data-bs-theme='dark'] #modalSenderName,
+[data-bs-theme='dark'] .text-dark {
+    color: #ffffff !important;
+}
+
+[data-bs-theme='dark'] .pagination .page-link {
+    background-color: #1a233a;
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+}
+
+[data-bs-theme='dark'] .pagination .page-item.active .page-link {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: #ffffff;
+}
+
+[data-bs-theme='dark'] .pagination .page-item.disabled .page-link {
+    background-color: #121826;
+    color: #475569;
+}
+
+/* ==========================================================================
+   2. ORTAK ORTAK FORM STİLLERİ (CREATE & UPDATE)
+   ========================================================================== */
+:root {
+    --card-bg: #ffffff;
+    --card-border: #e2e8f0;
+    --text-main: #0f172a;
+    --text-sub: #475569;
+    --input-bg: #f8fafc;
+    --input-border: #cbd5e1;
+    --btn-primary: #3b82f6;
+    --input-focus: #3b82f6;
+    --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+[data-bs-theme="dark"], .dark-theme, body.dark {
+    --card-bg: #151c2e;
+    --card-border: #222b40;
+    --text-main: #ffffff;
+    --text-sub: #94a3b8;
+    --input-bg: #111625;
+    --input-border: #222b40;
+    --btn-primary: #3b82f6;
+    --input-focus: #3b82f6;
+    --shadow: none;
+}
+
+.create-message-wrapper {
+    min-height: calc(100vh - 170px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.create-message-container {
+    width: 100%;
+    max-width: 1000px;
+}
+
+.custom-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.card-form-header {
+    padding: 20px 30px;
+    border-bottom: 1px solid var(--card-border);
+    background: linear-gradient(to right, rgba(59, 130, 246, 0.01), transparent);
+}
+
+.card-form-body {
+    padding: 30px;
+}
+
+.form-grid-layout {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 25px;
+}
+
+.form-left-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-right-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group-custom {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+    .form-group-custom.fill-height {
+        flex: 1;
+    }
+
+    .form-group-custom label {
+        display: block;
+        font-weight: 700;
+        font-size: 0.8rem;
+        color: var(--text-sub);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+    }
+
+/* İkon Yerleşimleri (Create'deki Yapı - Eğer Update'e de İkon Ekleyeceksen Ortak Kalabilir) */
+.input-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+    .input-icon-wrapper.textarea-wrapper {
+        flex: 1;
+        align-items: stretch;
+    }
+
+    .input-icon-wrapper i {
+        position: absolute;
+        left: 16px;
+        color: #94a3b8;
+        font-size: 0.95rem;
+        pointer-events: none;
+        z-index: 10;
+    }
+
+    .input-icon-wrapper:not(.textarea-wrapper) i {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .input-icon-wrapper.textarea-wrapper i {
+        top: 15px;
+    }
+
+/* INPUT AYARLARI: İkonlu Tasarımı Standart Yaptık (Padding Sol 44px) */
+.form-input-custom {
+    width: 100%;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-main) !important;
+    border-radius: 8px;
+    padding: 11px 15px 11px 44px; /* İkonlar için sol boşluk eklendi */
+    font-size: 0.92rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+    .form-input-custom.textarea-custom {
+        padding: 14px 15px 14px 44px; /* İkonlar için sol boşluk eklendi */
+        resize: none;
+        height: 100%;
+        min-height: 220px;
+    }
+
+    .form-input-custom:focus {
+        outline: none;
+        background-color: var(--card-bg);
+        border-color: var(--btn-primary);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+
+        .form-input-custom:focus ~ i {
+            color: var(--btn-primary);
+        }
+
+/* Butonlar */
+.form-action-footer {
+    padding-top: 20px;
+    border-top: 1px solid var(--card-border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.btn-submit-message {
+    background-color: var(--btn-primary);
+    color: white;
+    font-weight: 600;
+    padding: 11px 26px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+}
+
+    .btn-submit-message:hover {
+        opacity: 0.95;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 12px -1px rgba(59, 130, 246, 0.3);
+        color: white;
+    }
+
+.btn-cancel-message {
+    background-color: transparent;
+    color: var(--text-sub);
+    font-weight: 600;
+    padding: 11px 22px;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+    .btn-cancel-message:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+        color: var(--text-main);
+    }

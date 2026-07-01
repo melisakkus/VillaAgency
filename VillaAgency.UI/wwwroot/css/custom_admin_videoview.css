@@ -1,0 +1,232 @@
+﻿/* custom_admin_videoview.css */
+
+/* INDEX */
+.video-card {
+    transition: all 0.25s ease;
+}
+
+    .video-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+    }
+
+[data-bs-theme="dark"] .video-card {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+.btn-xs {
+    font-size: 0.72rem;
+    border-radius: 6px;
+}
+
+.status-toggle-btn {
+    font-size: 0.72rem;
+    border-radius: 6px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+    min-width: 100px;
+    display: inline-flex;
+    justify-content: flex-start;
+    padding-left: 12px;
+}
+
+    .status-toggle-btn.active-status {
+        background-color: rgba(25, 135, 84, 0.1);
+        border-color: rgba(25, 135, 84, 0.2);
+        color: #198754;
+    }
+
+[data-bs-theme="dark"] .status-toggle-btn.active-status {
+    background-color: rgba(40, 167, 69, 0.15);
+    border-color: rgba(40, 167, 69, 0.3);
+    color: #4cd137;
+}
+
+.status-toggle-btn.active-status:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+    border-color: rgba(220, 53, 69, 0.3);
+    color: #dc3545;
+}
+
+.status-toggle-btn.passive-status {
+    background-color: rgba(255, 193, 7, 0.12);
+    border-color: rgba(255, 193, 7, 0.3);
+    color: #997404;
+}
+
+[data-bs-theme="dark"] .status-toggle-btn.passive-status {
+    background-color: rgba(255, 193, 7, 0.08);
+    border-color: rgba(255, 193, 7, 0.25);
+    color: #ffc107;
+}
+
+.status-toggle-btn.passive-status:hover {
+    background-color: rgba(25, 135, 84, 0.15) !important;
+    border-color: rgba(25, 135, 84, 0.4) !important;
+    color: #198754 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+    .status-toggle-btn.passive-status:hover .bi-circle-fill {
+        color: #198754 !important;
+    }
+
+.status-toggle-btn.passive-status .bi-circle-fill {
+    color: #ffc107;
+    opacity: 0.8;
+}
+
+.status-toggle-btn.passive-status:hover .status-text,
+.status-toggle-btn.active-status:hover .status-text {
+    font-size: 0;
+}
+
+    .status-toggle-btn.active-status:hover .status-text::before {
+        content: 'Disable';
+        font-size: 0.72rem;
+    }
+
+    .status-toggle-btn.passive-status:hover .status-text::before {
+        content: 'Enable';
+        font-size: 0.72rem;
+    }
+
+.status-pulse-dot {
+    width: 7px;
+    height: 7px;
+    background-color: currentColor;
+    border-radius: 50%;
+    display: inline-block;
+    animation: activePulse 2s infinite;
+}
+
+@keyframes activePulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 6px rgba(25, 135, 84, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(25, 135, 84, 0);
+    }
+}
+
+.btn-outline-warning {
+    border-width: 1px;
+}
+
+[data-bs-theme="dark"] .btn-outline-warning i {
+    color: #ffc107;
+}
+
+[data-bs-theme="dark"] .btn-outline-warning:hover i {
+    color: #000;
+}
+
+
+/* CREATE & UPDATE */
+
+.custom-premium-card {
+    transition: background-color 0.2s ease;
+}
+
+[data-bs-theme="light"] .custom-premium-card,
+html:not([data-bs-theme="dark"]) .custom-premium-card {
+    background-color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .custom-premium-card {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+.custom-input {
+    background-color: rgba(var(--bs-text-color-rgb), 0.02) !important;
+    border: 1px solid var(--bs-border-color) !important;
+    border-left: none !important; 
+    color: var(--bs-body-color) !important;
+    font-size: 0.9rem;
+}
+
+    .custom-input:focus {
+        background-color: transparent !important;
+        border-color: var(--bs-primary) !important;
+        box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.05) !important;
+    }
+
+    .custom-input::placeholder {
+        font-size: 0.85rem;
+        opacity: 0.4;
+        font-style: italic;
+    }
+
+.input-group-text {
+    border-right: none !important;
+}
+
+.border-start-3 {
+    border-left-width: 3px !important;
+}
+
+.border-start-primary {
+    border-left-color: var(--bs-primary) !important;
+}
+
+[data-bs-theme="light"] .custom-info-box,
+html:not([data-bs-theme="dark"]) .custom-info-box {
+    background-color: rgba(var(--bs-primary-rgb), 0.03) !important;
+}
+
+[data-bs-theme="dark"] .custom-info-box {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+
+/* ==========================================================================
+   DARK THEME - KONTRAST VE OKUNABİLİRLİK İYİLEŞTİRMELERİ
+   ========================================================================== */
+[data-bs-theme="dark"] {
+    /* 1. Source URL Başlık Metni */
+    .text-primary.opacity-75
+
+{
+    color: #6ea8fe !important; /* Daha açık ve parlayan bir mavi */
+    opacity: 0.95 !important;
+}
+
+/* 2. Link Kutusunun Arka Planı ve Kenarlıkları */
+.source-link-box {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+    .source-link-box:hover {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        border-color: #6ea8fe !important;
+    }
+
+    /* 3. Link Kutusunun İçindeki İkonlar ve Metinler */
+    .source-link-box .bi-link-45deg,
+    .source-link-box .bi-box-arrow-up-right {
+        color: #6ea8fe !important; /* İkonları görünür yapıyoruz */
+        opacity: 1 !important;
+    }
+
+    .source-link-box .text-body-secondary {
+        color: #e2e8f0 !important; /* Link metnini neredeyse beyaz/açık gri yapıyoruz */
+    }
+
+/* 4. Alt Kısımdaki Preview Butonu Kontrastı */
+.btn-outline-primary {
+    color: #6ea8fe;
+    border-color: #6ea8fe;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #6ea8fe;
+        color: #000;
+    }
+}

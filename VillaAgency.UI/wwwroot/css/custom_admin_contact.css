@@ -1,0 +1,35 @@
+﻿/* custom_admin_contact.css */
+
+[data-bs-theme="dark"] .card {
+    --bs-card-bg: #1a2235;
+    --bs-card-border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-bs-theme="dark"] .bg-body {
+    background-color: #1a2235 !important;
+}
+
+[data-bs-theme="dark"] .form-control {
+    background-color: #111827;
+    border-color: #2d3748;
+    color: #f8fafc;
+}
+
+[data-bs-theme="dark"] .input-group-text {
+    background-color: #2d3748;
+    border-color: #2d3748;
+    color: #cbd5e1;
+}
+
+[data-bs-theme="dark"] .modal-content {
+    background-color: #1a2235 !important;
+}
+
+[data-bs-theme="dark"] .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Row Hover Effect */
+.hover-row:hover {
+    background-color: rgba(var(--bs-primary-rgb), 0.02);
+}

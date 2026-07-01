@@ -3,6 +3,7 @@
     ViewData["Title"] = "CreateBanner";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+<link rel="stylesheet" href="~/css/custom_admin_banner.css" />
 
 <div class="container-fluid py-4">
 
@@ -98,83 +99,4 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const inputCity = document.getElementById("inputCity");
-        const inputTitle = document.getElementById("inputTitle");
-        const inputImageUrl = document.getElementById("inputImageUrl");
-
-        const previewCard = document.getElementById("previewCard");
-        const previewPlaceholder = document.getElementById("previewPlaceholder");
-        const previewImg = document.getElementById("previewImg");
-        const previewCity = document.getElementById("previewCity");
-        const previewTitle = document.getElementById("previewTitle");
-
-        function updatePreview() {
-            const urlValue = inputImageUrl.value.trim();
-            const cityValue = inputCity.value.trim();
-            const titleValue = inputTitle.value.trim();
-
-            if (urlValue) {
-                previewImg.src = urlValue;
-                previewCity.textContent = cityValue || "City Name";
-                previewTitle.textContent = titleValue || "Banner Title";
-
-                previewCard.style.display = "block";
-                previewPlaceholder.style.display = "none";
-            } else {
-                previewCard.style.display = "none";
-                previewPlaceholder.style.display = "block";
-            }
-        }
-
-        inputCity.addEventListener("input", updatePreview);
-        inputTitle.addEventListener("input", updatePreview);
-        inputImageUrl.addEventListener("input", updatePreview);
-
-        previewImg.addEventListener("error", function() {
-            previewCard.style.display = "none";
-            previewPlaceholder.style.display = "block";
-        });
-
-        updatePreview();
-    });
-</script>
-
-
-
-<style>
-    [data-bs-theme="dark"] .card {
-        --bs-card-bg: #1a2235; 
-        --bs-card-border-color: rgba(255, 255, 255, 0.1);
-    }
-
-    [data-bs-theme="dark"] .bg-body {
-        background-color: #1a2235 !important;
-    }
-
-    [data-bs-theme="dark"] .bg-light-subtle {
-        background-color: #111827 !important; 
-    }
-
-    [data-bs-theme="dark"] .input-group-text {
-        background-color: #2d3748;
-        border-color: #4a5568;
-        color: #e2e8f0;
-    }
-
-    [data-bs-theme="dark"] .form-control {
-        background-color: #111827;
-        border-color: #2d3748;
-        color: #f8fafc;
-    }
-
-        [data-bs-theme="dark"] .form-control:focus {
-            background-color: #0f172a;
-            border-color: #3b82f6;
-        }
-
-    .input-group-text {
-        transition: all 0.3s ease;
-    }
-</style>
+<script src="~/js/custom_admin_banner.js"></script>

@@ -3,6 +3,7 @@
     ViewData["Title"] = "UpdateContact";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+<link rel="stylesheet" href="~/css/custom_admin_contact.css" />
 
 <div class="container-fluid py-4">
 
@@ -100,76 +101,4 @@
     </form>
 </div>
 
-<style>
-    /* Dark Mode Theme Overrides (Custom Navy Blue) */
-    [data-bs-theme="dark"] .card {
-        --bs-card-bg: #1a2235;
-        --bs-card-border-color: rgba(255, 255, 255, 0.1);
-    }
-
-    [data-bs-theme="dark"] .bg-body {
-        background-color: #1a2235 !important;
-    }
-
-    [data-bs-theme="dark"] .form-control {
-        background-color: #111827;
-        border-color: #2d3748;
-        color: #f8fafc;
-    }
-
-    [data-bs-theme="dark"] .input-group-text {
-        background-color: #2d3748;
-        border-color: #2d3748;
-        color: #cbd5e1;
-    }
-</style>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const mapUrlInput = document.getElementById("mapUrlInput");
-        const mapPreview = document.getElementById("mapPreview");
-        const mapPlaceholder = document.getElementById("mapPlaceholder");
-        const placeholderText = document.getElementById("placeholderText");
-        const urlWarning = document.getElementById("urlWarning");
-
-        function updateMapPreview() {
-            let url = mapUrlInput.value.trim();
-
-            // Auto-extract src from iframe tags if pasted
-            if (url.includes('<iframe')) {
-                const match = url.match(/src="([^"]+)"/);
-                if (match && match[1]) {
-                    url = match[1];
-                    mapUrlInput.value = url;
-                }
-            }
-
-            if (url && url.startsWith('http')) {
-                // If it's an embed link, show in iframe
-                if (url.includes('/embed') || url.includes('google.com/maps/embed')) {
-                    mapPreview.src = url;
-                    mapPreview.classList.remove("d-none");
-                    mapPlaceholder.classList.add("d-none");
-                    urlWarning.classList.add("d-none");
-                }
-                else {
-                    // Standard links detected: Explain why preview is disabled
-                    mapPreview.classList.add("d-none");
-                    mapPlaceholder.classList.remove("d-none");
-                    urlWarning.classList.remove("d-none");
-                    placeholderText.innerHTML = `Google blocks direct preview for standard links.<br><span class="text-info mt-2 d-block">But don't worry, the link will work!</span>`;
-                }
-            } else {
-                mapPreview.classList.add("d-none");
-                mapPlaceholder.classList.remove("d-none");
-                placeholderText.innerText = "Enter a valid URL to see preview";
-            }
-        }
-
-        // Listen for input changes
-        mapUrlInput.addEventListener("input", updateMapPreview);
-
-        // Initial call to load current database value into preview
-        updateMapPreview();
-    });
-</script>
+<script src="~/js/custom_admin_contact.js"></script>
