@@ -16,17 +16,33 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var activeProductsTask = _counterService.TGetActiveProductsCountAsync();
-            var soldProductsTask = _counterService.TGetSoldProductsCountAsync();
-            var allProductsTask = _counterService.TGetAllProductsCountAsync();
+            var allProductsCountTask = _counterService.TGetAllProductsCountAsync();
+            var activeProductsCountTask = _counterService.TGetActiveProductsCountAsync();
+            var soldProductsCountTask = _counterService.TGetSoldProductsCountAsync();
+            var rentedProductsCountTask = _counterService.TGetRentedProductsCountAsync();
+            var categoriesWithCountTask = _counterService.TGetProductCountsByCategoryAsync();
+            var unreadMessagesCountTask = _counterService.TGetUnReadMessagesCountAsync();
+            var lastMessagesTask = _counterService.TGetLastMessagesAsync(5);
 
-            await Task.WhenAll(activeProductsTask, soldProductsTask, allProductsTask);
+            await Task.WhenAll(
+                allProductsCountTask,
+                activeProductsCountTask,
+                soldProductsCountTask,
+                rentedProductsCountTask,
+                categoriesWithCountTask,
+                unreadMessagesCountTask,
+                lastMessagesTask
+            );
 
             var dto = new DashboardCounterDto
             {
-                ActiveProductsCount = await activeProductsTask,
-                SoldProductsCount = await soldProductsTask,
-                TotalProductsCount = await allProductsTask
+                AllProductsCount = allProductsCountTask.Result,
+                ActiveProductsCount = activeProductsCountTask.Result,
+                SoldProductsCount = soldProductsCountTask.Result,
+                RentedProductsCount = rentedProductsCountTask.Result,
+                UnreadMessagesCount = unreadMessagesCountTask.Result,
+                CategoriesWithCount = categoriesWithCountTask.Result,
+                LastMessages = lastMessagesTask.Result
             };
 
             return View(dto);

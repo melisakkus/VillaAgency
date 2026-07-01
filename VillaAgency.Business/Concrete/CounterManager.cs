@@ -1,5 +1,7 @@
-﻿using VillaAgency.Business.Abstract;
+﻿using Mapster;
+using VillaAgency.Business.Abstract;
 using VillaAgency.DataAccess.Abstract;
+using VillaAgency.Dto.MessageDtos;
 
 namespace VillaAgency.Business.Concrete
 {
@@ -12,6 +14,21 @@ namespace VillaAgency.Business.Concrete
             _counterDal = counterDal;
         }
 
+        public async Task<Dictionary<string, int>> TGetProductCountsByCategoryAsync()
+        {
+            return await _counterDal.GetProductCountsByCategoryAsync();
+        }
+
+        public async Task<int> TGetRentedProductsCountAsync()
+        {
+            return await _counterDal.GetRentedProductsCountAsync();
+        }
+
+        public async Task<int> TGetUnReadMessagesCountAsync()
+        {
+            return await _counterDal.GetUnReadMessagesCountAsync();
+        }
+
         public async Task<int> TGetActiveProductsCountAsync()
         {
             return await _counterDal.GetActiveProductsCountAsync();
@@ -22,14 +39,15 @@ namespace VillaAgency.Business.Concrete
             return await _counterDal.GetAllProductsCountAsync();
         }
 
-        public Task<int> TGetMessagesCount()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<int> TGetSoldProductsCountAsync()
         {
             return await _counterDal.GetSoldProductsCountAsync();
+        }
+
+        public async Task<List<ResultMessageDto>> TGetLastMessagesAsync(int count)
+        {
+            var values = await _counterDal.GetLastMessagesAsync(count);
+            return values.Adapt<List<ResultMessageDto>>();  
         }
     }
 }

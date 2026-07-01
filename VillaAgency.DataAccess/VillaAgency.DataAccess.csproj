@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VillaAgency.Dto\VillaAgency.Dto.csproj" />
     <ProjectReference Include="..\VillaAgency.Entity\VillaAgency.Entity.csproj" />
   </ItemGroup>
 

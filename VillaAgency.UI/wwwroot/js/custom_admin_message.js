@@ -20,3 +20,4 @@ document.addEventListener("DOMContentLoaded", function () {
         previewModal.querySelector('#modalMessageDate').textContent = date;
     });
 });
+

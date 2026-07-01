@@ -1,49 +1,281 @@
 ﻿@model DashboardCounterDto
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Dashboard";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="row g-3 mb-4">
-    <div class="col-12 col-md-4">
-        <div class="card border-0 shadow-sm p-3 bg-white h-100">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <p class="text-muted mb-1 text-uppercase fw-bold small">Total Portfolios</p>
-                    <h2 class="mb-0 fw-bold">@Model.TotalProductsCount</h2>
-                </div>
-                <div class="bg-primary bg-opacity-10 text-primary p-3 rounded">
-                    <i class="bi bi-building h3 mb-0"></i>
-                </div>
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<link rel="stylesheet" href="~/css/custom_admin_dashboard.css" />
+
+<!-- Main Container ensuring responsive height without breaking layout structure -->
+<div class="d-flex flex-column p-4 custom-dashboard-container">
+
+    <!-- Header Block -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-shrink-0">
+        <div>
+            <h3 class="fw-bold mb-1 dashboard-text-primary tracking-tight">Real Estate Analytics</h3>
+            <p class="text-muted small mb-0">Real-time insights and client inquiries for your portfolio.</p>
+        </div>
+        <div>
+            <div class="message-badge">
+                <i class="bi bi-envelope-open-fill me-2"></i>
+                <span>@Model.UnreadMessagesCount Unread Messages</span>
             </div>
         </div>
     </div>
 
-    <div class="col-12 col-md-4">
-        <div class="card border-0 shadow-sm p-3 bg-white h-100">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <p class="text-muted mb-1 text-uppercase fw-bold small">Active Listings</p>
-                    <h2 class="mb-0 fw-bold">@Model.ActiveProductsCount</h2>
+    <!-- Top Counter Cards -->
+    <div class="row g-3 mb-4 flex-shrink-0">
+        <div class="col-md-3">
+            <div class="stat-card p-3 h-100 color-1">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <span class="stat-title">Total Portfolio</span>
+                        <h3 class="stat-value">@Model.AllProductsCount</h3>
+                    </div>
+                    <div class="stat-icon"><i class="bi bi-collection-fill"></i></div>
                 </div>
-                <div class="bg-success bg-opacity-10 text-success p-3 rounded">
-                    <i class="bi bi-house-check h3 mb-0"></i>
+                <div class="mt-3"><span class="badge-mini">Full List</span></div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card p-3 h-100 color-2">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <span class="stat-title">Active Listings</span>
+                        <h3 class="stat-value">@Model.ActiveProductsCount</h3>
+                    </div>
+                    <div class="stat-icon"><i class="bi bi-megaphone-fill"></i></div>
                 </div>
+                <div class="mt-3"><span class="badge-mini">Live</span></div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card p-3 h-100 color-3">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <span class="stat-title">Rented Properties</span>
+                        <h3 class="stat-value">@Model.RentedProductsCount</h3>
+                    </div>
+                    <div class="stat-icon"><i class="bi bi-key-fill"></i></div>
+                </div>
+                <div class="mt-3"><span class="badge-mini">Contracted</span></div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card p-3 h-100 color-4">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <span class="stat-title">Sold Units</span>
+                        <h3 class="stat-value">@Model.SoldProductsCount</h3>
+                    </div>
+                    <div class="stat-icon"><i class="bi bi-cash-stack"></i></div>
+                </div>
+                <div class="mt-3"><span class="badge-mini">Successful Sales</span></div>
             </div>
         </div>
     </div>
 
-    <div class="col-12 col-md-4">
-        <div class="card border-0 shadow-sm p-3 bg-white h-100">
-            <div class="d-flex align-items-center justify-content-between">
-                <div>
-                    <p class="text-muted mb-1 text-uppercase fw-bold small">Successful Deals</p>
-                    <h2 class="mb-0 fw-bold">@Model.SoldProductsCount</h2>
+    <!-- Main Content Row -->
+    <div class="row g-4 flex-grow-1 overflow-hidden" style="min-height: 0; height: 1px;">
+
+        <!-- Left Block: Category Distribution -->
+        <div class="col-12 col-xl-5 h-100 overflow-hidden" style="min-height: 0;">
+            <div class="card border-0 shadow-soft rounded-4 h-100 premium-card d-flex flex-column overflow-hidden">
+                <div class="card-header premium-header bg-transparent pt-4 px-4 flex-shrink-0">
+                    <h6 class="fw-bold dashboard-text-primary text-uppercase tracking-wider small m-0">
+                        <i class="bi bi-pie-chart-fill me-2 text-primary opacity-75"></i>Category Distribution
+                    </h6>
                 </div>
-                <div class="bg-warning bg-opacity-10 text-warning p-3 rounded">
-                    <i class="bi bi-currency-dollar h3 mb-0"></i>
+                <div class="card-body d-flex align-items-center justify-content-center p-4 flex-grow-1 overflow-hidden" style="min-height: 0; position: relative;">
+                    <div style="position: absolute; top: 15px; bottom: 15px; left: 15px; right: 15px;">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Right Block: Recent Messages -->
+        <div class="col-12 col-xl-7 h-100 overflow-hidden" style="min-height: 0;">
+            <div class="card border-0 shadow-soft rounded-4 h-100 premium-card d-flex flex-column overflow-hidden" style="min-height: 0;">
+                <div class="card-header premium-header bg-transparent pt-4 px-4 flex-shrink-0">
+                    <h6 class="fw-bold dashboard-text-primary text-uppercase tracking-wider small m-0">
+                        <i class="bi bi-chat-left-dots-fill me-2 text-success opacity-75"></i>Recent Messages
+                    </h6>
+                </div>
+
+                <!-- Messages Area -->
+                <div class="card-body px-4 py-3 flex-grow-1 message-scroll-area">
+                    <div class="d-flex flex-column gap-2">
+                        @if (Model.LastMessages != null && Model.LastMessages.Any())
+                        {
+                            @foreach (var msg in Model.LastMessages)
+                            {
+                                <div class="msg-item p-3 rounded-3"
+                                     data-bs-toggle="modal" data-bs-target="#messageDetailModal"
+                                     data-name="@msg.Name"
+                                     data-email="@msg.Email"
+                                     data-subject="@msg.Subject"
+                                     data-date="@msg.MessageDate.ToString("dd MMM yyyy, HH:mm", new System.Globalization.CultureInfo("en-US"))"
+                                     data-content="@msg.Content">
+
+                                    <div class="d-flex align-items-center gap-3">
+                                        <!-- Dynamic Sender Avatar Box -->
+                                        <div class="avatar-circle flex-shrink-0">
+                                            @(string.IsNullOrEmpty(msg.Name) ? "?" : msg.Name.Substring(0, 1).ToUpper())
+                                        </div>
+
+                                        <!-- Message Content Hierarchy -->
+                                        <div class="flex-grow-1 overflow-hidden">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span class="fw-bold dashboard-text-primary text-truncate" style="font-size: 0.85rem;">@msg.Name</span>
+                                                <small class="text-muted flex-shrink-0" style="font-size: 0.7rem;">@msg.MessageDate.ToString("dd MMM", new System.Globalization.CultureInfo("en-US"))</small>
+                                            </div>
+                                            <div class="dashboard-text-secondary fw-medium text-truncate mb-0" style="font-size: 0.78rem;">@msg.Subject</div>
+                                            <p class="text-muted small text-truncate mb-0" style="font-size: 0.75rem;">@msg.Content</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="text-center text-muted small my-4 py-3">
+                                <i class="bi bi-chat-square-x d-block fs-3 mb-2 opacity-50"></i>
+                                No recent messages.
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Footer Action Button -->
+                <div class="card-footer bg-transparent border-0 p-3 pt-1 pb-4 flex-shrink-0 d-flex justify-content-center">
+                    <a asp-area="Admin" asp-controller="Message" asp-action="Index" class="btn btn-modern-action w-50 rounded-pill fw-bold btn-sm py-2">
+                        View All Messages <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- COMPACT & PORTAL STYLE QUICK PREVIEW MODAL (POPUP) -->
+<div class="modal fade" id="messageDetailModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered custom-modal-width">
+        <!-- custom-modal-width ile daraltıldı -->
+        <div class="modal-content custom-modal-theme shadow-lg border-0">
+            <!-- Modal Header -->
+            <div class="modal-header border-bottom-theme pb-3 px-4">
+                <h6 class="modal-title fw-bold text-primary m-0 d-flex align-items-center" id="messageModalLabel" style="font-size: 0.9rem; letter-spacing: 0.5px;">
+                    <i class="bi bi-envelope-open-fill me-2 text-primary"></i>Message Quick Preview
+                </h6>
+                <button type="button" class="btn-close custom-modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body px-4 pt-4 pb-3">
+                <!-- Sender Info & Date Row -->
+                <div class="d-flex justify-content-between align-items-start mb-4">
+                    <div>
+                        <h5 class="fw-bold dashboard-text-primary mb-1" id="modalSenderName" style="font-size: 1.05rem; letter-spacing: -0.3px;">Loading...</h5>
+                        <span class="text-muted small" id="modalSenderEmail" style="font-size: 0.82rem;">Loading...</span>
+                    </div>
+                    <div>
+                        <span class="badge-portal-date" id="modalMessageDate">Loading...</span>
+                    </div>
+                </div>
+
+                <!-- Centered Subject Badge -->
+                <div class="text-center mb-4">
+                    <span class="badge-portal-subject fw-bold" id="modalSubject">Loading...</span>
+                </div>
+
+                <!-- Compact & Balanced Message Box -->
+                <div class="portal-message-container p-3 rounded-3 border">
+                    <!-- text-start ile yazılar sola yaslandı ve daha okunaklı 2-3 satır formatına getirildi -->
+                    <p class="dashboard-text-secondary m-0 text-start" id="modalContent" style="font-size: 0.88rem; line-height: 1.6; max-height: 180px; overflow-y: auto; white-space: pre-line;">
+                        Loading...
+                    </p>
+                </div>
+            </div>
+
+            <!-- Footer Action Area -->
+            <div class="modal-footer border-0 px-4 pb-4 pt-0 d-flex justify-content-end">
+                <button type="button" class="btn btn-portal-close px-4 fw-bold" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // --- BRIDGE DATAS TO MODAL (POPUP) ---
+        const messageModal = document.getElementById('messageDetailModal');
+        if (messageModal) {
+            messageModal.addEventListener('show.bs.modal', function (event) {
+                const triggerElement = event.relatedTarget;
+
+                const name = triggerElement.getAttribute('data-name');
+                const email = triggerElement.getAttribute('data-email');
+                const subject = triggerElement.getAttribute('data-subject');
+                const date = triggerElement.getAttribute('data-date');
+                const content = triggerElement.getAttribute('data-content');
+
+                document.getElementById('modalSenderName').textContent = name;
+                document.getElementById('modalSenderEmail').textContent = email;
+                document.getElementById('modalSubject').textContent = subject;
+                document.getElementById('modalMessageDate').textContent = date;
+                document.getElementById('modalContent').textContent = content;
+            });
+        }
+
+        // --- CHART ENHANCEMENTS ---
+        const ctx = document.getElementById('categoryChart').getContext('2d');
+        const categoryData = @Html.Raw(Json.Serialize(Model.CategoriesWithCount));
+        const labels = Object.keys(categoryData);
+        const dataValues = Object.values(categoryData);
+
+        const total = dataValues.reduce((a, b) => a + b, 0);
+        const labelsWithPercent = labels.map((label, index) => {
+            const percentage = total > 0 ? ((dataValues[index] / total) * 100).toFixed(1) : 0;
+            return `${label} (${percentage}%)`;
+        });
+
+        const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark' || document.body.classList.contains('dark-mode');
+        const textLabelColor = isDark ? '#94a3b8' : '#475569';
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labelsWithPercent,
+                datasets: [{
+                    data: dataValues,
+                    backgroundColor: ['#4f46e5', '#10b981', '#3b82f6', '#f43f5e', '#ff9f43'],
+                    borderWidth: 0,
+                    hoverOffset: 12
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 12,
+                            font: { size: 11, weight: '600' },
+                            color: textLabelColor
+                        }
+                    }
+                },
+                cutout: '70%'
+            }
+        });
+    });
+</script>
