@@ -1,6 +1,6 @@
 ﻿@model UpdateMessageDto
 @{
-    ViewData["Title"] = "Update";
+    ViewData["Title"] = "Message Details";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -10,79 +10,83 @@
     <div class="create-message-wrapper">
         <div class="create-message-container">
 
-            <div class="mb-3 pl-1">
-                <a asp-area="Admin" asp-controller="Message" asp-action="Index" class="btn btn-sm btn-link p-0" style="color: var(--btn-primary); text-decoration: none; font-size: 0.85rem; font-weight: 600;">
-                    Back to Inbox
+            <div class="d-flex justify-content-between align-items-center mb-3 px-1">
+                <a asp-area="Admin" asp-controller="Message" asp-action="Index" class="btn btn-sm btn-link p-0 d-flex align-items-center gap-1" style="color: var(--text-sub); text-decoration: none; font-size: 0.85rem; font-weight: 600;">
+                    <i class="bi bi-arrow-left"></i> Back to Inbox
                 </a>
+
+                <div class="d-flex gap-2">
+                    <a asp-area="Admin" asp-controller="Message" asp-action="MarkAsRead" asp-route-id="@Model.Id" class="btn btn-sm btn-success d-flex align-items-center gap-1 px-3 py-1.5 fw-semibold rounded-2 shadow-sm">
+                        <i class="bi bi-envelope-open-fill"></i> Mark as Read
+                    </a>
+                    <a asp-area="Admin" asp-controller="Message" asp-action="MarkAsNotRead" asp-route-id="@Model.Id" class="btn btn-sm btn-warning d-flex align-items-center gap-1 px-3 py-1.5 fw-semibold text-dark rounded-2 shadow-sm">
+                        <i class="bi bi-envelope-fill"></i> Mark as Unread
+                    </a>
+                    <a asp-area="Admin" asp-controller="Message" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-sm btn-danger d-flex align-items-center gap-1 px-3 py-1.5 fw-semibold rounded-2 shadow-sm" onclick="deleteMessage('@Model.Id')">
+                        <i class="bi bi-trash3-fill"></i> Move to Trash
+                    </a>
+                </div>
             </div>
 
-            <div class="custom-card">
-                <div class="card-form-header">
-                    <h4 class="m-0 font-weight-bold" style="color: var(--text-main); font-size: 1.2rem;">
-                        Update Message Details
+            <div class="custom-card border shadow-sm rounded-3 overflow-hidden" style="background-color: var(--bs-body-bg); border-color: var(--bs-border-color) !important;">
+                <div class="card-form-header border-bottom py-3 px-4" style="background-color: var(--bs-tertiary-bg); border-color: var(--bs-border-color) !important;">
+                    <h4 class="m-0 font-weight-bold" style="color: var(--bs-heading-color); font-size: 1.15rem;">
+                        <i class="bi bi-envelope-paper me-2 text-primary"></i> Message Reader
                     </h4>
-                    <p class="m-0 mt-1 small" style="color: var(--text-sub);">Modify the values below to update the existing message record.</p>
+                    <p class="m-0 mt-1 small" style="color: var(--bs-secondary-color);">Review the incoming inquiry data details below.</p>
                 </div>
 
-                <div class="card-form-body">
-                    <form method="post" asp-area="Admin" asp-controller="Message" asp-action="Update">
-
-                        <input type="hidden" asp-for="Id" />
-                        <input type="hidden" name="activeTab" value="@ViewBag.ActiveTab" />
-
-                        <div class="form-grid-layout">
-                            <div class="form-left-side">
-                                <div class="form-group-custom">
-                                    <label asp-for="Name">Full Name</label>
-                                    <div class="input-icon-wrapper">
-                                        <input asp-for="Name" class="form-input-custom" placeholder="John Doe" autocomplete="off" />
-                                        <i class="fas fa-user"></i>
-                                    </div>
-                                    <span asp-validation-for="Name" class="text-danger small mt-1"></span>
-                                </div>
-
-                                <div class="form-group-custom">
-                                    <label asp-for="Email">Email Address</label>
-                                    <div class="input-icon-wrapper">
-                                        <input asp-for="Email" class="form-input-custom" placeholder="johndoe@example.com" autocomplete="off" />
-                                        <i class="fas fa-envelope"></i>
-                                    </div>
-                                    <span asp-validation-for="Email" class="text-danger small mt-1"></span>
-                                </div>
-
-                                <div class="form-group-custom">
-                                    <label asp-for="Subject">Subject</label>
-                                    <div class="input-icon-wrapper">
-                                        <input asp-for="Subject" class="form-input-custom" placeholder="Inquiry about..." autocomplete="off" />
-                                        <i class="fas fa-heading"></i>
-                                    </div>
-                                    <span asp-validation-for="Subject" class="text-danger small mt-1"></span>
+                <div class="card-form-body p-4">
+                    @* Bilgileri salt okunur (readonly) olarak gösteriyoruz, böylece kazara düzenleme yapılamaz *@
+                    <div class="form-grid-layout">
+                        <div class="form-left-side">
+                            <div class="form-group-custom mb-3">
+                                <label class="fw-semibold mb-1 small text-muted">Full Name</label>
+                                <div class="input-icon-wrapper position-relative">
+                                    <input asp-for="Name" class="form-control" style="background-color: var(--bs-tertiary-bg); color: var(--bs-body-color);" readonly />
+                                    <i class="fas fa-user position-absolute end-0 top-50 translate-middle-y me-3 text-muted"></i>
                                 </div>
                             </div>
 
-                            <div class="form-right-side">
-                                <div class="form-group-custom fill-height">
-                                    <label asp-for="Content">Message Content</label>
-                                    <div class="input-icon-wrapper textarea-wrapper">
-                                        <textarea asp-for="Content" class="form-input-custom textarea-custom" placeholder="Type your detailed message here..."></textarea>
-                                        <i class="fas fa-comment-alt"></i>
-                                    </div>
-                                    <span asp-validation-for="Content" class="text-danger small mt-1"></span>
+                            <div class="form-group-custom mb-3">
+                                <label class="fw-semibold mb-1 small text-muted">Email Address</label>
+                                <div class="input-icon-wrapper position-relative">
+                                    <input asp-for="Email" class="form-control" style="background-color: var(--bs-tertiary-bg); color: var(--bs-body-color);" readonly />
+                                    <i class="fas fa-envelope position-absolute end-0 top-50 translate-middle-y me-3 text-muted"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group-custom mb-3">
+                                <label class="fw-semibold mb-1 small text-muted">Subject</label>
+                                <div class="input-icon-wrapper position-relative">
+                                    <input asp-for="Subject" class="form-control fw-semibold" style="background-color: var(--bs-tertiary-bg); color: var(--bs-heading-color);" readonly />
+                                    <i class="fas fa-heading position-absolute end-0 top-50 translate-middle-y me-3 text-muted"></i>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-action-footer">
-                            <a asp-area="Admin" asp-controller="Message" asp-action="Index" class="btn-cancel-message" style="text-decoration: none;">Cancel</a>
-                            <button type="submit" class="btn-submit-message">
-                                <i class="fas fa-save mr-1"></i> Save Changes
-                            </button>
+                        <div class="form-right-side">
+                            <div class="form-group-custom fill-height mb-3 d-flex flex-column h-100">
+                                <label class="fw-semibold mb-1 small text-muted">Message Content</label>
+                                <div class="input-icon-wrapper textarea-wrapper position-relative flex-grow-1">
+                                    <textarea asp-for="Content" class="form-control h-100" style="background-color: var(--bs-tertiary-bg); color: var(--bs-body-color); min-height: 200px; resize: none;" readonly></textarea>
+                                    <i class="fas fa-comment-alt position-absolute end-0 top-0 mt-3 me-3 text-muted"></i>
+                                </div>
+                            </div>
                         </div>
+                    </div>
 
-                    </form>
+                    @* Alt barı sadeleştirip ana sayfaya dönüş butonu ekledik *@
+                    <div class="form-action-footer d-flex justify-content-end border-top pt-3 mt-4" style="border-color: var(--bs-border-color) !important;">
+                        <a asp-area="Admin" asp-controller="Message" asp-action="Index" class="btn btn-primary px-4 py-1.5 fw-semibold shadow-sm">
+                            <i class="bi bi-check-lg me-1"></i> Done
+                        </a>
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
 </div>
+
+<script src="~/js/custom_admin_message.js"></script>

@@ -1,39 +1,96 @@
-﻿<div class="navbar-actions ms-auto">
+﻿@model Tuple<List<ResultMessageDto>, int>
+
+<div class="navbar-actions ms-auto">
     <button class="icon-button theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme" title="Switch color theme">
         <i class="bi bi-moon-stars" data-theme-icon aria-hidden="true"></i>
     </button>
+
     <div class="dropdown">
-        <button class="icon-button" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notifications">
-            <span class="notification-dot"></span>
-            <i class="bi bi-bell" aria-hidden="true"></i>
+        <button class="icon-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            @if (Model != null && Model.Item2 > 0)
+            {
+                <span class="notification-dot"></span>
+            }
+            <i class="bi bi-bell"></i>
         </button>
-        <div class="dropdown-menu dropdown-menu-end notification-menu">
-            <div class="dropdown-header fw-bold text-body">Notifications</div>
-            <a class="dropdown-item" href="users.html">
-                <span class="notification-title">New user registered</span>
-                <span class="notification-time">4 minutes ago</span>
-            </a>
-            <a class="dropdown-item" href="charts.html">
-                <span class="notification-title">Revenue target reached</span>
-                <span class="notification-time">32 minutes ago</span>
-            </a>
-            <a class="dropdown-item" href="settings.html">
-                <span class="notification-title">Security review completed</span>
-                <span class="notification-time">1 hour ago</span>
-            </a>
+
+        <div class="dropdown-menu dropdown-menu-end notification-menu shadow-lg border rounded-3 overflow-hidden" style="width: 340px;">
+
+            <div class="dropdown-header d-flex justify-content-between align-items-center py-3 px-3 border-bottom custom-dropdown-header">
+                <span class="fw-bold fs-6 header-title">Messages</span>
+                <span class="badge bg-primary rounded-pill">@Model?.Item2</span>
+            </div>
+
+            <div class="message-list-scroll">
+                @if (Model == null || Model.Item1 == null || !Model.Item1.Any())
+                {
+                    <div class="text-center py-4 text-muted small">
+                        <i class="bi bi-envelope-open d-block fs-3 mb-2"></i>
+                        No new messages
+                    </div>
+                }
+                else
+                {
+                    foreach (var item in Model.Item1)
+                    {
+                        var firstLetter = !string.IsNullOrEmpty(item.Name) ? item.Name[0].ToString().ToUpper() : "M";
+
+                        <div class="message-item-wrapper custom-border-bottom">
+                            <a class="dropdown-item d-flex align-items-start py-3 px-3 custom-dropdown-item"
+                               asp-area="Admin"
+                               asp-controller="Message"
+                               asp-action="Update"
+                               asp-route-id="@item.Id">
+
+                                <div class="avatar-circle-placeholder me-3 d-flex align-items-center justify-content-center fw-bold rounded-circle">
+                                    @firstLetter
+                                </div>
+
+                                <div class="w-100">
+                                    <div class="d-flex justify-content-between align-items-baseline mb-1">
+                                        <h6 class="mb-0 text-truncate fw-semibold custom-item-name" style="max-width: 160px; font-size: 0.9rem;">
+                                            @(item.Name ?? "New Inquiry")
+                                        </h6>
+                                        <small class="text-muted text-nowrap style-date" style="font-size: 0.75rem;">
+                                            @item.MessageDate.ToString("dd MMM")
+                                        </small>
+                                    </div>
+                                    <p class="mb-0 text-muted text-truncate small custom-item-subject" style="font-size: 0.825rem; max-width: 220px;">
+                                        @item.Subject
+                                    </p>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div class="p-2 border-top text-center custom-dropdown-footer">
+                <a asp-area="Admin" asp-controller="Message" asp-action="Index" class="text-primary fw-semibold small d-block py-1 hover-underline" style="font-size: 0.85rem; text-decoration: none;">
+                    View All Messages <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
         </div>
     </div>
 
     <div class="dropdown">
-        <button class="profile-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <img class="avatar-img avatar-sm" src="~/adminhmd-1.0.0/assets/images/avatar/avatar.jpg" alt="Admin">
+        <button class="profile-button" type="button"  aria-expanded="false">
+            <img class="avatar-img avatar-sm" src="/adminhmd-1.0.0/assets/images/avatar/adminicon.png" alt="Admin">
             <span class="profile-name d-none d-sm-inline">Admin</span>
         </button>
-        <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="profile.html">Profile</a></li>
-            <li><a class="dropdown-item" href="settings.html">Account settings</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="login.html">Sign out</a></li>
-        </ul>
+      
     </div>
+
+@*     <div class="dropdown">
+        <button class="profile-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img class="avatar-img avatar-sm" src="/adminhmd-1.0.0/assets/images/avatar/adminicon.png" alt="Admin">
+            <span class="profile-name d-none d-sm-inline">Admin</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow border rounded-3 custom-dropdown-menu">
+            <li><a class="dropdown-item py-2 custom-dropdown-item" href="profile.html"><i class="bi bi-person me-2"></i>Profile</a></li>
+            <li><a class="dropdown-item py-2 custom-dropdown-item" href="settings.html"><i class="bi bi-gear me-2"></i>Account settings</a></li>
+            <li><hr class="dropdown-divider custom-divider"></li>
+            <li><a class="dropdown-item py-2 text-danger" href="login.html"><i class="bi bi-box-arrow-right me-2"></i>Sign out</a></li>
+        </ul>
+    </div> *@
 </div>

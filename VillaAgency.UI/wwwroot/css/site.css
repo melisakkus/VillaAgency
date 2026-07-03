@@ -1,22 +1,131 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+}
+
+/* ==========================================
+   THEME-SAFE NOTIFICATION MENU (PROFESSIONAL MAIL VIEW)
+   ========================================== */
+
+/* Dropdown Genel Menü Kutusu */
+.notification-menu.dropdown-menu {
+    padding: 0 !important;
+    background-color: var(--bs-body-bg) !important; /* Temanýn ana arka plan rengini otomatik alýr */
+    border-color: var(--bs-border-color) !important; /* Temanýn sýnýr çizgi rengini alýr */
+}
+
+/* Menü Baþlýðý */
+.custom-dropdown-header {
+    background-color: var(--bs-tertiary-bg) !important;
+    border-color: var(--bs-border-color) !important;
+}
+
+    .custom-dropdown-header .header-title {
+        color: var(--bs-heading-color) !important;
+    }
+
+/* Menü Altlýðý */
+.custom-dropdown-footer {
+    background-color: var(--bs-tertiary-bg) !important;
+    border-color: var(--bs-border-color) !important;
+}
+
+/* Mail Tarzý Düz Çizgi Ayrýmý (Dashed yerine Solid) */
+.custom-border-bottom {
+    border-bottom: 1px solid var(--bs-border-color) !important;
+}
+
+.message-item-wrapper:last-child.custom-border-bottom {
+    border-bottom: none !important;
+}
+
+/* Satýr Elemanlarý ve Yazý Renkleri */
+.custom-dropdown-item {
+    background-color: transparent !important;
+    color: var(--bs-body-color) !important;
+    transition: background-color 0.15s ease-in-out;
+}
+
+    /* Üzerine gelindiðinde (Hover efekti) */
+    .custom-dropdown-item:hover {
+        background-color: var(--bs-secondary-bg) !important; /* Light temada açýk gri, Dark temada koyu gri */
+    }
+
+.custom-item-name {
+    color: var(--bs-heading-color) !important;
+}
+
+.custom-item-subject {
+    color: var(--bs-secondary-color) !important;
+}
+
+/* Avatar Halkasý */
+.avatar-circle-placeholder {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    font-size: 14px;
+    font-weight: 700 !important; /* Harfi daha kalýn ve okunabilir yapar */
+    color: #ffffff !important; /* Harf rengi light/dark fark etmeksizin her zaman net beyaz kalýr */
+    /* Hem açýk hem koyu temada harika kontrast saðlayan daha doygun bir modern gradyan */
+    background: linear-gradient(135deg, #4f46e5 0%, #2563eb 100%) !important;
+    /* Hafif bir derinlik katýp tasarýmý canlandýrýr */
+    box-shadow: 0 2px 6px rgba(79, 70, 229, 0.3) !important;
+}
+
+/* Profil Menüsü Ýçin Ekstra Çizgi ve Renk Düzeltmesi */
+.custom-dropdown-menu {
+    background-color: var(--bs-body-bg) !important;
+    border-color: var(--bs-border-color) !important;
+}
+
+.custom-divider {
+    border-color: var(--bs-border-color) !important;
+    opacity: 1;
+}
+
+/* Kaydýrma Çubuðu (Scrollbar) */
+.message-list-scroll {
+    max-height: 320px;
+    overflow-y: auto;
+    background-color: var(--bs-body-bg);
+}
+
+    .message-list-scroll::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .message-list-scroll::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .message-list-scroll::-webkit-scrollbar-thumb {
+        background: var(--bs-border-color-translucent);
+        border-radius: 4px;
+    }
+
+        .message-list-scroll::-webkit-scrollbar-thumb:hover {
+            background: var(--bs-secondary-color);
+        }
+
+.hover-underline:hover {
+    text-decoration: underline !important;
 }

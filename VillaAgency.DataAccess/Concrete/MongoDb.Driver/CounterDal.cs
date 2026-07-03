@@ -17,7 +17,7 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
 
         public async Task<int> GetUnReadMessagesCountAsync()
         {
-            var filter = Builders<Message>.Filter.Eq(x => x.IsRead, false);
+            var filter = Builders<Message>.Filter.Where(x => !x.IsRead && !x.IsDeleted);
             var count = await _context.GetCollection<Message>().CountDocumentsAsync(filter);
             return (int)count;
         }
@@ -68,7 +68,7 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
         public async Task<List<Message>> GetLastMessagesAsync(int count)
         {
             var _collection = _context.GetCollection<Message>();
-            var filter = Builders<Message>.Filter.Eq(x => x.IsRead, false);
+            var filter = Builders<Message>.Filter.Where(x => !x.IsRead && !x.IsDeleted);
             var messages = await _collection.Find(filter)
                                             .Sort(Builders<Message>.Sort.Descending(x=>x.Id))
                                             .Limit(count).ToListAsync();
