@@ -1,6 +1,4 @@
-﻿/* ==========================================================================
-   1. INDEX SAYFASI STİLLERİ
-   ========================================================================== */
+﻿/* 1. INDEX  */
 .text-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -90,9 +88,7 @@
     color: #475569;
 }
 
-/* ==========================================================================
-   2. ORTAK ORTAK FORM STİLLERİ (CREATE & UPDATE)
-   ========================================================================== */
+/* 2. CREATE & UPDATE */
 :root {
     --card-bg: #ffffff;
     --card-border: #e2e8f0;
@@ -187,7 +183,7 @@
         letter-spacing: 0.6px;
     }
 
-/* İkon Yerleşimleri (Create'deki Yapı - Eğer Update'e de İkon Ekleyeceksen Ortak Kalabilir) */
+/* Icons */
 .input-icon-wrapper {
     position: relative;
     display: flex;
@@ -218,22 +214,22 @@
         top: 15px;
     }
 
-/* INPUT AYARLARI: İkonlu Tasarımı Standart Yaptık (Padding Sol 44px) */
+/* INPUT */
 .form-input-custom {
     width: 100%;
     background-color: var(--input-bg);
     border: 1px solid var(--input-border);
     color: var(--text-main) !important;
     border-radius: 8px;
-    padding: 11px 15px 11px 44px; /* İkonlar için sol boşluk eklendi */
-    font-size: 0.92rem;
+    padding: 11px 15px 11px 44px;
+    */ font-size: 0.92rem;
     font-weight: 500;
     transition: all 0.2s ease;
     box-sizing: border-box;
 }
 
     .form-input-custom.textarea-custom {
-        padding: 14px 15px 14px 44px; /* İkonlar için sol boşluk eklendi */
+        padding: 14px 15px 14px 44px;
         resize: none;
         height: 100%;
         min-height: 220px;
@@ -250,7 +246,7 @@
             color: var(--btn-primary);
         }
 
-/* Butonlar */
+/* Buttons */
 .form-action-footer {
     padding-top: 20px;
     border-top: 1px solid var(--card-border);
@@ -295,3 +291,45 @@
         background-color: rgba(0, 0, 0, 0.02);
         color: var(--text-main);
     }
+
+
+/* sweetalert */
+.swal2-popup {
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1) !important;
+    backdrop-filter: none !important;
+}
+
+.swal2-title {
+    color: #0f172a !important;
+    font-weight: 600 !important;
+}
+
+.swal2-html-container {
+    color: #64748b !important;
+}
+
+[data-bs-theme="dark"] .swal2-popup,
+body.dark-mode .swal2-popup {
+    background-color: #0b1320 !important;
+    color: #f1f5f9 !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-bs-theme="dark"] .swal2-title,
+body.dark-mode .swal2-title {
+    color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .swal2-html-container,
+body.dark-mode .swal2-html-container {
+    color: #94a3b8 !important;
+}
+
+.swal2-cancel {
+    background-color: #475569 !important;
+    color: #ffffff !important;
+}

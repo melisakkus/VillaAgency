@@ -26,7 +26,7 @@
                 </button>
             }
 
-            <a asp-area="Admin" asp-controller="Feature" asp-action="Create" class="btn btn-sm btn-primary px-3 shadow-sm fw-semibold">
+            <a asp-area="Admin" asp-controller="Feature" asp-action="Create" class="btn btn-sm btn-primary px-3 shadow-sm fw-semibold btn-add-feature">
                 <i class="bi bi-plus-lg me-1"></i> Add New
             </a>
         </div>
@@ -121,13 +121,14 @@
                                             </div>
 
                                             <div class="p-3 mt-auto border-top border-secondary-subtle d-flex justify-content-end gap-2">
-                                                <a asp-area="Admin" asp-controller="Feature" asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning px-3 py-1 fw-semibold">
+                                                <a asp-area="Admin" asp-controller="Feature" asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-warning px-3 py-1 fw-semibold shadow-sm text-dark hover-lift">
                                                     <i class="bi bi-pencil-square me-1"></i>Edit
                                                 </a>
-                                                <a asp-area="Admin" asp-controller="Feature" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger px-3 py-1 fw-semibold">
+                                                <button onclick="deleteFeature('@item.Id')" class="btn btn-sm btn-danger px-3 py-1 fw-semibold shadow-sm hover-lift">
                                                     <i class="bi bi-trash me-1"></i>Delete
-                                                </a>
+                                                </button>
                                             </div>
+
                                         </div>
                                     </div>
                                 }
@@ -150,3 +151,4 @@
     </div>
 </div>
 
+<script src="~/js/custom_admin_feature.js"></script>

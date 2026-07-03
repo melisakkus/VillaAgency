@@ -1,183 +1,186 @@
 ﻿// custom_admin_feature.js
 
-//update
 document.addEventListener("DOMContentLoaded", function () {
+    // 1. Elements for the Preview logic
     const inputTitle = document.getElementById("inputTitle");
     const imageUrlInput = document.getElementById("imageUrlInput");
-
     const previewCard = document.getElementById("previewCard");
     const imagePreview = document.getElementById("imagePreview");
     const previewTitle = document.getElementById("previewTitle");
     const previewPlaceholder = document.getElementById("previewPlaceholder");
 
+    // Target either the Create or Update form
+    const form = document.getElementById('createFeatureForm') || document.getElementById('updateFeatureForm');
+
+    // --- PREVIEW LOGIC ---
     function updatePreview() {
+        if (!imageUrlInput || !imagePreview) return; // Exit if elements don't exist (e.g., on Index page)
+
         const url = imageUrlInput.value.trim();
-        const title = inputTitle.value.trim();
-
-        if (url && url !== "") {
-            imagePreview.src = url;
-            previewTitle.textContent = title || "Feature Title";
-
-            previewCard.classList.remove("d-none");
-            previewPlaceholder.classList.add("d-none");
-        } else {
-            previewCard.classList.add("d-none");
-            previewPlaceholder.classList.remove("d-none");
-        }
-    }
-
-    // Değişiklikleri dinle
-    imageUrlInput.addEventListener("input", updatePreview);
-    inputTitle.addEventListener("input", updatePreview);
-
-    imagePreview.addEventListener("error", function () {
-        previewCard.classList.add("d-none");
-        previewPlaceholder.classList.remove("d-none");
-    });
-
-    // Sayfa açıldığında mevcut veriyi göster
-    updatePreview();
-});
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    const inputTitle = document.getElementById("inputTitle");
-    const imageUrlInput = document.getElementById("imageUrlInput");
-
-    const previewCard = document.getElementById("previewCard");
-    const imagePreview = document.getElementById("imagePreview");
-    const previewTitle = document.getElementById("previewTitle");
-    const previewPlaceholder = document.getElementById("previewPlaceholder");
-
-    function updatePreview() {
-        const url = imageUrlInput.value.trim();
-        const title = inputTitle.value.trim();
+        const title = inputTitle ? inputTitle.value.trim() : "";
 
         if (url) {
             imagePreview.src = url;
-            previewTitle.textContent = title || "Feature Title";
+            if (previewTitle) previewTitle.textContent = title || "Feature Title";
 
-            previewCard.classList.remove("d-none");
-            previewPlaceholder.classList.add("d-none");
+            if (previewCard) previewCard.classList.remove("d-none");
+            if (previewPlaceholder) previewPlaceholder.classList.add("d-none");
         } else {
-            previewCard.classList.add("d-none");
-            previewPlaceholder.classList.remove("d-none");
+            if (previewCard) previewCard.classList.add("d-none");
+            if (previewPlaceholder) previewPlaceholder.classList.remove("d-none");
+            imagePreview.src = "#";
         }
     }
 
-    imageUrlInput.addEventListener("input", updatePreview);
-    inputTitle.addEventListener("input", updatePreview);
+    // Attach Preview Listeners safely
+    if (imageUrlInput) {
+        imageUrlInput.addEventListener("input", updatePreview);
+        imageUrlInput.addEventListener("change", updatePreview);
 
-    imagePreview.addEventListener("error", function () {
-        previewCard.classList.add("d-none");
-        previewPlaceholder.classList.remove("d-none");
-    });
+        // imagePreview var mı kontrolü eklendi
+        if (imagePreview) {
+            imagePreview.addEventListener("error", function () {
+                if (previewCard) previewCard.classList.add("d-none");
+                if (previewPlaceholder) previewPlaceholder.classList.remove("d-none");
+            });
+        }
+
+        updatePreview();
+    }
+
+    if (inputTitle) {
+        inputTitle.addEventListener("input", updatePreview);
+    }
+
+    // --- FORM SUBMIT REINDEXING ---
+    if (form) {
+        form.addEventListener('submit', function () {
+            reindex("faq-item", "FAQs");
+            reindex("detail-item", "FeatureDetails");
+        });
+    }
 });
 
-
-// update
-const urlInput = document.getElementById('imageUrlInput');
-const previewContainer = document.getElementById('previewContainer');
-const imgPreview = document.getElementById('imagePreview');
-const form = document.getElementById('updateFeatureForm');
-
-function updateImagePreview() {
-    const url = urlInput.value.trim();
-    if (url) {
-        imgPreview.src = url;
-        previewContainer.classList.remove('d-none');
-
-        imgPreview.onerror = function () {
-            previewContainer.classList.add('d-none');
-        };
-    } else {
-        previewContainer.classList.add('d-none');
-        imgPreview.src = "#";
-    }
-}
-
-urlInput.addEventListener('input', updateImagePreview);
-urlInput.addEventListener('change', updateImagePreview);
-window.addEventListener('DOMContentLoaded', updateImagePreview);
+// --- GLOBAL FUNCTIONS (Called by HTML buttons) ---
 
 function addFaq() {
-    const container = document.getElementById("faqContainer");
-    const html = `
-        <div class="row g-2 mb-3 faq-item align-items-start">
+
+    const index = document.querySelectorAll(".faq-item").length;
+
+    document.getElementById("faqContainer").insertAdjacentHTML("beforeend", `
+        <div class="row g-2 mb-3 faq-item">
+
             <div class="col-5">
-                <input name="FAQs[0].Question" class="form-control form-control-sm" placeholder="Question" />
-                <span class="text-danger d-block mt-1" data-valmsg-for="FAQs[0].Question" data-valmsg-replace="true" style="font-size: 11px;"></span>
+                <input name="FAQs[${index}].Question"
+                       class="form-control form-control-sm"
+                       placeholder="Question">
             </div>
+
             <div class="col-6">
-                <input name="FAQs[0].Answer" class="form-control form-control-sm" placeholder="Answer" />
-                <span class="text-danger d-block mt-1" data-valmsg-for="FAQs[0].Answer" data-valmsg-replace="true" style="font-size: 11px;"></span>
+                <input name="FAQs[${index}].Answer"
+                       class="form-control form-control-sm"
+                       placeholder="Answer">
             </div>
-            <div class="col-1 text-end pt-1">
-                <button type="button" class="btn btn-sm text-danger p-0 border-0 lh-1" onclick="removeItem(this, 'faq-item', 'FAQs')">
-                    <i class="bi bi-trash3-fill"></i>
+
+            <div class="col-1 text-end">
+                <button type="button"
+                        class="btn btn-sm text-danger border-0"
+                        onclick="removeItem(this,'faq-item','FAQs')">
+                    ✕
                 </button>
             </div>
-        </div>`;
-    container.insertAdjacentHTML("beforeend", html);
-    reindex("faq-item", "FAQs");
+
+        </div>
+    `);
 }
 
 function addDetail() {
-    const container = document.getElementById("detailContainer");
-    const html = `
-        <div class="row g-2 mb-3 detail-item align-items-start">
-            <input type="hidden" name="FeatureDetails[0].Icon" value="bi bi-star" />
+
+    const index = document.querySelectorAll(".detail-item").length;
+
+    document.getElementById("detailContainer").insertAdjacentHTML("beforeend", `
+        <div class="row g-2 mb-3 detail-item">
+
+            <input type="hidden"
+                   name="FeatureDetails[${index}].Icon"
+                   value="bi bi-star">
+
             <div class="col-5">
-                <input name="FeatureDetails[0].Title" class="form-control form-control-sm" placeholder="Title" />
-                <span class="text-danger d-block mt-1" data-valmsg-for="FeatureDetails[0].Title" data-valmsg-replace="true" style="font-size: 11px;"></span>
+                <input name="FeatureDetails[${index}].Title"
+                       class="form-control form-control-sm"
+                       placeholder="Detail Title">
             </div>
+
             <div class="col-6">
-                <input name="FeatureDetails[0].SubTitle" class="form-control form-control-sm" placeholder="SubTitle" />
-                <span class="text-danger d-block mt-1" data-valmsg-for="FeatureDetails[0].SubTitle" data-valmsg-replace="true" style="font-size: 11px;"></span>
+                <input name="FeatureDetails[${index}].SubTitle"
+                       class="form-control form-control-sm"
+                       placeholder="Detail Subtitle">
             </div>
-            <div class="col-1 text-end pt-1">
-                <button type="button" class="btn btn-sm text-danger p-0 border-0 lh-1" onclick="removeItem(this, 'detail-item', 'FeatureDetails')">
-                    <i class="bi bi-trash3-fill"></i>
+
+            <div class="col-1 text-end">
+                <button type="button"
+                        class="btn btn-sm text-danger border-0"
+                        onclick="removeItem(this,'detail-item','FeatureDetails')">
+                    ✕
                 </button>
             </div>
-        </div>`;
-    container.insertAdjacentHTML("beforeend", html);
-    reindex("detail-item", "FeatureDetails");
+
+        </div>
+    `);
 }
 
 function removeItem(button, itemClass, rootName) {
-    const row = button.closest('.row');
-    if (row) row.remove();
+    button.closest("." + itemClass).remove();
     reindex(itemClass, rootName);
 }
 
+// Corrects the [0] indices so C# List model binding works
 function reindex(itemClass, rootName) {
-    const items = document.querySelectorAll('.' + itemClass);
-    items.forEach((item, index) => {
-        const q = item.querySelector('input[name$=".Question"]');
-        const a = item.querySelector('input[name$=".Answer"]');
-        const t = item.querySelector('input[name$=".Title"]');
-        const s = item.querySelector('input[name$=".SubTitle"]');
-        const i = item.querySelector('input[name$=".Icon"]');
 
-        if (q) q.name = `${rootName}[${index}].Question`;
-        if (a) a.name = `${rootName}[${index}].Answer`;
-        if (t) t.name = `${rootName}[${index}].Title`;
-        if (s) s.name = `${rootName}[${index}].SubTitle`;
-        if (i) i.name = `${rootName}[${index}].Icon`;
+    document.querySelectorAll("." + itemClass).forEach((item, index) => {
 
-        const spans = item.querySelectorAll('span[data-valmsg-for]');
-        spans.forEach(span => {
-            const currentAttr = span.getAttribute('data-valmsg-for').toLowerCase();
-            if (currentAttr.includes('question')) span.setAttribute('data-valmsg-for', `${rootName}[${index}].Question`);
-            if (currentAttr.includes('answer')) span.setAttribute('data-valmsg-for', `${rootName}[${index}].Answer`);
-            if (currentAttr.includes('title')) span.setAttribute('data-valmsg-for', `${rootName}[${index}].Title`);
-            if (currentAttr.includes('subtitle')) span.setAttribute('data-valmsg-for', `${rootName}[${index}].SubTitle`);
+        item.querySelectorAll("input").forEach(input => {
+
+            if (input.name.endsWith("Question"))
+                input.name = `${rootName}[${index}].Question`;
+
+            else if (input.name.endsWith("Answer"))
+                input.name = `${rootName}[${index}].Answer`;
+
+            else if (input.name.endsWith("SubTitle"))
+                input.name = `${rootName}[${index}].SubTitle`;
+
+            else if (input.name.endsWith("Title"))
+                input.name = `${rootName}[${index}].Title`;
+
+            else if (input.name.endsWith("Icon"))
+                input.name = `${rootName}[${index}].Icon`;
         });
     });
 }
 
-form.addEventListener('submit', function () {
-    reindex("faq-item", "FAQs");
-    reindex("detail-item", "FeatureDetails");
-});
+// SweetAlert - For Index Page
+function deleteFeature(id) {
+    if (typeof Swal === 'undefined') {
+        if (confirm("Are you sure you want to delete this feature?")) {
+            window.location.href = `/Admin/Feature/Delete/${id}`;
+        }
+        return;
+    }
+
+    Swal.fire({
+        title: "Delete Feature",
+        text: "This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#dc2626",
+        cancelButtonColor: "#6c757d",
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = `/Admin/Feature/Delete/${id}`;
+        }
+    });
+}

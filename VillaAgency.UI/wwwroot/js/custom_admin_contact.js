@@ -79,3 +79,26 @@ function handleMapModal(url) {
 document.getElementById('mapModal').addEventListener('hidden.bs.modal', function () {
     document.getElementById('modalIframe').src = '';
 });
+
+
+// sweetalert
+function deleteContact(id) {
+    Swal.fire({
+        title: "Delete Contact?",
+        text: "This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#dc2626",
+        cancelButtonColor: "#6c757d",
+        reverseButtons: true,
+        customClass: {
+            popup: "rounded-4 shadow-lg"
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = `/Admin/Contact/Delete/${id}`;
+        }
+    });
+}

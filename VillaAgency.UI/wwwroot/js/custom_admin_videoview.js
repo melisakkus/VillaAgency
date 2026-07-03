@@ -1,5 +1,29 @@
 ﻿// custom_admin_videoview.js
 
+// sweetalert
+function deleteVideo(id) {
+    Swal.fire({
+        title: "Delete Video",
+        text: "This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#dc2626",
+        cancelButtonColor: "#6c757d",
+        reverseButtons: true,
+        customClass: {
+            popup: "rounded-4 shadow-lg"
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = `/Admin/Video/Delete/${id}`;
+        }
+    });
+}
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
 
     // 1. INDEX 
@@ -69,3 +93,5 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 });
+
+

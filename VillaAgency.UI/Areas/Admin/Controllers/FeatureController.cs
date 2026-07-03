@@ -34,16 +34,34 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var model = new CreateFeatureDto();
+
+            model.FAQs.Add(new FAQItemDto());
+
+            model.FeatureDetails.Add(new FeatureDetailDto
+            {
+                Icon = "bi bi-star"
+            });
+
+            return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> Create(CreateFeatureDto dto)
         {
             if (!ModelState.IsValid)
             {
+                foreach (var item in ModelState)
+                {
+                    Console.WriteLine($"KEY = {item.Key}");
+
+                    foreach (var error in item.Value.Errors)
+                    {
+                        Console.WriteLine($"ERROR = {error.ErrorMessage}");
+                    }
+                }
+
                 return View(dto);
             }
-
             await _featureService.TCreateAsync(dto);
             return RedirectToAction("Index");
         }

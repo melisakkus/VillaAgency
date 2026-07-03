@@ -40,3 +40,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updatePreview();
 });
+
+
+
+// sweetalert
+function deleteBanner(id) {
+    Swal.fire({
+        title: "Delete Banner?",
+        text: "This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#dc2626",
+        cancelButtonColor: "#6c757d",
+        reverseButtons: true,
+        customClass: {
+            popup: "rounded-4 shadow-lg"
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = `/Admin/Banner/DeleteBanner/${id}`;
+        }
+    });
+}

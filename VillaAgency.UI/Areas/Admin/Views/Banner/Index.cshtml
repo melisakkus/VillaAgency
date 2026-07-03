@@ -3,6 +3,7 @@
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+<link rel="stylesheet" href="~/css/custom_admin_banner.css" />
 
 <div class="card bg-transparent border-0 shadow-none w-100 m-0 mb-auto">
 
@@ -49,7 +50,7 @@
                                 <h6 class="card-title fw-bold text-body mb-3">@item.Title</h6>
                                 <div class="d-flex justify-content-end gap-2 border-top border-secondary-subtle pt-3">
                                     <a asp-area="Admin" asp-controller="Banner" append-version="true" asp-action="UpdateBanner" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning px-3">Update</a>
-                                    <a asp-area="Admin" asp-controller="Banner" asp-action="DeleteBanner" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger px-3">Delete</a>
+                                    <button onclick="deleteBanner('@item.Id')" class="btn btn-sm btn-danger px-3 fw-semibold shadow"><i class="bi bi-trash me-1"></i> Delete</button>
                                 </div>
                             </div>
                         </div>
@@ -85,9 +86,8 @@
                                         <a asp-area="Admin" asp-controller="Banner" append-version="true" asp-action="UpdateBanner" asp-route-id="@item.Id" class="btn btn-sm btn-warning px-3 fw-semibold shadow">
                                             <i class="bi bi-pencil-square me-1"></i> Update
                                         </a>
-                                        <a asp-area="Admin" asp-controller="Banner" asp-action="DeleteBanner" asp-route-id="@item.Id" class="btn btn-sm btn-danger px-3 fw-semibold shadow">
-                                            <i class="bi bi-trash me-1"></i> Delete
-                                        </a>
+                                        <button onclick="deleteBanner('@item.Id')" class="btn btn-sm btn-danger px-3 fw-semibold shadow"><i class="bi bi-trash me-1"></i> Delete</button>
+
                                     </div>
                                 </div>
                             </div>
@@ -107,3 +107,5 @@
         }
     </div>
 </div>
+
+<script src="~/js/custom_admin_banner.js"></script>

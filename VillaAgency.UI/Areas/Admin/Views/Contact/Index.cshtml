@@ -86,8 +86,14 @@
                                 </td>
 
                                 <td class="text-end pe-3">
-                                    <a asp-area="Admin" asp-controller="Contact" asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning px-3 me-1">Update</a>
-                                    <a asp-area="Admin" asp-controller="Contact" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger px-3">Delete</a>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a asp-area="Admin" asp-controller="Contact" asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-warning fw-semibold px-3 shadow-sm text-dark">
+                                            <i class="bi bi-pencil-square me-1"></i> Update
+                                        </a>
+                                        <button onclick="deleteContact('@item.Id')" class="btn btn-sm btn-danger fw-semibold px-3 shadow-sm">
+                                            <i class="bi bi-trash me-1"></i> Delete
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         }

@@ -65,16 +65,35 @@
                             <div id="faqContainer">
                                 @for (int i = 0; i < Model.FAQs.Count; i++)
                                 {
-                                    <div class="row g-2 mb-3 faq-item align-items-start">
+                                    <div class="row g-2 mb-3 faq-item">
+
                                         <div class="col-5">
-                                            <input name="FAQs[@i].Question" value="@Model.FAQs[i].Question" class="form-control form-control-sm" placeholder="Question" />
+                                            <input asp-for="FAQs[i].Question"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Question" />
+                                            <span asp-validation-for="FAQs[i].Question"
+                                                  class="text-danger small"></span>
                                         </div>
+
                                         <div class="col-6">
-                                            <input name="FAQs[@i].Answer" value="@Model.FAQs[i].Answer" class="form-control form-control-sm" placeholder="Answer" />
+                                            <input asp-for="FAQs[i].Answer"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Answer" />
+                                            <span asp-validation-for="FAQs[i].Answer"
+                                                  class="text-danger small"></span>
                                         </div>
+
                                         <div class="col-1 text-end">
-                                            <button type="button" class="btn btn-sm text-danger border-0" onclick="removeItem(this, 'faq-item', 'FAQs')">✕</button>
+                                            @if (i > 0)
+                                            {
+                                                <button type="button"
+                                                        class="btn btn-sm text-danger border-0"
+                                                        onclick="removeItem(this,'faq-item','FAQs')">
+                                                    ✕
+                                                </button>
+                                            }
                                         </div>
+
                                     </div>
                                 }
                             </div>
@@ -88,17 +107,37 @@
                             <div id="detailContainer">
                                 @for (int i = 0; i < Model.FeatureDetails.Count; i++)
                                 {
-                                    <div class="row g-2 mb-3 detail-item align-items-start">
-                                        <input type="hidden" name="FeatureDetails[@i].Icon" value="@Model.FeatureDetails[i].Icon" />
+                                    <div class="row g-2 mb-3 detail-item">
+
+                                        <input asp-for="FeatureDetails[i].Icon" type="hidden" />
+
                                         <div class="col-5">
-                                            <input name="FeatureDetails[@i].Title" value="@Model.FeatureDetails[i].Title" class="form-control form-control-sm" placeholder="Title" />
+                                            <input asp-for="FeatureDetails[i].Title"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Detail Title" />
+                                            <span asp-validation-for="FeatureDetails[i].Title"
+                                                  class="text-danger small"></span>
                                         </div>
+
                                         <div class="col-6">
-                                            <input name="FeatureDetails[@i].SubTitle" value="@Model.FeatureDetails[i].SubTitle" class="form-control form-control-sm" placeholder="SubTitle" />
+                                            <input asp-for="FeatureDetails[i].SubTitle"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Detail Subtitle" />
+                                            <span asp-validation-for="FeatureDetails[i].SubTitle"
+                                                  class="text-danger small"></span>
                                         </div>
+
                                         <div class="col-1 text-end">
-                                            <button type="button" class="btn btn-sm text-danger border-0" onclick="removeItem(this, 'detail-item', 'FeatureDetails')">✕</button>
+                                            @if (i > 0)
+                                            {
+                                                <button type="button"
+                                                        class="btn btn-sm text-danger border-0"
+                                                        onclick="removeItem(this,'detail-item','FeatureDetails')">
+                                                    ✕
+                                                </button>
+                                            }
                                         </div>
+
                                     </div>
                                 }
                             </div>
