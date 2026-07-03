@@ -333,3 +333,20 @@ body.dark-mode .swal2-html-container {
     background-color: #475569 !important;
     color: #ffffff !important;
 }
+
+.message-readonly {
+    background: var(--input-bg) !important;
+    color: var(--text-main) !important;
+    border: 1px solid var(--input-border) !important;
+}
+
+    .message-readonly:focus {
+        background: var(--input-bg) !important;
+        color: var(--text-main) !important;
+        border-color: var(--btn-primary) !important;
+        box-shadow: none;
+    }
+
+    .message-readonly[readonly] {
+        opacity: 1;
+    }

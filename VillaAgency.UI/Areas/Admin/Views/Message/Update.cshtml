@@ -1,4 +1,5 @@
 ﻿@model UpdateMessageDto
+
 @{
     ViewData["Title"] = "Message Details";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
@@ -11,78 +12,159 @@
         <div class="create-message-container">
 
             <div class="d-flex justify-content-between align-items-center mb-3 px-1">
-                <a asp-area="Admin" asp-controller="Message" asp-action="Index" class="btn btn-sm btn-link p-0 d-flex align-items-center gap-1" style="color: var(--text-sub); text-decoration: none; font-size: 0.85rem; font-weight: 600;">
-                    <i class="bi bi-arrow-left"></i> Back to Inbox
+
+                <a asp-area="Admin"
+                   asp-controller="Message"
+                   asp-action="Index"
+                   class="btn btn-sm btn-link p-0 d-flex align-items-center gap-1 text-decoration-none"
+                   style="font-size:.85rem;font-weight:600;color:var(--text-sub);">
+                    <i class="bi bi-arrow-left"></i>
+                    Back to Inbox
                 </a>
 
                 <div class="d-flex gap-2">
-                    <a asp-area="Admin" asp-controller="Message" asp-action="MarkAsRead" asp-route-id="@Model.Id" class="btn btn-sm btn-success d-flex align-items-center gap-1 px-3 py-1.5 fw-semibold rounded-2 shadow-sm">
-                        <i class="bi bi-envelope-open-fill"></i> Mark as Read
+
+                    <a asp-area="Admin"
+                       asp-controller="Message"
+                       asp-action="MarkAsRead"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-sm btn-success d-flex align-items-center gap-1 px-3 fw-semibold shadow-sm">
+                        <i class="bi bi-envelope-open-fill"></i>
+                        Mark as Read
                     </a>
-                    <a asp-area="Admin" asp-controller="Message" asp-action="MarkAsNotRead" asp-route-id="@Model.Id" class="btn btn-sm btn-warning d-flex align-items-center gap-1 px-3 py-1.5 fw-semibold text-dark rounded-2 shadow-sm">
-                        <i class="bi bi-envelope-fill"></i> Mark as Unread
+
+                    <a asp-area="Admin"
+                       asp-controller="Message"
+                       asp-action="MarkAsNotRead"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-sm btn-warning text-dark d-flex align-items-center gap-1 px-3 fw-semibold shadow-sm">
+                        <i class="bi bi-envelope-fill"></i>
+                        Mark as Unread
                     </a>
-                    <a asp-area="Admin" asp-controller="Message" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-sm btn-danger d-flex align-items-center gap-1 px-3 py-1.5 fw-semibold rounded-2 shadow-sm" onclick="deleteMessage('@Model.Id')">
-                        <i class="bi bi-trash3-fill"></i> Move to Trash
+
+                    <a asp-area="Admin"
+                       asp-controller="Message"
+                       asp-action="Delete"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-sm btn-danger d-flex align-items-center gap-1 px-3 fw-semibold shadow-sm"
+                       onclick="deleteMessage('@Model.Id')">
+                        <i class="bi bi-trash3-fill"></i>
+                        Move to Trash
                     </a>
+
                 </div>
+
             </div>
 
-            <div class="custom-card border shadow-sm rounded-3 overflow-hidden" style="background-color: var(--bs-body-bg); border-color: var(--bs-border-color) !important;">
-                <div class="card-form-header border-bottom py-3 px-4" style="background-color: var(--bs-tertiary-bg); border-color: var(--bs-border-color) !important;">
-                    <h4 class="m-0 font-weight-bold" style="color: var(--bs-heading-color); font-size: 1.15rem;">
-                        <i class="bi bi-envelope-paper me-2 text-primary"></i> Message Reader
+            <div class="custom-card border shadow-sm rounded-3 overflow-hidden">
+
+                <div class="card-form-header border-bottom py-3 px-4">
+
+                    <h4 class="m-0 fw-bold">
+                        <i class="bi bi-envelope-paper text-primary me-2"></i>
+                        Message Reader
                     </h4>
-                    <p class="m-0 mt-1 small" style="color: var(--bs-secondary-color);">Review the incoming inquiry data details below.</p>
+
+                    <p class="m-0 mt-1 small">
+                        Review the incoming inquiry data details below.
+                    </p>
+
                 </div>
 
-                <div class="card-form-body p-4">
-                    @* Bilgileri salt okunur (readonly) olarak gösteriyoruz, böylece kazara düzenleme yapılamaz *@
+                <div class="card-form-body">
+
                     <div class="form-grid-layout">
+
                         <div class="form-left-side">
-                            <div class="form-group-custom mb-3">
-                                <label class="fw-semibold mb-1 small text-muted">Full Name</label>
-                                <div class="input-icon-wrapper position-relative">
-                                    <input asp-for="Name" class="form-control" style="background-color: var(--bs-tertiary-bg); color: var(--bs-body-color);" readonly />
-                                    <i class="fas fa-user position-absolute end-0 top-50 translate-middle-y me-3 text-muted"></i>
+
+                            <div class="form-group-custom">
+
+                                <label>Full Name</label>
+
+                                <div class="input-icon-wrapper">
+
+                                    <input asp-for="Name"
+                                           class="form-control message-readonly"
+                                           readonly />
+
+                                    <i class="fas fa-user"></i>
+
                                 </div>
+
                             </div>
 
-                            <div class="form-group-custom mb-3">
-                                <label class="fw-semibold mb-1 small text-muted">Email Address</label>
-                                <div class="input-icon-wrapper position-relative">
-                                    <input asp-for="Email" class="form-control" style="background-color: var(--bs-tertiary-bg); color: var(--bs-body-color);" readonly />
-                                    <i class="fas fa-envelope position-absolute end-0 top-50 translate-middle-y me-3 text-muted"></i>
+                            <div class="form-group-custom">
+
+                                <label>Email Address</label>
+
+                                <div class="input-icon-wrapper">
+
+                                    <input asp-for="Email"
+                                           class="form-control message-readonly"
+                                           readonly />
+
+                                    <i class="fas fa-envelope"></i>
+
                                 </div>
+
                             </div>
 
-                            <div class="form-group-custom mb-3">
-                                <label class="fw-semibold mb-1 small text-muted">Subject</label>
-                                <div class="input-icon-wrapper position-relative">
-                                    <input asp-for="Subject" class="form-control fw-semibold" style="background-color: var(--bs-tertiary-bg); color: var(--bs-heading-color);" readonly />
-                                    <i class="fas fa-heading position-absolute end-0 top-50 translate-middle-y me-3 text-muted"></i>
+                            <div class="form-group-custom">
+
+                                <label>Subject</label>
+
+                                <div class="input-icon-wrapper">
+
+                                    <input asp-for="Subject"
+                                           class="form-control message-readonly fw-semibold"
+                                           readonly />
+
+                                    <i class="fas fa-heading"></i>
+
                                 </div>
+
                             </div>
+
                         </div>
 
                         <div class="form-right-side">
-                            <div class="form-group-custom fill-height mb-3 d-flex flex-column h-100">
-                                <label class="fw-semibold mb-1 small text-muted">Message Content</label>
-                                <div class="input-icon-wrapper textarea-wrapper position-relative flex-grow-1">
-                                    <textarea asp-for="Content" class="form-control h-100" style="background-color: var(--bs-tertiary-bg); color: var(--bs-body-color); min-height: 200px; resize: none;" readonly></textarea>
-                                    <i class="fas fa-comment-alt position-absolute end-0 top-0 mt-3 me-3 text-muted"></i>
+
+                            <div class="form-group-custom fill-height">
+
+                                <label>Message Content</label>
+
+                                <div class="input-icon-wrapper textarea-wrapper">
+
+                                    <textarea asp-for="Content"
+                                              class="form-control message-readonly"
+                                              readonly></textarea>
+
+                                    <i class="fas fa-comment-alt"></i>
+
                                 </div>
+
                             </div>
+
                         </div>
+
                     </div>
 
-                    @* Alt barı sadeleştirip ana sayfaya dönüş butonu ekledik *@
-                    <div class="form-action-footer d-flex justify-content-end border-top pt-3 mt-4" style="border-color: var(--bs-border-color) !important;">
-                        <a asp-area="Admin" asp-controller="Message" asp-action="Index" class="btn btn-primary px-4 py-1.5 fw-semibold shadow-sm">
-                            <i class="bi bi-check-lg me-1"></i> Done
+                    <div class="form-action-footer">
+
+                        <a asp-area="Admin"
+                           asp-controller="Message"
+                           asp-action="Index"
+                           class="btn btn-primary px-4 fw-semibold shadow-sm">
+
+                            <i class="bi bi-check-lg me-1"></i>
+                            Done
+
                         </a>
+
                     </div>
+
                 </div>
+
             </div>
 
         </div>
