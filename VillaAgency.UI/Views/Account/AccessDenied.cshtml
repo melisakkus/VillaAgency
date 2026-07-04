@@ -1,29 +1,266 @@
 ﻿@{
     ViewData["Title"] = "Access Denied";
-    Layout = null; 
+    Layout = null;
 }
-<div class="d-flex align-items-center justify-content-center w-100 m-0" style="min-height: 70vh;">
-    <div class="text-center p-5 rounded-4 shadow-sm border border-body-tertiary bg-transparent" style="max-width: 500px;">
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,500,600" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-        <div class="mb-4 d-inline-flex align-items-center justify-content-center bg-danger-subtle text-danger rounded-circle shadow-sm" style="width: 90px; height: 90px;">
-            <i class="bi bi-shield-lock-fill" style="font-size: 3.5rem;"></i>
+        body {
+            background-color: #1C2127;
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .page-wrapper {
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: 40px;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        @@media (min-width: 768px) {
+            .page-wrapper
+
+        {
+            flex-direction: row;
+            justify-content: space-around;
+            gap: 20px;
+        }
+
+        }
+
+        .content-section {
+            color: white;
+            text-align: center;
+            max-width: 450px;
+        }
+
+        @@media (min-width: 768px) {
+            .content-section
+
+        {
+            text-align: left;
+        }
+
+        }
+
+        .message {
+            font-size: clamp(28px, 4vw, 36px);
+            font-weight: 600;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .message2 {
+            font-size: clamp(15px, 2vw, 18px);
+            font-weight: 300;
+            color: #A0AEC0;
+            line-height: 1.6;
+        }
+
+        .illustration-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .neon {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 90px;
+            color: #5BE0B3;
+            letter-spacing: 3px;
+            text-shadow: 0 0 5px #6EECC1;
+            animation: flux 2s linear infinite;
+            margin-bottom: 20px;
+            user-select: none;
+        }
+
+        .door-frame {
+            height: 460px;
+            width: 280px;
+            border-radius: 140px 140px 0 0;
+            background-color: #8594A5;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .door {
+            height: 100%;
+            width: 100%;
+            border-radius: 120px 120px 0 0;
+            background-color: #A0AEC0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 60px;
+        }
+
+        .window {
+            height: 45px;
+            width: 120px;
+            background-color: #1C2127;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.6);
+        }
+
+        .eye-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .eye {
+            height: 6px;
+            width: 16px;
+            border-radius: 50%;
+            background-color: white;
+            animation: eye 7s ease-in-out infinite;
+        }
+
+        .leaf {
+            height: 100%;
+            width: 100%;
+            background-color: #8594A5;
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: leaf 7s infinite;
+            transform-origin: right;
+            border-left: 2px solid #6b7887;
+        }
+
+        .lock-set {
+            position: absolute;
+            left: 25px;
+            top: 240px;
+            display: flex;
+            align-items: center;
+        }
+
+        .rectangle {
+            height: 65px;
+            width: 22px;
+            background-color: #CBD8E6;
+            border-radius: 4px;
+            box-shadow: 1px 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .handle {
+            height: 10px;
+            width: 45px;
+            border-radius: 5px;
+            background-color: #EBF3FC;
+            position: absolute;
+            left: 5px;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+        }
+
+        @@keyframes leaf {
+            0%, 75%, 100%
+
+        {
+            transform: scaleX(1);
+        }
+
+        5%, 70% {
+            transform: scaleX(0);
+        }
+
+        }
+
+        @@keyframes eye {
+            0%, 5%, 65%, 100%
+
+        {
+            opacity: 0;
+            transform: translateX(0);
+        }
+
+        15%, 35% {
+            opacity: 1;
+            transform: translateX(8px);
+        }
+
+        40%, 60% {
+            opacity: 1;
+            transform: translateX(-8px);
+        }
+
+        }
+
+        @@keyframes flux {
+            0%, 100%
+
+        {
+            text-shadow: 0 0 5px #00FFC6, 0 0 15px #00FFC6, 0 0 30px #00FFC6, 2px 2px 3px #12E29C;
+            color: #4BFFEF;
+        }
+
+        50% {
+            text-shadow: 0 0 3px #00B58D, 0 0 10px #00B58D, 0 0 20px #00B58D, 2px 2px 3px #006A60;
+            color: #63D3AE;
+        }
+
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <div class="content-section">
+            <h1 class="message">You are not authorized.</h1>
+            <p class="message2">You tried to access a page you did not have prior authorization for.</p>
         </div>
 
-        <h1 class="fw-bold text-uppercase tracking-wider text-body mb-2" style="font-size: 1.8rem;">403 - Access Denied</h1>
-        <h5 class="fw-semibold text-secondary mb-3">Restricted Access Area</h5>
-
-        <p class="text-muted small mb-4 px-3">
-            You do not have the required permissions to view this resource. If you believe this is an error, please reach out to your system administrator.
-        </p>
-
-        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold shadow-sm d-inline-flex align-items-center gap-2">
-                <i class="bi bi-speedometer2"></i> Back to Dashboard
-            </a>
-            <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary px-4 py-2 rounded-3 fw-medium">
-                Go to Website
-            </a>
+        <div class="illustration-section">
+            <div class="neon">403</div>
+            <div class="door-frame">
+                <div class="door">
+                    <div class="window">
+                        <div class="eye-container">
+                            <div class="eye"></div>
+                            <div class="eye"></div>
+                        </div>
+                        <div class="leaf"></div>
+                    </div>
+                    <div class="lock-set">
+                        <div class="rectangle"></div>
+                        <div class="handle"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-
     </div>
-</div>
+
+</body>
+</html>

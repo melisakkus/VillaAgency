@@ -75,8 +75,8 @@
     </div>
 
     <div class="dropdown">
-        <button class="profile-button" type="button" aria-expanded="false">
-            <img class="avatar-img avatar-sm" src="/adminhmd-1.0.0/assets/images/avatar/adminicon.png" alt="Profile">
+        <button class="profile-button d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img class="avatar-img avatar-sm" src="/adminhmd-1.0.0/assets/images/avatar/adminicon.png" alt="Profile" style="width: 32px; height: 32px; border-radius: 50%;">
             <span class="profile-name d-none d-sm-inline">
                 @if (User.Identity?.IsAuthenticated == true)
                 {
@@ -94,6 +94,23 @@
                     }
                 }
             </span>
+            <i class="bi bi-chevron-down small text-muted"></i>
         </button>
+
+        <ul class="dropdown-menu dropdown-menu-end shadow border rounded-3 custom-dropdown-menu">
+            <li>
+                <a class="dropdown-item d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-globe" aria-hidden="true"></i>
+                    <span>Go to Website</span>
+                </a>
+            </li>
+            <li><hr class="dropdown-divider custom-divider"></li>
+            <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 text-danger" asp-area="" asp-controller="Account" asp-action="Logout">
+                    <i class="bi bi-door-open" aria-hidden="true"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
     </div>
 </div>
