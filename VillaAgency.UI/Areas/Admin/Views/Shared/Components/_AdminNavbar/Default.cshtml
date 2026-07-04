@@ -80,13 +80,13 @@
             <span class="profile-name d-none d-sm-inline">
                 @if (User.Identity?.IsAuthenticated == true)
                 {
-                    if (User.IsInRole(Roles.Admin))
-                    {
-                        @:Admin
-                    }
-                    else if (User.IsInRole(Roles.Manager))
+                    if (User.IsInRole(Roles.Manager))
                     {
                         @:Manager
+                    }
+                    else if (User.IsInRole(Roles.Admin))
+                    {
+                        @:Admin
                     }
                     else
                     {

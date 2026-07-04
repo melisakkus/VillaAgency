@@ -37,7 +37,7 @@ namespace VillaAgency.WebUI.Controllers
                 return View(dto);
             }
 
-            ModelState.AddModelError("", "Invalid username or password.");
+            ModelState.AddModelError("", "Invalid username/email or password.");
             return View(dto);
         }
 
