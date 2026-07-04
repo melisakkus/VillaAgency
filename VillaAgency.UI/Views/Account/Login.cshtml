@@ -1,0 +1,105 @@
+﻿@using VillaAgency.Dto.AuthDtos
+@model LoginDto
+@{
+    Layout = null;
+    ViewData["Title"] = "VillaAgency Admin";
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/login-form-02/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/login-form-02/css/custom_login.css">
+    <title>VillaAgency Admin</title>
+</head>
+
+<body>
+
+    <div class="login-wrapper">
+
+        <div class="login-panel">
+
+            <div class="login-content">
+
+                <div class="brand">
+                    VillaAgency
+                </div>
+
+                <h2>Welcome Back</h2>
+
+                <p class="subtitle">
+                    Sign in to access the administration dashboard and manage
+                    properties, reservations, users and platform settings.
+                </p>
+
+                <form asp-controller="Account"
+                      asp-action="Login"
+                      method="post"
+                      novalidate>
+
+                    <div class="mb-3">
+                        <label asp-for="UserNameOrEmail" class="form-label">
+                            Username or Email
+                        </label>
+
+                        <input asp-for="UserNameOrEmail"
+                               class="form-control"
+                               autofocus />
+
+                        <span asp-validation-for="UserNameOrEmail"
+                              class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">
+                            Password
+                        </label>
+
+                        <input asp-for="Password"
+                               type="password"
+                               class="form-control" />
+
+                        <span asp-validation-for="Password"
+                              class="text-danger small"></span>
+                    </div>
+
+                    <div class="form-check mb-4">
+
+                        <input asp-for="RememberMe"
+                               class="form-check-input" />
+
+                        <label asp-for="RememberMe"
+                               class="form-check-label">
+                            Remember me
+                        </label>
+
+                    </div>
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 mb-3"></div>
+
+                    <button type="submit" class="btn btn-login w-100">
+                        Sign In
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <!-- IMAGE -->
+
+        <div class="image-panel"></div>
+
+    </div>
+
+    <script src="~/login-form-02/js/jquery-3.3.1.min.js"></script>
+    <script src="~/login-form-02/js/popper.min.js"></script>
+    <script src="~/login-form-02/js/bootstrap.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

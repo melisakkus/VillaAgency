@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VillaAgency.Business.Abstract;
 using VillaAgency.Dto.ContactDtos;
+using VillaAgency.Entity.Identity.Constants;
 
 namespace VillaAgency.WebUI.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class ContactController : Controller
+    [Authorize(Roles = Roles.Admin)]
+    public class ContactController : AdminBaseController
     {
         private readonly IContactService _contactService;
         public ContactController(IContactService contactService)

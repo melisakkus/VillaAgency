@@ -1,0 +1,128 @@
+﻿
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    background: #f8f9fa;
+}
+
+.login-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+.login-panel {
+    width: 30%;
+    min-width: 420px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    box-shadow: 0 0 30px rgba(0,0,0,.05);
+    z-index: 10;
+}
+
+.login-content {
+    width: 100%;
+    max-width: 420px;
+}
+
+/* RIGHT IMAGE */
+
+.image-panel {
+    width: 70%;
+    background: url('/login-form-02/images/login.png') center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+    .image-panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient( rgba(20,35,70,.08), rgba(20,35,70,.08) );
+    }
+
+h2 {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #6c757d;
+    margin-bottom: 35px;
+    line-height: 1.7;
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    height: 52px;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+}
+
+    .form-control:focus {
+        border-color: #f35525;
+        box-shadow: 0 0 0 .15rem rgba(243,85,37,.2);
+    }
+
+.btn-login {
+    height: 54px;
+    border-radius: 10px;
+    background: #f35525;
+    border: none;
+    color: white;
+    font-weight: 600;
+    transition: .3s;
+}
+
+    .btn-login:hover {
+        background: #dc4d21;
+    }
+
+.brand {
+    font-size: 14px;
+    color: #f35525;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+@@media(max-width:991px) {
+
+    body {
+        overflow: auto;
+    }
+
+    .login-wrapper {
+        flex-direction: column;
+    }
+
+    .image-panel {
+        width: 100%;
+        height: 300px;
+        order: 1;
+    }
+
+    .login-panel {
+        width: 100%;
+        min-width: auto;
+        order: 2;
+        padding: 40px 25px;
+    }
+}
+

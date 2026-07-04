@@ -1,0 +1,118 @@
+﻿@using VillaAgency.Entity.Identity
+@model List<(AppUser User, string Role)>
+@{
+    ViewData["Title"] = "User Management";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card border border-body-tertiary shadow-sm rounded-4 w-100 m-0 bg-transparent">
+
+    <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-4 px-4 border-bottom border-body-tertiary">
+        <div class="d-flex align-items-center gap-3">
+            <span class="bg-primary rounded-pill shadow-sm" style="width: 5px; height: 26px;"></span>
+            <div>
+                <h5 class="m-0 fw-bold text-uppercase tracking-wider text-body" style="font-size: 1.1rem;">User Management</h5>
+                <small class="text-muted d-none d-sm-block mt-1">Manage system administrators, managers, and their statuses.</small>
+            </div>
+        </div>
+        <a asp-area="Admin" asp-controller="User" asp-action="Create" class="btn btn-primary px-4 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2 fw-semibold">
+            <i class="bi bi-person-plus-fill fs-5"></i>
+            <span>Add New Manager</span>
+        </a>
+    </div>
+
+    <div class="card-body p-4">
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr class="text-uppercase small fw-bold text-muted border-bottom border-secondary-subtle">
+                        <th class="ps-3 py-3">Full Name</th>
+                        <th class="py-3">Username</th>
+                        <th class="py-3">Email</th>
+                        <th class="py-3">Role</th>
+                        <th class="py-3">Status</th>
+                        <th class="text-end pe-3 py-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="border-bottom border-body-tertiary">
+                            <td class="ps-3 py-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-primary bg-primary-subtle border border-primary-subtle"
+                                         style="width: 40px; height: 40px; min-width: 40px;">
+                                        @(string.IsNullOrEmpty(item.User.FullName) ? "U" : item.User.FullName.Substring(0, 1).ToUpper())
+                                    </div>
+                                    <span class="fw-bold text-body">@item.User.FullName</span>
+                                </div>
+                            </td>
+
+                            <td class="py-3">
+                                <span class="badge px-2.5 py-1.5 fw-medium text-secondary bg-body-secondary border border-secondary-subtle">
+                                    @@@item.User.UserName
+                                </span>
+                            </td>
+
+                            <td class="py-3 text-secondary">@item.User.Email</td>
+
+                            <td class="py-3">
+                                @if (item.Role == "Admin")
+                                {
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-2 fw-semibold">
+                                        <i class="bi bi-shield-lock-fill me-1"></i> @item.Role
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-3 py-2 fw-semibold">
+                                        <i class="bi bi-person-badge-fill me-1"></i> @item.Role
+                                    </span>
+                                }
+                            </td>
+
+                            <td class="py-3">
+                                @if (item.User.IsActive)
+                                {
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2 fw-medium d-inline-flex align-items-center gap-1.5">
+                                        <span class="bg-success rounded-circle" style="width: 6px; height: 6px;"></span> Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-2 fw-medium d-inline-flex align-items-center gap-1.5">
+                                        <span class="bg-danger rounded-circle" style="width: 6px; height: 6px;"></span> Inactive
+                                    </span>
+                                }
+                            </td>
+
+                            <td class="text-end pe-3 py-3">
+                                @if (item.Role != "Admin")
+                                {
+                                    <form asp-action="ToggleActive" asp-route-id="@item.User.Id" method="post" class="d-inline">
+                                        @if (item.User.IsActive)
+                                        {
+                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-3 px-3 py-1.5 fw-medium">
+                                                <i class="bi bi-person-x"></i> Deactivate
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="btn btn-sm btn-success text-white rounded-3 px-3 py-1.5 fw-medium shadow-sm">
+                                                <i class="bi bi-person-check"></i> Activate
+                                            </button>
+                                        }
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small fst-italic ps-2">System Protected</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

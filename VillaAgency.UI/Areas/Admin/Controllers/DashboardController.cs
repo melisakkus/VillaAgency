@@ -4,8 +4,7 @@ using VillaAgency.Dto.CounterDtos;
 
 namespace VillaAgency.WebUI.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class DashboardController : Controller
+    public class DashboardController : AdminBaseController
     {
         private readonly ICounterService _counterService;
 

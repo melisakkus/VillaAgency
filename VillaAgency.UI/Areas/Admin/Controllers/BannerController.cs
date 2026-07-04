@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VillaAgency.Business.Abstract;
 using VillaAgency.Dto.BannerDtos;
+using VillaAgency.Entity.Identity.Constants;
 
 namespace VillaAgency.WebUI.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class BannerController : Controller
+    [Authorize(Roles = Roles.Admin)]
+    public class BannerController : AdminBaseController
     {
         private readonly IBannerService _bannerService;
         public BannerController(IBannerService bannerService)

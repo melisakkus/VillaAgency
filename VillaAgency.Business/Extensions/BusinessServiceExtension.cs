@@ -5,6 +5,7 @@ using VillaAgency.Business.Abstract;
 using VillaAgency.Business.Concrete;
 using VillaAgency.Business.Validators.BannerValidators;
 using VillaAgency.DataAccess.Extension;
+using VillaAgency.DataAccess.Extensions;
 
 namespace VillaAgency.Business.Extension
 {
@@ -14,6 +15,7 @@ namespace VillaAgency.Business.Extension
             this IServiceCollection services, IConfiguration config)
         {
             services.AddDataAccessServices(config);
+            services.AddIdentityServices(config);
 
             services.AddScoped<IBannerService, BannerManager>();
             services.AddScoped<IContactService, ContactManager>();
@@ -23,6 +25,8 @@ namespace VillaAgency.Business.Extension
             services.AddScoped<IMessageService, MessageManager>();
             services.AddScoped<IQuestionService, QuestionManager>();
             services.AddScoped<IVideoService, VideoManager>();
+
+            services.AddScoped<IAuthService,AuthManager>();
 
             //services.AddSingleton<ICacheService, CacheManager>();
 

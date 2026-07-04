@@ -1,0 +1,81 @@
+﻿@model RegisterDto
+@{
+    ViewData["Title"] = "Create User";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card border border-body-tertiary shadow-sm rounded-4 bg-transparent w-100 m-0">
+
+    <div class="card-header bg-transparent d-flex align-items-center gap-3 py-4 px-4 border-bottom border-body-tertiary">
+        <span class="bg-primary rounded-pill shadow-sm" style="width: 5px; height: 24px;"></span>
+        <div>
+            <h5 class="m-0 fw-bold text-uppercase tracking-wider text-body" style="font-size: 1.1rem;">Add New Manager</h5>
+            <small class="text-muted d-none d-sm-block mt-1">Create a new system manager account with specific credentials.</small>
+        </div>
+    </div>
+
+    <div class="card-body p-4">
+
+        <form asp-action="Create" method="post">
+            <div class="row justify-content-center m-0 w-100">
+                <div class="col-12 col-xl-10 p-0">
+                        <div class="row g-4">
+                            <div class="col-12 col-md-6">
+                                <label class="form-label small fw-semibold text-secondary" asp-for="FullName">Full Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-primary-subtle border-primary-subtle text-primary"><i class="bi bi-person"></i></span>
+                                    <input class="form-control bg-transparent border-secondary-subtle text-body" asp-for="FullName" placeholder="John Doe">
+                                </div>
+                                <span asp-validation-for="FullName" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label small fw-semibold text-secondary" asp-for="UserName">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-primary-subtle border-primary-subtle text-primary fw-bold">@@</span>                                    <input class="form-control bg-transparent border-secondary-subtle text-body" asp-for="UserName" placeholder="johndoe">
+                                </div>
+                                <span asp-validation-for="UserName" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label small fw-semibold text-secondary" asp-for="Email">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-primary-subtle border-primary-subtle text-primary"><i class="bi bi-envelope"></i></span>
+                                    <input class="form-control bg-transparent border-secondary-subtle text-body" asp-for="Email" type="email" placeholder="name@example.com">
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label small fw-semibold text-secondary" asp-for="Password">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-primary-subtle border-primary-subtle text-primary"><i class="bi bi-key"></i></span>
+                                    <input class="form-control bg-transparent border-secondary-subtle text-body" asp-for="Password" type="password" minlength="6" placeholder="••••••••">
+                                </div>
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label class="form-label small fw-semibold text-secondary" asp-for="ConfirmedPassword">Confirm Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-primary-subtle border-primary-subtle text-primary"><i class="bi bi-key-fill"></i></span>
+                                    <input class="form-control bg-transparent border-secondary-subtle text-body" asp-for="ConfirmedPassword" type="password" minlength="6" placeholder="••••••••">
+                                </div>
+                                <span asp-validation-for="ConfirmedPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+
+
+
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center gap-3 pt-4 mt-4 border-top border-body-tertiary">
+                <button type="submit" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold shadow-sm d-inline-flex align-items-center gap-2">
+                    <i class="bi bi-person-plus-fill fs-6"></i> Create Account
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary px-4 py-2 rounded-3 fw-medium">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

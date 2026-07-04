@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VillaAgency.Business.Abstract;
-using VillaAgency.Dto.FeatureDtos;
 using VillaAgency.Dto.VideoViewDtos;
+using VillaAgency.Entity.Identity.Constants;
 
 namespace VillaAgency.WebUI.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class VideoController : Controller
+    [Authorize(Roles = Roles.Admin)]
+    public class VideoController : AdminBaseController
     {
         private readonly IVideoService _videoService;
 

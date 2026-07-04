@@ -4,8 +4,7 @@ using VillaAgency.Dto.MessageDtos;
 
 namespace VillaAgency.WebUI.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class MessageController : Controller
+    public class MessageController : AdminBaseController
     {
         private readonly IMessageService _messageService;
 

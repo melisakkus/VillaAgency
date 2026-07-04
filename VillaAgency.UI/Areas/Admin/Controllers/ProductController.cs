@@ -5,8 +5,7 @@ using VillaAgency.Entity.Entities;
 
 namespace VillaAgency.WebUI.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class ProductController : Controller
+    public class ProductController : AdminBaseController
     {
         private readonly IProductService _productService;
 

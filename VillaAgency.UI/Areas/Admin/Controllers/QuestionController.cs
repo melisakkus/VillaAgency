@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VillaAgency.Business.Abstract;
 using VillaAgency.Dto.QuestionDtos;
+using VillaAgency.Entity.Identity.Constants;
 
 namespace VillaAgency.WebUI.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class QuestionController : Controller
+    [Authorize(Roles = Roles.Admin)]
+    public class QuestionController : AdminBaseController
     {
         private readonly IQuestionService _questionService;
 

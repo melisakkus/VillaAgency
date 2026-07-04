@@ -1,7 +1,10 @@
 using FluentValidation.AspNetCore;
 using Mapster;
+using Microsoft.AspNetCore.Identity;
 using Serilog;
 using VillaAgency.Business.Extension;
+using VillaAgency.Entity.Identity;
+using VillaAgency.Entity.Identity.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +25,15 @@ builder.Services.AddControllersWithViews(options =>
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddBusinessServices(builder.Configuration);
 
+// Cookie settings
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    options.SlidingExpiration = true;
+});
+
 var app = builder.Build();
 
 // Ensure logs are safely flushed and closed when the application shuts down
@@ -37,6 +49,7 @@ app.UseStaticFiles();
 app.UseSerilogRequestLogging();
 
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 // Routing & Endpoints 
@@ -48,5 +61,33 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+
+    foreach (var roleName in new[] { Roles.Admin, Roles.Manager })
+    {
+        if (!await roleManager.RoleExistsAsync(roleName))
+            await roleManager.CreateAsync(new AppRole(roleName));
+    }
+
+    var adminEmail = "admin@villaagency.com";
+    if (await userManager.FindByEmailAsync(adminEmail) is null)
+    {
+        var admin = new AppUser
+        {
+            UserName = "admin",
+            Email = adminEmail,
+            FullName = "VillaAgency Admin",
+            IsActive = true
+        };
+        var result = await userManager.CreateAsync(admin, "admin00");
+        if (result.Succeeded)
+            await userManager.AddToRoleAsync(admin, Roles.Admin);
+    }
+}
 
 app.Run();
