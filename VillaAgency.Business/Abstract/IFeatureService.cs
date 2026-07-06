@@ -13,6 +13,9 @@ namespace VillaAgency.Business.Abstract
         Task TUpdateAsync(UpdateFeatureDto dto);
         Task TDeleteAsync(string id);
 
-        Task<List<ResultFeatureDto>> TGetFilteredListAsync(Expression<Func<FeatureSection, bool>> predicate);
+        Task<List<ResultFeatureDto>> TGetFilteredListAsync(
+            Expression<Func<FeatureSection, bool>> predicate,
+            int? page = null,
+            int? pageSize = null);
     }
 }

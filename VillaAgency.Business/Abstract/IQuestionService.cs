@@ -13,6 +13,6 @@ namespace VillaAgency.Business.Abstract
         Task<List<ResultQuestionDto>> TGetListAsync();
         Task<UpdateQuestionDto> TGetByIdAsync(string id);
 
-        Task<List<ResultQuestionDto>> TGetFilteredListAsync(Expression<Func<Question, bool>> predicate);
+        Task<List<ResultQuestionDto>> TGetFilteredListAsync(Expression<Func<Question, bool>> predicate, int? page = null, int? pageSize = null);
     }
 }

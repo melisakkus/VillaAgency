@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using VillaAgency.DataAccess.Abstract.Common;
+﻿using VillaAgency.DataAccess.Abstract.Common;
 using VillaAgency.Entity.Entities;
 
 namespace VillaAgency.DataAccess.Abstract
@@ -8,5 +7,6 @@ namespace VillaAgency.DataAccess.Abstract
     {
         Task<List<string>> GetUniqueCategoriesAsync();
         Task ChangeStatusAsync(string id, ProductStatus status);
+        Task<List<Product>> GetRandomProductPerCategoryAsync(int countPerCategory = 1);
     }
 }

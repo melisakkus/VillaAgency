@@ -1,0 +1,45 @@
+﻿@*@await Component.InvokeAsync("_DefaultVideo")*@
+@model List<ResultVideoViewDto>
+
+<style>
+    .video.section .section-heading {
+        max-width: 580px !important;
+        margin: 0 auto 60px auto !important;
+    }
+    .video.section .section-heading h2 {
+        font-size: 40px !important;
+        line-height: 52px !important;
+        color: #fff !important;
+        font-weight: 700 !important;
+        text-transform: capitalize !important;
+    }
+</style>
+
+<div class="video section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <div class="section-heading text-center">
+                    <h6>| Video View</h6>
+                    <h2>Step Inside and Discover a New Way of Living</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="video-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1">
+                @foreach (var item in Model)
+                {
+                    <div class="video-frame">
+                        <img src="~/VillaAgency-1.0.0/assets/images/video-frame-image.jpg" alt="Property Video Frame">
+                        <a href="@item.VideoUrl" target="_blank"><i class="fa fa-play"></i></a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

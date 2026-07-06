@@ -60,12 +60,13 @@ namespace VillaAgency.Business.Concrete
             return entity.Adapt<UpdateVideoViewDto>();
         }
 
-        public async Task<List<ResultVideoViewDto>> TGetFilteredListAsync(Expression<Func<VideoView, bool>> predicate)
+        public async Task<List<ResultVideoViewDto>> TGetFilteredListAsync(Expression<Func<VideoView, bool>> predicate, int? page = null,
+            int? pageSize = null)
         {
             if (predicate is null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            var entities = await _videoDal.GetFilteredListAsync(predicate);
+            var entities = await _videoDal.GetFilteredListAsync(predicate,page,pageSize);
             _logger.LogInformation("Filtered Video enitities retrieved. Count: {Count}", entities.Count);
             return entities.Adapt<List<ResultVideoViewDto>>();
         }

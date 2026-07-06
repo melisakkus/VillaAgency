@@ -9,12 +9,7 @@ namespace VillaAgency.Business.Validators.ProductValidators
         {
             RuleFor(x => x.ImageUrl)
                             .NotEmpty().WithMessage("ImageUrl is required.")
-                            .Matches(@"^https?://.*").WithMessage("Please enter a valid URL.")
-                            .Must(url => string.IsNullOrEmpty(url) ||
-                                         url.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                                         url.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-                                         url.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
-                            .WithMessage("Image URL must end with .jpg, .jpeg or .png");
+                            .Matches(@"^https?://.*").WithMessage("Please enter a valid URL.");
 
             RuleFor(x => x.Category)
                 .NotEmpty().WithMessage("Category is required.")

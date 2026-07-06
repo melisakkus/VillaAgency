@@ -56,12 +56,12 @@ namespace VillaAgency.Business.Concrete
             return entity.Adapt<UpdateQuestionDto>();
         }
 
-        public async Task<List<ResultQuestionDto>> TGetFilteredListAsync(Expression<Func<Question, bool>> predicate)
+        public async Task<List<ResultQuestionDto>> TGetFilteredListAsync(Expression<Func<Question, bool>> predicate, int? page = null, int? pageSize = null)
         {
             if (predicate is null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            var entities = await _genericDal.GetFilteredListAsync(predicate);
+            var entities = await _genericDal.GetFilteredListAsync(predicate, page, pageSize);
             _logger.LogInformation("Filtered questions retrieved. Count: {Count}", entities.Count);
             return entities.Adapt<List<ResultQuestionDto>>();
         }

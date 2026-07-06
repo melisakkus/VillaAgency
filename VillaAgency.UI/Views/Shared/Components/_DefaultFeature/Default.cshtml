@@ -1,0 +1,142 @@
+﻿@model List<ResultFeatureDto>
+
+<style>
+    .accordion-item {
+        border: none !important;
+        border-bottom: 1px solid #eee !important;
+        margin-bottom: 0px !important;
+    }
+
+    .accordion-button {
+        font-size: 18px !important;
+        font-weight: 600 !important;
+        color: #1e1e1e !important;
+        background-color: #fff !important;
+        padding: 20px 0px !important;
+        box-shadow: none !important;
+    }
+
+        .accordion-button.collapsed {
+            color: #1e1e1e !important;
+        }
+
+        .accordion-button:not(.collapsed) {
+            color: #f35525 !important;
+            background-color: #fff !important;
+            box-shadow: none !important;
+        }
+
+        .accordion-button::after {
+            display: none !important;
+        }
+
+    .accordion-body {
+        padding: 0px 0px 20px 0px !important;
+        color: #4a4a4a !important;
+        font-size: 15px !important;
+        line-height: 2em !important;
+    }
+
+    .info-table ul li {
+        display: flex !important;
+        align-items: flex-start !important; /
+        gap: 20px !important; 
+        margin-bottom: 35px !important; 
+    }
+        .info-table ul li img {
+            flex-shrink: 0 !important;
+        }
+
+    .info-table .info-text-wrapper {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important; 
+        text-align: left !important;
+    }
+
+        .info-table .info-text-wrapper h4 {
+            font-size: 20px !important;
+            font-weight: 700 !important;
+            color: #1e1e1e !important;
+            margin: 0px 0px 5px 0px !important; 
+            line-height: 1.2 !important;
+        }
+
+        .info-table .info-text-wrapper span {
+            font-size: 14px !important;
+            color: #aaaaaa !important;
+            line-height: 1.5 !important; 
+            display: block !important;
+            word-break: break-word !important; 
+        }
+</style>
+
+<div class="featured section">
+    <div class="container">
+
+        @foreach (var item in Model)
+        {
+            int faqCounter = 0;
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="left-image">
+                        <img src="@item.ImageUrl" alt="">
+                        <a ><img src="~/VillaAgency-1.0.0/assets/images/featured-icon.png" alt="" style="max-width: 60px; padding: 0px;"></a>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="section-heading">
+                        <h6>| Featured</h6>
+                        <h2>@item.Title</h2>
+                    </div>
+                    <div class="accordion" id="accordionExample-@item.Id">
+                        @foreach (var question in item.FAQs)
+                        {
+                            faqCounter++;
+                            bool isFirst = (faqCounter == 1);
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading-@item.Id-@faqCounter">
+                                    <button class="accordion-button @(isFirst ? "" : "collapsed")" type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#collapse-@item.Id-@faqCounter"
+                                            aria-expanded="@(isFirst ? "true" : "false")"
+                                            aria-controls="collapse-@item.Id-@faqCounter">
+                                        @question.Question
+                                    </button>
+                                </h2>
+
+                                <div id="collapse-@item.Id-@faqCounter"
+                                     class="accordion-collapse collapse @(isFirst ? "show" : "")"
+                                     aria-labelledby="heading-@item.Id-@faqCounter"
+                                     data-bs-parent="#accordionExample-@item.Id">
+                                    <div class="accordion-body">
+                                        @question.Answer
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="info-table">
+                        <ul>
+                            @foreach (var details in item.FeatureDetails)
+                            {
+                                <li>
+                                    <img src="~/VillaAgency-1.0.0/assets/images/info-icon-04.png" alt="" style="max-width: 52px;">
+                                    <div class="info-text-wrapper">
+                                        <h4>@details.Title</h4>
+                                        <span>@details.SubTitle</span>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

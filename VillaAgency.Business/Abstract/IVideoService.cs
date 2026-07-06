@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using VillaAgency.Dto.BannerDtos;
 using VillaAgency.Dto.VideoViewDtos;
 using VillaAgency.Entity.Entities;
 
@@ -14,8 +13,10 @@ namespace VillaAgency.Business.Abstract
         Task<List<ResultVideoViewDto>> TGetListAsync();
         Task<UpdateVideoViewDto> TGetByIdAsync(string id);
 
-        Task<List<ResultVideoViewDto>> TGetFilteredListAsync(Expression<Func<VideoView, bool>> predicate);
-
+        Task<List<ResultVideoViewDto>> TGetFilteredListAsync(
+            Expression<Func<VideoView, bool>> predicate,
+            int? page = null,
+            int? pageSize = null);
         Task TMakeItActive(string id);
         Task TMakeItPassive(string id);
     }

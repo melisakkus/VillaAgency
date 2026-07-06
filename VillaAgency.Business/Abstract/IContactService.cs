@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using MongoDB.Bson;
 using System.Linq.Expressions;
 using VillaAgency.Dto.ContactDtos;
 using VillaAgency.Entity.Entities;
@@ -14,6 +15,7 @@ namespace VillaAgency.Business.Abstract
         Task TUpdateAsync(UpdateContactDto dto);
         Task TDeleteAsync(string id);
 
-        Task<List<ResultContactDto>> TGetFilteredListAsync(Expression<Func<Contact, bool>> predicate);
+        Task<List<ResultContactDto>> TGetFilteredListAsync(Expression<Func<Contact, bool>> predicate,int? page = null,
+                                                                int? pageSize = null);
     }
 }

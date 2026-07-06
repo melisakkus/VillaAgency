@@ -34,6 +34,17 @@
     transition: all 0.3s ease;
 }
 
+/* Dark temada carousel oklarını beyaz (açık renk) yapmak için */
+[data-bs-theme="dark"] .carousel-control-prev-icon,
+[data-bs-theme="dark"] .carousel-control-next-icon {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Opsiyonel: Okların üzerine gelindiğinde (hover) daha da parlamasını isterseniz */
+[data-bs-theme="dark"] .carousel-control-prev:hover .carousel-control-prev-icon,
+[data-bs-theme="dark"] .carousel-control-next:hover .carousel-control-next-icon {
+    filter: invert(1) grayscale(100%) brightness(400%);
+}
 
 /* sweetalert */
 .swal2-popup {

@@ -63,12 +63,13 @@ namespace VillaAgency.Business.Concrete
             return entity.Adapt<UpdateContactDto>();
         }
 
-        public async Task<List<ResultContactDto>> TGetFilteredListAsync(Expression<Func<Contact, bool>> predicate)
+        public async Task<List<ResultContactDto>> TGetFilteredListAsync(Expression<Func<Contact, bool>> predicate, int? page = null,
+                                                                int? pageSize = null)
         {
             if (predicate is null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            var entities = await _genericDal.GetFilteredListAsync(predicate);
+            var entities = await _genericDal.GetFilteredListAsync(predicate, page,pageSize);
             _logger.LogInformation("Retrieved filtered contacts. Count: {Count}", entities.Count);
             return entities.Adapt<List<ResultContactDto>>();
         }

@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using System.Linq.Expressions;
 using VillaAgency.DataAccess.Abstract;
 using VillaAgency.DataAccess.Concrete.MongoDb.Driver.Common;
@@ -34,6 +35,57 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
                                     .DistinctAsync<string>("Category", new MongoDB.Bson.BsonDocument());
 
             return await distinctCategories.ToListAsync();
+        }
+
+
+        public async Task<List<Product>> GetRandomProductPerCategoryAsync(int countPerCategory = 1)
+        {
+            int poolSize = countPerCategory == 1 ? 20 : 40;
+            if (countPerCategory <= 1)
+            {
+                return await _collection.Aggregate()
+                            .Match(Builders<Product>.Filter.Eq(p => p.Status, ProductStatus.Active))
+                            .Sort(Builders<Product>.Sort.Descending(p => p.Id))
+                            .Limit(20)
+                            .Sample(20)
+                            .Group(
+                                p => p.Category,
+                                g => g.First()
+                            )
+                            .ToListAsync();
+            }
+
+            var pipeline = new List<BsonDocument>
+                        {
+                            new BsonDocument("$match",
+                                new BsonDocument("Status", ProductStatus.Active.ToString())),
+
+                            new BsonDocument("$sample",
+                                new BsonDocument("size", 200)),
+
+                            new BsonDocument("$group",
+                                new BsonDocument
+                                {
+                                    { "_id", "$Category" },
+                                    { "AllProducts", new BsonDocument("$push","$$ROOT") }
+                                }),
+
+                            new BsonDocument("$project",
+                                new BsonDocument
+                                {
+                                    { "Products",
+                                        new BsonDocument("$slice",
+                                            new BsonArray { "$AllProducts", countPerCategory })
+                                    }
+                                }),
+
+                            new BsonDocument("$unwind","$Products"),
+
+                            new BsonDocument("$replaceRoot",
+                                new BsonDocument("newRoot","$Products"))
+                        };
+
+            return await _collection.Aggregate<Product>(pipeline).ToListAsync();
         }
     }
 }

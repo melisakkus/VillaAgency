@@ -21,7 +21,7 @@ namespace VillaAgency.Business.Concrete
 
         public async Task TCreateAsync(CreateFeatureDto dto)
         {
-            if (dto is null) 
+            if (dto is null)
             {
                 throw new ArgumentNullException(nameof(dto), "Dto cannot be null.");
             }
@@ -64,12 +64,15 @@ namespace VillaAgency.Business.Concrete
             return entity.Adapt<UpdateFeatureDto>();
         }
 
-        public async Task<List<ResultFeatureDto>> TGetFilteredListAsync(Expression<Func<FeatureSection, bool>> predicate)
+        public async Task<List<ResultFeatureDto>> TGetFilteredListAsync(
+                                Expression<Func<FeatureSection, bool>> predicate,
+                                int? page = null,
+                                int? pageSize = null)
         {
             if (predicate is null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            var entities = await _genericDal.GetFilteredListAsync(predicate);
+            var entities = await _genericDal.GetFilteredListAsync(predicate, page, pageSize);
             _logger.LogInformation("Filtered features retrieved. Count: {Count}", entities.Count);
             return entities.Adapt<List<ResultFeatureDto>>();
         }

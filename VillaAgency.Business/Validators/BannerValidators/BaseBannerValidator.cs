@@ -19,13 +19,7 @@ namespace VillaAgency.Business.Validators.BannerValidators
 
             RuleFor(x => x.ImageUrl)
                 .NotEmpty().WithMessage("Banner image URL is required.")
-                .Matches(@"^https?://.*").WithMessage("Please enter a valid URL (starting with http:// or https://).")
-                .Must(url => string.IsNullOrEmpty(url) ||
-                             url.EndsWith(".jpg") ||
-                             url.EndsWith(".jpeg") ||
-                             url.EndsWith(".png") ||
-                             url.EndsWith(".webp"))
-                .WithMessage("Image URL must end with a valid extension (.jpg, .jpeg, .png, or .webp).");
+                .Matches(@"^https?://.*").WithMessage("Please enter a valid URL (starting with http:// or https://).");
         }
     }
 }

@@ -82,6 +82,9 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
         {
             await GetViewBagCategoriesAndStatuses();
             var value = await _productService.TGetByIdAsync(id);
+
+            ViewBag.ReturnCategory = value.Category;
+            ViewBag.ReturnStatus = value.Status.ToString();
             return View(value);
         }
 
@@ -95,7 +98,11 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
             }
 
             await _productService.TUpdateAsync(dto);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new
+            {
+                category = dto.Category,
+                status = dto.Status.ToString() 
+            });
         }
         
 

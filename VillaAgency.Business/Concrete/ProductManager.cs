@@ -126,5 +126,12 @@ namespace VillaAgency.Business.Concrete
 
             await _productDal.ChangeStatusAsync(id, enumStatus);
         }
+
+        public async Task<List<ResultProductDto>> TGetRandomProductPerCategoryAsync(int countPerCategory = 1)
+        {
+            var values = await _productDal.GetRandomProductPerCategoryAsync(countPerCategory);
+            return values.Adapt<List<ResultProductDto>>();
+        }
+
     }
 }
