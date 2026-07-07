@@ -55,18 +55,26 @@
         height: 100%;
     }
 
+    #contact-form {
+        margin: 0 !important;
+        padding: 25px !important;
+    }
+
     .contact-form-container {
         background: #fff;
         border-radius: 20px;
-        padding: 32px;
+        padding: 0px;
         border: 1px solid #eee;
         box-shadow: 0 8px 25px rgba(0,0,0,.05);
+
     }
 
+    /* 1. Alan kapsayıcısının genel boşluğunu ve hizalamasını ayarlıyoruz */
     #contact-form fieldset {
         border: none;
         padding: 0;
-        margin-bottom: 18px;
+        margin-bottom: 20px; /* Her form grubu (input+label) arasındaki temiz boşluk */
+        position: relative;
     }
 
     #contact-form label {
@@ -77,6 +85,7 @@
         margin-bottom: 6px;
     }
 
+    /* 2. BOŞLUĞA NEDEN OLAN KISIM: input'un altındaki margin değerini sıfırlıyoruz veya 0px yapıyoruz */
     #contact-form input,
     #contact-form textarea {
         width: 100%;
@@ -88,6 +97,7 @@
         color: #333;
         transition: .3s;
         outline: none;
+        margin-bottom: 0px !important; /* Dışarıdan ezilmesini engellemek için !important ekledik */
     }
 
         #contact-form input:focus,
@@ -102,13 +112,14 @@
         resize: none;
     }
 
+    /* 3. Hata mesajını inputun 3-4 piksel altına temiz bir şekilde konumlandırıyoruz */
     .validation-error {
         display: none;
         color: #dc3545;
         font-size: 12px;
-        margin-top: 6px;
         font-weight: 500;
-        line-height: 1.3;
+        margin-top: 4px; /* Orijinal akışta inputun hemen altında yer alacak */
+        line-height: 1.2;
     }
 
         .validation-error.show {
@@ -213,7 +224,7 @@
                 }
             </div>
 
-            <div class="col-lg-5">
+            <div class="col-lg-5 ps-lg-4" style="padding-left:0;">
                 <div class="form-column-wrapper">
                     <div class="contact-form-container">
                         <form id="contact-form" asp-controller="Default" asp-action="SendMessage" method="post">
@@ -278,7 +289,13 @@
                 data: form.serialize(),
                 success: function (response) {
                     if (response.success) {
-                        Swal.fire({ icon: "success", title: "Success", text: response.message, confirmButtonColor: "#f35525" });
+                        Swal.fire({
+                            icon: "success",
+                            title: "Message Received",
+                            text: "Your message has been sent successfully. We will get in touch with you as soon as possible.",
+                            confirmButtonColor: "#f35525",
+                            confirmButtonText: "Close"
+                        });
                         form[0].reset();
                     } else {
                         $.each(response.errors, function (key, value) {

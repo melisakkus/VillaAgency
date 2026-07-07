@@ -28,6 +28,41 @@
     -->
 
     <style>
+
+        /* Tüm sayfa yapısını dikeyde esnek yapar */
+        html, body {
+            height: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+            main, .main-content, body > div:not(.sub-header):not(.header-area):not(#js-preloader):not(footer) {
+                flex: 1 0 auto !important;
+            }
+
+        /* Temadan gelen tüm gizli yükseklik ve satır arası boşlukları sıfırlayan kesin çözüm */
+        footer {
+            margin-top: auto !important;
+            flex-shrink: 0 !important; /* Yüksekliğinin esnemesini kesin olarak engeller */
+            padding: 10px 0 !important; /* Alt ve üstten sadece 10px boşluk bırakır */
+            min-height: auto !important; /* Temadaki olası minimum yükseklik sınırını sıfırlar */
+            height: auto !important;
+        }
+
+            /* Paragraf etiketlerinin gizli alt boşluklarını ve satır yüksekliklerini sıfırlıyoruz */
+            footer p {
+                margin: 0 !important;
+                padding: 0 !important;
+                line-height: 1.2 !important; /* Satır yüksekliğini minimuma indirir */
+            }
+
+            footer .credits-links {
+                font-size: 10px !important;
+                line-height: 1.2 !important;
+            }
+
         .main-nav .logo {
             display: flex;
             align-items: center;
@@ -55,6 +90,41 @@
             .main-nav .logo:hover h1 {
                 opacity: 0.8;
             }
+
+
+        .sub-header-right {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            height: 100%;
+        }
+        .admin-quick-login {
+            color: #1e293b !important; 
+            font-size: 13px !important;
+            text-decoration: none !important;
+            margin-left: 20px !important;
+            transition: all 0.3s ease !important;
+            display: inline-flex !important;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Poppins', sans-serif !important;
+            font-weight: 500 !important; 
+            border: 1px solid #e2e8f0; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            background: #f8fafc; 
+        }
+
+            .admin-quick-login:hover {
+                color: #fff !important; 
+                background: #f35525 !important; 
+                border-color: #f35525 !important;
+                box-shadow: 0 4px 10px rgba(243,85,37,.15); 
+            }
+
+            .admin-quick-login i {
+                font-size: 11px;
+            }
     </style>
 </head>
 
@@ -76,21 +146,25 @@
     <div class="sub-header">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 col-md-8">
+                <div class="col-lg-8 col-md-7">
                     <ul class="info">
                         <li><i class="fa fa-envelope"></i> info@villaagency.com</li>
                         <li><i class="fa fa-map"></i> Sunny Isles Beach, FL 33160</li>
                     </ul>
                 </div>
-                <div class="col-lg-4 col-md-4">
-                    <ul class="social-links">
-                        <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
-                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                    </ul>
+                <div class="col-lg-4 col-md-5">
+                    <div class="sub-header-right">
+                        <ul class="social-links">
+                            <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+                            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                        </ul>
+                        <a asp-area="" asp-controller="Account" asp-action="Login" class="admin-quick-login">
+                            <i class="fa fa-lock"></i> Admin Panel
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
     <!-- ***** Header Area Start ***** -->
     <header class="header-area header-sticky">
@@ -121,22 +195,30 @@
         </div>
     </header>
     <!-- ***** Header Area End ***** -->
-
     @RenderBody()
 
-    <div style="clear: both; height: 60px; background-color: #ffffff;"></div>
+    <div style="height: 25px; background-color: #ffffff;"></div>
 
-    <footer style="background-color: #f1f4f8 !important; padding: 15px 0 !important; border-top: 1px solid #e2e8f0 !important; margin: 0 !important; position: relative; z-index: 10;">
+    <footer style="background-color: #f8fafc !important; border-top: 1px solid #e2e8f0 !important;">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12 d-flex justify-content-between align-items-center" style="font-size: 13px !important; font-family: 'Poppins', sans-serif !important;">
-                    <p class="mb-0" style="color: #64748b !important; font-weight: 400 !important; margin: 0 !important;">
-                        &copy; 2026 <strong style="color: #1e293b; font-weight: 600;">VillaAgency</strong>. Built by <a href="#" style="color: #2563eb !important; text-decoration: none !important; font-weight: 500 !important;">Melisa Akkuş</a>
+                <div class="col-lg-12 d-flex justify-content-between align-items-baseline flex-wrap gap-2">
+
+                    <p style="font-size: 13.5px !important; color: #64748b !important; font-family: 'Poppins', sans-serif !important; font-weight: 400; margin: 0 !important; padding: 0 !important; line-height: 1.2 !important;">
+                        &copy; 2026 <strong style="color: #1e293b; font-weight: 500;">VillaAgency</strong>. Built by
+                        <span style="color: #f35525; font-weight: 500;">Melisa Akkuş</span>
+                        <span style="margin-left: 6px;">
+                            <a href="https://github.com/melisakkus" target="_blank" title="GitHub Profile" style="color: #64748b !important; text-decoration: none !important; margin-right: 4px; transition: color 0.2s;"><i class="fab fa-github"></i></a>
+                            <a href="mailto:melisa.akkus01@gmail.com" title="Send me Email" style="color: #64748b !important; text-decoration: none !important; transition: color 0.2s;"><i class="fa fa-envelope"></i></a>
+                        </span>
                     </p>
-                    <p class="mb-0" style="color: #94a3b8 !important; margin: 0 !important;">
-                        Design: <a rel="nofollow" href="https://templatemo.com" target="_blank" style="color: #94a3b8 !important; text-decoration: none !important;">TemplateMo</a>
-                        Distribution: <a href="https://themewagon.com" target="_blank" style="color: #94a3b8 !important; text-decoration: none !important;">ThemeWagon</a>
+
+                    <p class="credits-links" style="color: #94a3b8 !important; font-family: 'Poppins', sans-serif !important; background: none !important; margin: 0 !important; padding: 0 !important;">
+                        Design: <a rel="nofollow" href="https://templatemo.com" target="_blank" style="color: #94a3b8 !important; text-decoration: none !important; background: none !important; padding: 0 !important; display: inline !important;">TemplateMo</a>
+                        <span style="margin: 0 4px; color: #cbd5e1;">|</span>
+                        Distribution: <a href="https://themewagon.com" target="_blank" style="color: #94a3b8 !important; text-decoration: none !important; background: none !important; padding: 0 !important; display: inline !important;">ThemeWagon</a>
                     </p>
+
                 </div>
             </div>
         </div>
