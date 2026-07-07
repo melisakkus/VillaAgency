@@ -89,24 +89,35 @@
                             <td class="text-end pe-3 py-3">
                                 @if (item.Role != "Admin")
                                 {
-                                    <form asp-action="ToggleActive" asp-route-id="@item.User.Id" method="post" class="d-inline">
-                                        @if (item.User.IsActive)
-                                        {
-                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-3 px-3 py-1.5 fw-medium">
-                                                <i class="bi bi-person-x"></i> Deactivate
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <form asp-action="ToggleActive" asp-route-id="@item.User.Id" method="post">
+                                            @if (item.User.IsActive)
+                                            {
+                                                <button type="submit" class="btn btn-sm btn-outline-warning rounded-pill px-3">
+                                                    <i class="bi bi-person-slash"></i> Deactivate
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-3">
+                                                    <i class="bi bi-person-check"></i> Activate
+                                                </button>
+                                            }
+                                        </form>
+
+                                        <form id="deleteForm_@item.User.Id" asp-action="Delete" asp-route-id="@item.User.Id" method="post">
+                                            <button type="button" class="btn btn-sm btn-link text-danger p-0"
+                                                    onclick="confirmDelete('@item.User.Id', '@item.User.FullName')">
+                                                <i class="bi bi-trash3-fill fs-5"></i>
                                             </button>
-                                        }
-                                        else
-                                        {
-                                            <button type="submit" class="btn btn-sm btn-success text-white rounded-3 px-3 py-1.5 fw-medium shadow-sm">
-                                                <i class="bi bi-person-check"></i> Activate
-                                            </button>
-                                        }
-                                    </form>
+                                        </form>
+                                    </div>
                                 }
                                 else
                                 {
-                                    <span class="text-muted small fst-italic ps-2">System Protected</span>
+                                    <span class="badge bg-dark text-muted border border-secondary rounded-pill px-3 py-2">
+                                        <i class="bi bi-shield-check"></i> System Protected
+                                    </span>
                                 }
                             </td>
                         </tr>
@@ -116,3 +127,22 @@
         </div>
     </div>
 </div>
+
+<script>
+    function confirmDelete(id, fullName) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `You are about to delete user "${fullName}". This action cannot be undone!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('deleteForm_' + id).submit();
+            }
+        });
+    }
+</script>                             

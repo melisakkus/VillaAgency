@@ -1,0 +1,56 @@
+﻿@model List<ResultQuestionDto>
+
+<section class="section" style="padding-top: 0px; padding-bottom: 100px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading text-center">
+                    <h6 style="color: #f35525; font-size: 15px; text-transform: uppercase; font-weight: 700; margin-bottom: 15px;">| FAQ</h6>
+                    <h2 style="font-size: 40px; font-weight: 700; color: #1e293b;">Frequently Asked <em>Questions</em></h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        var item = Model[i];
+                        var collapseId = "collapse" + i;
+                        var headingId = "heading" + i;
+
+                        <div class="card" style="border: none; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; overflow: hidden;">
+                            <div class="card-header" id="@headingId" style="background: #fff; padding: 0; border: none;">
+                                <button class="btn btn-link w-100 text-left p-4" type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId" style="text-decoration: none; color: #1e293b; font-weight: 600; font-size: 18px; display: flex; justify-content: space-between; align-items: center;">
+                                    @item.QuestionText
+                                    <i class="fa fa-chevron-down" style="font-size: 14px; color: #f35525;"></i>
+                                </button>
+                            </div>
+                            <div id="@collapseId" class="collapse" data-bs-parent="#faqAccordion">
+                                <div class="card-body" style="padding: 0 25px 25px 25px; color: #64748b; line-height: 1.8; font-size: 15px;">
+                                    @item.Answer
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+    /* Accordion hover ve aktif durumları için stil */
+    .accordion-button:not(.collapsed) {
+        color: #f35525 !important;
+        background-color: #fff !important;
+    }
+
+    .accordion-button::after {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23f35525'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    }
+
+    .accordion-button:focus {
+        box-shadow: none !important;
+    }
+</style>

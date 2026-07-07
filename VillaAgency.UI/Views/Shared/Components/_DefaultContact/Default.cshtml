@@ -2,8 +2,9 @@
 
 <style>
     .contact-content {
-        padding: 60px 0;
+        padding: 60px 0 0 0;
         background: #fbfbfb;
+        margin-top: 0;
     }
 
     .custom-contact-card {
@@ -69,11 +70,10 @@
 
     }
 
-    /* 1. Alan kapsayıcısının genel boşluğunu ve hizalamasını ayarlıyoruz */
     #contact-form fieldset {
         border: none;
         padding: 0;
-        margin-bottom: 20px; /* Her form grubu (input+label) arasındaki temiz boşluk */
+        margin-bottom: 20px;
         position: relative;
     }
 
@@ -85,7 +85,6 @@
         margin-bottom: 6px;
     }
 
-    /* 2. BOŞLUĞA NEDEN OLAN KISIM: input'un altındaki margin değerini sıfırlıyoruz veya 0px yapıyoruz */
     #contact-form input,
     #contact-form textarea {
         width: 100%;
@@ -97,7 +96,7 @@
         color: #333;
         transition: .3s;
         outline: none;
-        margin-bottom: 0px !important; /* Dışarıdan ezilmesini engellemek için !important ekledik */
+        margin-bottom: 0px !important;
     }
 
         #contact-form input:focus,
@@ -112,13 +111,12 @@
         resize: none;
     }
 
-    /* 3. Hata mesajını inputun 3-4 piksel altına temiz bir şekilde konumlandırıyoruz */
     .validation-error {
         display: none;
         color: #dc3545;
         font-size: 12px;
         font-weight: 500;
-        margin-top: 4px; /* Orijinal akışta inputun hemen altında yer alacak */
+        margin-top: 4px; 
         line-height: 1.2;
     }
 
@@ -171,6 +169,16 @@
         }
     }
 
+    .contact-card-info h5 {
+        letter-spacing: 0.5px; 
+        font-variant-numeric: tabular-nums;
+    }
+
+    .country-code {
+        color: #f35525; 
+        font-weight: 800;
+    }
+
 </style>
 
 <div class="contact section" id="contact-us-section">
@@ -203,7 +211,23 @@
                                     <img src="~/VillaAgency-1.0.0/assets/images/phone-icon.png" alt="Phone">
                                 </div>
                                 <div class="contact-card-info">
-                                    <h5>@item.PhoneNumber</h5>
+                                    <h5>
+                                        @if (!string.IsNullOrEmpty(item.PhoneNumber))
+                                        {
+                                            var rawNumber = item.PhoneNumber;
+                                            string displayNumber = rawNumber;
+                                            if (rawNumber.StartsWith("+1") && rawNumber.Length == 12)
+                                            {
+                                                displayNumber =
+                                                $"+1 ({rawNumber.Substring(2, 3)}) {rawNumber.Substring(5, 3)}-{rawNumber.Substring(8, 4)}";
+                                            }
+                                            @displayNumber
+                                        }
+                                        else
+                                        {
+                                            @:No number provided
+                                        }
+                                    </h5>
                                     <span>Phone Number</span>
                                 </div>
                             </a>

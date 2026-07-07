@@ -8,5 +8,6 @@ namespace VillaAgency.Business.Abstract
         Task<IdentityResult> RegisterAsync(RegisterDto dto, string role);
         Task<SignInResult> LoginAsync(LoginDto dto);
         Task LogoutAsync();
+        Task<IdentityResult> DeleteUserAsync(string userId);
     }
 }

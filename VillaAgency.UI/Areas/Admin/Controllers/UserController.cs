@@ -46,16 +46,31 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
                 return View(dto);
             }
 
-            var resut = await _authService.RegisterAsync(dto, Roles.Manager);
-            if (resut.Succeeded)
+            var result = await _authService.RegisterAsync(dto, Roles.Manager);
+            if (result.Succeeded)
             {
                 return RedirectToAction("Index");
             }
             else
             {
-                foreach (var error in resut.Errors)
+                foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError("", error.Description);
+                    if (error.Code.Contains("Password"))
+                    {
+                        ModelState.AddModelError("Password", error.Description);
+                    }
+                    else if (error.Code.Contains("UserName"))
+                    {
+                        ModelState.AddModelError("UserName", error.Description);
+                    }
+                    else if (error.Code.Contains("Email"))
+                    {
+                        ModelState.AddModelError("Email", error.Description);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
                 }
                 return View(dto);
             }
@@ -69,6 +84,17 @@ namespace VillaAgency.WebUI.Areas.Admin.Controllers
 
             user.IsActive = !user.IsActive;
             await _userManager.UpdateAsync(user);
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var result = await _authService.DeleteUserAsync(id);
+            ViewBag.Notification = result.Succeeded
+                    ? "success|User deleted successfully."
+                    : "error|An error occurred while deleting the user.";
+
             return RedirectToAction("Index");
         }
     }

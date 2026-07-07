@@ -10,13 +10,27 @@
     string FormatPhone(string p)
     {
         if (string.IsNullOrEmpty(p)) return string.Empty;
-        string num = new string(p.Where(char.IsDigit).ToArray());
 
-        return num switch
+        string digits = new string(p.Where(char.IsDigit).ToArray());
+
+        if (p.StartsWith("+"))
         {
-            { Length: 12 } when num.StartsWith("90") => $"+90 ({num[2..5]}) {num[5..8]} {num[8..10]} {num[10..12]}",
-            { Length: 11 } when num.StartsWith("0") => $"+90 ({num[1..4]}) {num[4..7]} {num[7..9]} {num[9..11]}",
-            { Length: 10 } => $"+90 ({num[0..3]}) {num[3..6]} {num[6..8]} {num[8..10]}",
+            if (digits.Length >= 10)
+            {
+                string countryCode = digits.Substring(0, digits.Length - 10);
+                string areaCode = digits.Substring(digits.Length - 10, 3);
+                string part1 = digits.Substring(digits.Length - 7, 3);
+                string part2 = digits.Substring(digits.Length - 4);
+                return $"+{countryCode} ({areaCode}) {part1} {part2}";
+            }
+            return p; 
+        }
+
+        return digits switch
+        {
+            { Length: 12 } when digits.StartsWith("90") => $"+90 ({digits[2..5]}) {digits[5..8]} {digits[8..10]} {digits[10..12]}",
+            { Length: 11 } when digits.StartsWith("0") => $"+90 ({digits[1..4]}) {digits[4..7]} {digits[7..9]} {digits[9..11]}",
+            { Length: 10 } => $"+90 ({digits[0..3]}) {digits[3..6]} {digits[6..8]} {digits[8..10]}",
             _ => p
         };
     }
@@ -65,15 +79,15 @@
                                 <td>
                                     @if (!string.IsNullOrEmpty(item.MapUrl))
                                     {
-                                        @* Unified button for all map types *@
                                         <button type="button" class="btn btn-sm btn-outline-primary px-3" onclick="handleMapModal('@item.MapUrl')">
                                             <i class="bi bi-geo-alt-fill me-1"></i> View Map
                                         </button>
                                     }
                                 </td>
 
-                                <td>
-                                    <a href="tel:@item.PhoneNumber" class="text-body text-decoration-none link-primary font-monospace small">
+                                <td class="font-monospace">
+                                    <a href="tel:@(item.PhoneNumber.StartsWith("+") ? item.PhoneNumber : "+" + new string(item.PhoneNumber.Where(char.IsDigit).ToArray()))"
+                                       class="text-body text-decoration-none link-primary small">
                                         <i class="bi bi-telephone-fill me-2 text-primary opacity-75"></i>
                                         @FormatPhone(item.PhoneNumber)
                                     </a>
