@@ -1,0 +1,145 @@
+﻿@model List<ResultProductDto>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+
+    string selectedCategory = ViewBag.SelectedCategory ?? "All";
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
+}
+
+<div class="page-heading header-text">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <span class="breadcrumb"><a href="#">Home</a> / Properties</span>
+                <h3>Properties</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section properties">
+    <div class="container">
+        <ul class="properties-filter">
+            <li>
+                <a class="@(selectedCategory == "All" ? "is_active" : "")"
+                   href="@Url.Action("Index", "DefaultProduct", new { category = "All", page = 1 })">Show All</a>
+            </li>
+            @foreach (var category in ViewBag.Categories)
+            {
+                <li>
+                    <a class="@(selectedCategory.Equals(category, StringComparison.OrdinalIgnoreCase) ? "is_active" : "")"
+                       href="@Url.Action("Index", "DefaultProduct", new { category = category, page = 1 })">@category</a>
+                </li>
+            }
+        </ul>
+
+        @if (Model != null && Model.Any())
+        {
+            var chunkedProducts = Model.Chunk(3);
+
+            @foreach (var rowProducts in chunkedProducts)
+            {
+                <div class="row mb-4 gy-4">
+                    @foreach (var item in rowProducts)
+                    {
+                        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mb-30 properties-items">
+                            <div class="item w-100 d-flex flex-column justify-content-between">
+                                <div>
+                                    <a href="property-details.html">
+                                        <img src="@item.ImageUrl"
+                                             onerror="this.onerror=null; this.src='https://images.pexels.com/photos/7533761/pexels-photo-7533761.jpeg?_gl=1*i92yty*_ga*MTU1NjgzNzg5OS4xNzgzMzMzMTkw*_ga_8JE65Q40S6*czE3ODM0MTY1OTgkbzUkZzEkdDE3ODM0MTY2MDMkajU1JGwwJGgw';"
+                                             alt="@item.Title"
+                                             style="object-fit: cover; height: 250px; width: 100%;">
+                                    </a>
+                                    <span class="category">@item.Category</span>
+                                    <h6>$@item.Price.ToString("N0", new System.Globalization.CultureInfo("en-US"))</h6>
+                                    <h4><a href="property-details.html">@item.Title</a></h4>
+                                    <ul>
+                                        <li>Bedrooms: <span>@item.BedroomCount</span></li>
+                                        <li>Bathrooms: <span>@item.BathroomCount</span></li>
+                                        <li>Area: <span>@item.Area m²</span></li>
+                                        <li>Floor: <span>@item.Floor</span></li>
+                                        <li>Parking: <span>@item.ParkingCount</span></li>
+                                    </ul>
+                                </div>
+                                <div class="main-button mt-auto pt-3">
+                                    <a asp-controller="DefaultProductDetail" asp-action="Index" asp-route-id="@item.Id" class="w-100 text-center">See Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <p>No properties found matching the criteria.</p>
+                </div>
+            </div>
+        }
+
+        <div class="row mt-2 mb-5">
+            <div class="col-lg-12">
+                <ul class="pagination justify-content-center">
+
+                    @if (currentPage > 1)
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "DefaultProduct", new { category = selectedCategory, page = currentPage - 1 })"><i class="fa fa-angle-left"></i></a>
+                        </li>
+                    }
+
+                    @{
+                        int maxPagesToShow = 3;
+                        int startPage = Math.Max(1, currentPage - maxPagesToShow);
+                        int endPage = Math.Min(totalPages, currentPage + maxPagesToShow);
+                    }
+
+                    @if (startPage > 1)
+                    {
+                        <li>
+                            <a class="@(currentPage == 1 ? "is_active" : "")"
+                               href="@Url.Action("Index", "DefaultProduct", new { category = selectedCategory, page = 1 })">1</a>
+                        </li>
+                        @if (startPage > 2)
+                        {
+                            <li><span style="padding: 10px 15px; display: inline-block; color: #999;">...</span></li>
+                        }
+                    }
+
+                    @for (int i = startPage; i <= endPage; i++)
+                    {
+                        <li>
+                            <a class="@(currentPage == i ? "is_active" : "")"
+                               href="@Url.Action("Index", "DefaultProduct", new { category = selectedCategory, page = i })">@i</a>
+                        </li>
+                    }
+
+                    @if (endPage < totalPages)
+                    {
+                        @if (endPage < totalPages - 1)
+                        {
+                            <li><span style="padding: 10px 15px; display: inline-block; color: #999;">...</span></li>
+                        }
+                        <li>
+                            <a class="@(currentPage == totalPages ? "is_active" : "")"
+                               href="@Url.Action("Index", "DefaultProduct", new { category = selectedCategory, page = totalPages })">@totalPages</a>
+                        </li>
+                    }
+
+                    @if (currentPage < totalPages)
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "DefaultProduct", new { category = selectedCategory, page = currentPage + 1 })">>></a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

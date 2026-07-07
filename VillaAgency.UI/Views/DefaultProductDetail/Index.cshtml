@@ -1,0 +1,204 @@
+﻿@model UpdateProductDto
+@{
+    ViewData["Title"] = "Property Details";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+<style>
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 10px;
+        border: 1px solid #f5c6cb;
+        border-radius: 6px;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 10px;
+        border: 1px solid #c3e6cb;
+        border-radius: 6px;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+</style>
+<div class="page-heading header-text">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <span class="breadcrumb"><a href="#">Home</a>  /  Property Details</span>
+                <h3>@Model.Title</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="single-property section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="main-image mb-4">
+                    <img src="@Model.ImageUrl"
+                         onerror="this.onerror=null; this.src='https://images.pexels.com/photos/7533761/pexels-photo-7533761.jpeg';"
+                         alt="@Model.Title"
+                         style="width: 100%; height: 500px; object-fit: cover; border-radius: 10px; box-shadow: 0px 0px 15px rgba(0,0,0,0.1);">
+                </div>
+
+                <div class="main-content">
+                    <span class="category" style="background-color: #f35525; color: #fff; padding: 6px 20px; border-radius: 4px; font-size: 14px; font-weight: 600; text-transform: uppercase;">@Model.Category</span>
+                    <h4 style="font-size: 28px; font-weight: 700; margin-top: 20px; margin-bottom: 15px; color: #1e1e1e;">@Model.Title</h4>
+                    <h3 style="color: #f35525; font-size: 32px; font-weight: 800; margin-bottom: 30px;">$@Model.Price.ToString("N0", new System.Globalization.CultureInfo("en-US"))</h3>
+
+                    <div class="property-description mb-5" style="line-height: 1.8; color: #4a4a4a; font-size: 16px;">
+                        <p class="fw-bold text-dark" style="font-size: 18px;">Discover Your Dream Living Space</p>
+                        <p>
+                            Welcome to this exceptional @Model.Category.ToLower() designed to offer an unparalleled living experience. Located in one of the city's most sought-after and prestigious neighborhoods, this property seamlessly combines modern architectural mastery with functional, spacious luxury.
+                        </p>
+                        <p>
+                            Every square meter of this @Model.Area m² property has been crafted using high-end materials and premium finishes. From the naturally sunlit bedrooms to the expertly optimized kitchen layout, this home provides a perfect backdrop for both relaxed family living and sophisticated entertaining.
+                        </p>
+                    </div>
+
+                    <h5 class="mb-4 fw-bold text-dark" style="border-left: 4px solid #f35525; padding-left: 10px;">Premium Amenities</h5>
+                    <div class="row g-4 mb-5">
+                        <div class="col-sm-6 col-md-4">
+                            <div class="p-3 border rounded text-center bg-light">
+                                <i class="fa fa-shield-alt text-success mb-2" style="font-size: 24px;"></i>
+                                <p class="mb-0 fw-bold" style="font-size: 14px;">24/7 Security</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="p-3 border rounded text-center bg-light">
+                                <i class="fa fa-swimming-pool text-primary mb-2" style="font-size: 24px;"></i>
+                                <p class="mb-0 fw-bold" style="font-size: 14px;">Swimming Pool</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="p-3 border rounded text-center bg-light">
+                                <i class="fa fa-dumbbell text-danger mb-2" style="font-size: 24px;"></i>
+                                <p class="mb-0 fw-bold" style="font-size: 14px;">Fitness Center</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+                <div class="info-table mb-4" style="box-shadow: 0px 0px 15px rgba(0,0,0,0.05); border-radius: 10px;">
+                    <ul>
+                        @if (Model.Area.HasValue)
+                        {
+                            <li>
+                                <img src="~/assets/images/info-icon-01.png" alt="" style="max-width: 52px;">
+                                <h4>@Model.Area m²<br><span>Total Space</span></h4>
+                            </li>
+                        }
+                        @if (Model.BedroomCount.HasValue)
+                        {
+                            <li>
+                                <img src="~/assets/images/info-icon-02.png" alt="" style="max-width: 52px;">
+                                <h4>@Model.BedroomCount<br><span>Bedrooms</span></h4>
+                            </li>
+                        }
+                        @if (Model.BathroomCount.HasValue)
+                        {
+                            <li>
+                                <img src="~/assets/images/info-icon-03.png" alt="" style="max-width: 52px;">
+                                <h4>@Model.BathroomCount<br><span>Bathrooms</span></h4>
+                            </li>
+                        }
+                        @if (Model.Floor.HasValue)
+                        {
+                            <li>
+                                <img src="~/assets/images/info-icon-04.png" alt="" style="max-width: 52px;">
+                                <h4>@Model.Floor<br><span>Property Floor</span></h4>
+                            </li>
+                        }
+                        @if (Model.ParkingCount.HasValue)
+                        {
+                            <li>
+                                <img src="~/assets/images/info-icon-04.png" alt="" style="max-width: 52px;">
+                                <h4>@Model.ParkingCount Spots<br><span>Parking Space</span></h4>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="contact-form p-4 border rounded bg-white" style="box-shadow: 0px 0px 15px rgba(0,0,0,0.05); border-radius: 10px;">
+                    <h5 class="fw-bold mb-3 text-dark" style="font-size: 18px;">Schedule a Tour & Request Info</h5>
+                    <form id="contactForm" novalidate>
+                        <div class="mb-3">
+                            <input type="text" id="name" name="Name" class="form-control" placeholder="Your Full Name">
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" id="email" name="Email" class="form-control" placeholder="Your Email Address">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" id="subject" name="Subject" class="form-control" value="Inquiry for: @Model.Title" readonly style="background-color: #f8f9fa; cursor: not-allowed;">
+                        </div>
+                        <div class="mb-3">
+                            <textarea id="content" name="Content" class="form-control" rows="4">I am interested in '@Model.Title'. Please send me more details.</textarea>
+                        </div>
+
+                        <button type="submit" id="sendBtn" class="btn text-white w-100 fw-bold" style="background-color: #f35525;">
+                            <i class="fa fa-paper-plane me-2"></i> Send Request
+                        </button>
+                    </form>
+
+                    <div id="responseMessage" class="mt-3 p-2" style="display:none; border-radius:5px;"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#contactForm").on("submit", function (e) {
+            e.preventDefault();
+
+            var $msgDiv = $("#responseMessage");
+            var $btn = $("#sendBtn");
+
+            var formData = {
+                Name: $("#name").val(),
+                Email: $("#email").val(),
+                Subject: $("#subject").val(),
+                Content: $("#content").val()
+            };
+
+            $btn.prop("disabled", true).text("Sending...");
+
+            $.ajax({
+                url: '/Default/SendMessage',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        $msgDiv.removeClass("alert-danger").addClass("alert-success").text(response.message).show();
+                        $("#contactForm")[0].reset();
+                    } else {
+                        var errorHtml = '<ul style="list-style:none; padding:0; margin:0;">';
+                        $.each(response.errors, function (key, messages) {
+                            $.each(messages, function (index, msg) {
+                                errorHtml += '<li style="margin-bottom: 5px;"><i class="fa fa-exclamation-circle me-2"></i>' + msg + '</li>';
+                            });
+                        });
+                        errorHtml += '</ul>';
+                        $msgDiv.removeClass("alert-success").addClass("alert-danger").html(errorHtml).show();
+                    }
+                    $btn.prop("disabled", false).text("Send Request");
+                },
+                error: function () {
+                    $msgDiv.removeClass("alert-success").addClass("alert-danger").text("An unexpected error occurred.").show();
+                    $btn.prop("disabled", false).text("Send Request");
+                }
+            });
+        });
+    });
+</script>

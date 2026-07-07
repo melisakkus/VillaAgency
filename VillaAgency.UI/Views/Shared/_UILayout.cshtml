@@ -28,8 +28,10 @@
     -->
 
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
 
-        /* Tüm sayfa yapısını dikeyde esnek yapar */
         html, body {
             height: 100% !important;
             margin: 0 !important;
@@ -42,20 +44,18 @@
                 flex: 1 0 auto !important;
             }
 
-        /* Temadan gelen tüm gizli yükseklik ve satır arası boşlukları sıfırlayan kesin çözüm */
         footer {
             margin-top: auto !important;
-            flex-shrink: 0 !important; /* Yüksekliğinin esnemesini kesin olarak engeller */
-            padding: 10px 0 !important; /* Alt ve üstten sadece 10px boşluk bırakır */
-            min-height: auto !important; /* Temadaki olası minimum yükseklik sınırını sıfırlar */
+            flex-shrink: 0 !important; 
+            padding: 10px 0 !important; 
+            min-height: auto !important; 
             height: auto !important;
         }
 
-            /* Paragraf etiketlerinin gizli alt boşluklarını ve satır yüksekliklerini sıfırlıyoruz */
             footer p {
                 margin: 0 !important;
                 padding: 0 !important;
-                line-height: 1.2 !important; /* Satır yüksekliğini minimuma indirir */
+                line-height: 1.2 !important;
             }
 
             footer .credits-links {
@@ -149,7 +149,6 @@
                 <div class="col-lg-8 col-md-7">
                     <ul class="info">
                         <li><i class="fa fa-envelope"></i> info@villaagency.com</li>
-                        <li><i class="fa fa-map"></i> Sunny Isles Beach, FL 33160</li>
                     </ul>
                 </div>
                 <div class="col-lg-4 col-md-5">
@@ -173,17 +172,21 @@
                 <div class="col-12">
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
-                        <a href="index.html" class="logo">
+                        <a asp-controller="Default" asp-action="Index" class="logo">
                             <h1>Villa<span>Agency</span></h1>
                         </a>
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
-                            <li><a href="index.html" class="active">Home</a></li>
-                            <li><a href="properties.html">Properties</a></li>
-                            <li><a href="property-details.html">Property Details</a></li>
-                            <li><a href="contact.html">Contact Us</a></li>
-                            <li><a href="#"><i class="fa fa-calendar"></i> Schedule a visit</a></li>
+                            <li>
+                                <a asp-controller="Default" asp-action="Index" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")">Home</a>
+                            </li>
+                            <li>
+                                <a asp-controller="DefaultProduct" asp-action="Index" class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "DefaultProduct" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">Properties</a>
+                            </li>
+                            <li>
+                                <a href="/Default/Index#contact-us-section"><i class="fa fa-envelope"></i> Contact Us</a>
+                            </li>
                         </ul>
                         <a class='menu-trigger'>
                             <span>Menu</span>

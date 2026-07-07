@@ -1,7 +1,9 @@
 ﻿using Mapster;
+using System.Linq.Expressions;
 using VillaAgency.Business.Abstract;
 using VillaAgency.DataAccess.Abstract;
 using VillaAgency.Dto.MessageDtos;
+using VillaAgency.Entity.Entities;
 
 namespace VillaAgency.Business.Concrete
 {
@@ -34,9 +36,9 @@ namespace VillaAgency.Business.Concrete
             return await _counterDal.GetActiveProductsCountAsync();
         }
 
-        public async Task<int> TGetAllProductsCountAsync()
+        public async Task<int> TGetAllProductsCountAsync(Expression<Func<Product, bool>>? predicate = null)
         {
-            return await _counterDal.GetAllProductsCountAsync();
+            return await _counterDal.GetAllProductsCountAsync(predicate);
         }
 
         public async Task<int> TGetSoldProductsCountAsync()

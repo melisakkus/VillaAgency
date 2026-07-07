@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
+using System.Linq.Expressions;
 using VillaAgency.DataAccess.Abstract;
 using VillaAgency.DataAccess.Context;
 using VillaAgency.Entity.Entities;
@@ -22,10 +23,15 @@ namespace VillaAgency.DataAccess.Concrete.MongoDb.Driver
             return (int)count;
         }
 
-        public async Task<int> GetAllProductsCountAsync()
+        public async Task<int> GetAllProductsCountAsync(Expression<Func<Product, bool>>? predicate = null)
         {
-            var count = await _context.GetCollection<Product>().CountDocumentsAsync(Builders<Product>.Filter.Empty);
-            return (int)count;
+            var collection = _context.GetCollection<Product>();
+            if (predicate != null)
+            {
+                return (int)await collection.CountDocumentsAsync(predicate);
+            }
+            return (int)await collection.CountDocumentsAsync(Builders<Product>.Filter.Empty);
+
         }
 
         public async Task<int> GetActiveProductsCountAsync()

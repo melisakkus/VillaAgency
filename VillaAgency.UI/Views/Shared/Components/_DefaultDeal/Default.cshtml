@@ -133,21 +133,30 @@
             margin-bottom: 25px;
         }
 
-        .best-deal .main-button a {
-            display: inline-block;
-            background-color: #1e1e1e;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 500;
-            padding: 12px 25px;
-            border-radius: 25px;
-            text-decoration: none;
-            transition: all 0.3s;
+        .best-deal .main-button {
+            margin-top: 20px;
+            text-align: center;
         }
 
-            .best-deal .main-button a:hover {
-                background-color: #f35525;
+            .best-deal .main-button a {
+                display: inline-flex; 
+                align-items: center; 
+                justify-content: center; 
+                background-color: #1e1e1e;
+                color: #fff;
+                font-size: 14px;
+                font-weight: 500;
+                padding: 12px 30px;
+                border-radius: 25px;
+                text-decoration: none;
+                transition: all 0.3s;
+                line-height: normal; 
             }
+
+                .best-deal .main-button a:hover {
+                    background-color: #f35525;
+                    color: #fff;
+                }
 </style>
 
 @{
@@ -252,6 +261,9 @@
                                     <p>
                                         Welcome to your next chapter of refined living. This carefully curated property combines contemporary architectural design with functional spaces, ensuring ultimate privacy and convenience.
                                     </p>
+                                    <div class="main-button text-center">
+                                        <a asp-controller="DefaultProductDetail" asp-action="Index" asp-route-id="@item.Id">See Details</a>
+                                    </div>
                                 </div>
 
                             </div>
