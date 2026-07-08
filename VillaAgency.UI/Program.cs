@@ -74,19 +74,27 @@ using (var scope = app.Services.CreateScope())
             await roleManager.CreateAsync(new AppRole(roleName));
     }
 
-    var adminEmail = "admin@villaagency.com";
+    var adminUserName = builder.Configuration.GetValue<string>("AdminUser:UserName")!;
+    var adminEmail = builder.Configuration.GetValue<string>("AdminUser:Email")!;
+    var adminPassword = builder.Configuration.GetValue<string>("AdminUser:Password")!;
+    var adminFullName = builder.Configuration.GetValue<string>("AdminUser:FullName")!;
+
     if (await userManager.FindByEmailAsync(adminEmail) is null)
     {
         var admin = new AppUser
         {
-            UserName = "admin",
+            UserName = adminUserName,
             Email = adminEmail,
-            FullName = "VillaAgency Admin",
+            FullName = adminFullName,
             IsActive = true
         };
-        var result = await userManager.CreateAsync(admin, "admin00");
+
+        var result = await userManager.CreateAsync(admin, adminPassword);
+
         if (result.Succeeded)
+        {
             await userManager.AddToRoleAsync(admin, Roles.Admin);
+        }
     }
 }
 
