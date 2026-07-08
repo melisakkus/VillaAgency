@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using VillaAgency.WebUI.Models;
 
 namespace VillaAgency.WebUI.Controllers
 {
@@ -26,11 +28,24 @@ namespace VillaAgency.WebUI.Controllers
         public IActionResult Error()
         {
             var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+            var userMessage = "This operation cannot be performed at the moment. Please try again later.";
+
             if (exceptionFeature?.Error != null)
             {
-                _logger.LogError(exceptionFeature.Error, "An unhandled exception occurred while processing the request. Path: {Path}", exceptionFeature.Path); 
+                var ex = exceptionFeature.Error;
+
+                _logger.LogError(ex,
+                    "Unhandled exception while processing {Path}: {Message}",
+                    exceptionFeature.Path, ex.Message);
             }
-            return View();
+
+            var model = new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                UserMessage = userMessage
+            };
+
+            return View(model);
         }
     }
 }

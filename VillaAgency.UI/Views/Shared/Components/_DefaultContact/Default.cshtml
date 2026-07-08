@@ -67,7 +67,6 @@
         padding: 0px;
         border: 1px solid #eee;
         box-shadow: 0 8px 25px rgba(0,0,0,.05);
-
     }
 
     #contact-form fieldset {
@@ -116,7 +115,7 @@
         color: #dc3545;
         font-size: 12px;
         font-weight: 500;
-        margin-top: 4px; 
+        margin-top: 4px;
         line-height: 1.2;
     }
 
@@ -170,12 +169,12 @@
     }
 
     .contact-card-info h5 {
-        letter-spacing: 0.5px; 
+        letter-spacing: 0.5px;
         font-variant-numeric: tabular-nums;
     }
 
     .country-code {
-        color: #f35525; 
+        color: #f35525;
         font-weight: 800;
     }
 
@@ -277,10 +276,10 @@
                                 <div class="col-lg-12">
                                     <fieldset>
                                         <label for="message">Message</label>
-                                <textarea name="Content"
-                                          id="message"
-                                          rows="4"
-                                          placeholder="Your Message..."></textarea>
+                                        <textarea name="Content"
+                                                  id="message"
+                                                  rows="4"
+                                                  placeholder="Your Message..."></textarea>
                                         <span class="validation-error error-Content"></span>
                                     </fieldset>
                                 </div>
@@ -307,27 +306,37 @@
             $(".validation-error").removeClass("show").text("");
             var form = $(this);
 
-            $.ajax({
-                url: form.attr("action"),
-                type: "POST",
-                data: form.serialize(),
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Message Received",
-                            text: "Your message has been sent successfully. We will get in touch with you as soon as possible.",
-                            confirmButtonColor: "#f35525",
-                            confirmButtonText: "Close"
-                        });
-                        form[0].reset();
-                    } else {
-                        $.each(response.errors, function (key, value) {
-                            $(".error-" + key).text(value[0]).addClass("show");
+        $.ajax({
+            url: form.attr("action"),
+            type: "POST",
+            data: form.serialize(),
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Message Sent",
+                        text: response.message,
+                        confirmButtonColor: "#f35525"
+                    });
+                    form[0].reset();
+                } else {
+                    if (response.errors) {
+                        $.each(response.errors, function (key, messages) {
+                            var errorSpan = $(".error-" + key);
+                            errorSpan.text(messages[0]).addClass("show");
                         });
                     }
                 }
-            });
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "System Error",
+                    text: "An unexpected error occurred. Please try again later.",
+                    confirmButtonColor: "#333"
+                });
+            }
+    });
         });
     });
 </script>

@@ -23,7 +23,6 @@ namespace VillaAgency.WebUI.Controllers
                             );
                 return Json(new { success = false, errors = errors });
             }
-
             await _messageService.TCreateAsync(dto);
             return Json(new { success = true, message = "Your message has been sent successfully!" });
         }
