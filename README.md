@@ -4,7 +4,7 @@ Language Options: [🇬🇧 English (this file)](README.md) | [🇹🇷 Türkçe
 
 **A real estate/villa showcase and management platform built on MongoDB with a layered architecture.**
 
-> 🧩 For technical architecture decisions, layer design, and rationale: **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**
+> 🧩 For technical architecture decisions, layer design, and rationale: **[ARCHITECTURE.md](ARCHITECTURE.md)**
 >
 > 🔗 **Live Demo:** _(link will be shared here once deployed)_
 >
@@ -22,7 +22,7 @@ The **public side** is a showcase site where visitors can browse villa listings 
 
 Role-based authorization is applied in the admin panel: an **Admin** can add **Manager** accounts with limited privileges; these accounts can only perform the operations assigned to them (product and message management) and cannot access the remaining modules (Banner, Contact, Feature/FAQ, Video, User Management). Incoming messages are managed with an inbox logic that supports read/deleted states. Product listing is done with paging in view of a growing data volume; any unexpected errors that occur in the system are handled through a centralized error-handling mechanism instead of being shown to the user as raw stack traces.
 
-This project was built to demonstrate how the basic skeleton of a web application — layering, validation, logging, error handling, authorization, data access — can be set up consistently. The rationale behind the architectural decisions taken, and the known limitations, are covered in detail in a separate document ([docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)).
+This project was built to demonstrate how the basic skeleton of a web application — layering, validation, logging, error handling, authorization, data access — can be set up consistently. The rationale behind the architectural decisions taken, and the known limitations, are covered in detail in a separate document ([ARCHITECTURE.md](ARCHITECTURE.md)).
 
 ---
 
@@ -73,7 +73,7 @@ This project was built to demonstrate how the basic skeleton of a web applicatio
 
 ### Admin Panel
 
-- **Role-Based Authorization:** Different access scopes between Admin and Manager roles (see the [architecture document](docs/ARCHITECTURE.md#authentication-and-role-based-authorization) for the detailed permission table).
+- **Role-Based Authorization:** Different access scopes between Admin and Manager roles (see the [architecture document](ARCHITECTURE.md#authentication-and-role-based-authorization) for the detailed permission table).
 - **Product Management:** Category and status-based filtering, paging, one-click status update (Active / Sold / Rented / Archived).
 - **Message Inbox:** All / Unread / Deleted tabs, independent paging per tab, mark-as-read, and recoverable (soft delete) deletion.
 - **Dashboard:** Total/active/sold product counts, category distribution, and recent messages summarized on a single page using parallel queries.
