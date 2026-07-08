@@ -4,7 +4,7 @@ Language Options: [🇬🇧 English](README.md) | [🇹🇷 Türkçe (bu dosya)]
 
 **MongoDB üzerinde çalışan, katmanlı mimariyle geliştirilmiş bir emlak/villa tanıtım ve yönetim platformu.**
 
-> 🧩 Teknik mimari kararları, katman tasarımı ve gerekçeleri için: **[docs/ARCHITECTURE.tr.md](docs/ARCHITECTURE.tr.md)**
+> 🧩 Teknik mimari kararları, katman tasarımı ve gerekçeleri için: **[ARCHITECTURE.tr.md](ARCHITECTURE.tr.md)**
 >
 > 🔗 **Canlı Demo:** _(yayına alındığında link burada paylaşılacaktır)_
 >
@@ -93,13 +93,13 @@ Bu proje, bir web uygulamasının temel iskeletinin — katmanlama, doğrulama, 
 - **Nesne Eşleme:** Mapster
 - **Ön Yüz:** Bootstrap 5, jQuery, SweetAlert2
 
-Her katmanın hangi paketleri neden kullandığına dair ayrıntılı liste ve gerekçeler için: **[docs/ARCHITECTURE.tr.md](docs/ARCHITECTURE.tr.md#bağımlılık-envanteri-nuget-paketleri)**
+Her katmanın hangi paketleri neden kullandığına dair ayrıntılı liste ve gerekçeler için: **[ARCHITECTURE.tr.md](ARCHITECTURE.tr.md#bağımlılık-envanteri-nuget-paketleri)**
 
 ---
 
 ## İlgili Proje: Test Verisi Üretici (Python)
 
-Veritabanını gerçekçi test verisiyle doldurmak için ayrı bir Python aracı da geliştirilmiştir: **[VillaAgency_DataGenerator-Python-](https://github.com/melisakkus/VillaAgency_DataGenerator-Python-)**.
+Veritabanını gerçekçi test verisiyle doldurmak için ayrı bir Python aracı da geliştirilmiştir: **[VillaAgency_DataGenerator-Python-](https://github.com/melisakkus/VillaAgency_DataGenerator-Python-/blob/main/README.tr.md)**.
 
 Bu araç, `Faker` ile kategoriye özel mantıksal sınırlar (oda/banyo sayısı, fiyat aralığı, kat/otopark bilgisi) içeren 1000 adet ilan üretir; ardından MongoDB Atlas üzerinde toplu güncelleme (`bulk_write`) ile görsel linklerini günceller, fiyat alanını `float`'tan `int`'e dönüştürür ve ilanlara olasılık ağırlıklı durum (`Status`) ile oluşturulma zaman damgası ekleyip artık kullanılmayan eski alanları (`$unset`) temizler. Kısacası VillaAgency'nin boş bir veritabanıyla değil, üretim benzeri bir veri hacmiyle sergilenebilmesini sağlayan yardımcı bir migration/seed katmanıdır.
 
@@ -116,5 +116,5 @@ Bu proje şu an herhangi bir açık kaynak lisansı taşımamaktadır — tüm h
 Sorularınız, canlı demo talebiniz veya iş birliği teklifleriniz için aşağıdaki kanallardan bana ulaşabilirsiniz:
 
 - **GitHub:** [github.com/melisakkus](https://github.com/melisakkus)
-- **LinkedIn:** _(profil linkinizi buraya ekleyin)_
-- **E-posta:** _(iletişim e-postanızı buraya ekleyin)_
+- **LinkedIn:** _(https://www.linkedin.com/in/melisa-akkus-/)_
+- **Email:** _(melisa.akkus01@gmail.com)_

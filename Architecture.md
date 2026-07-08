@@ -1,6 +1,6 @@
 # VillaAgency — Architecture and Design Decisions
 
-This document explains VillaAgency's layer architecture, data access strategy, and the rationale behind the design decisions made during development, in detail. For the project's general introduction and feature list, see the [README](../README.md) file at the repository root.
+This document explains VillaAgency's layer architecture, data access strategy, and the rationale behind the design decisions made during development, in detail. For the project's general introduction and feature list, see the [README](README.md) file at the repository root.
 
 Every heading here describes a concrete choice that has a counterpart in the code; it contains no hypothetical or unimplemented feature.
 

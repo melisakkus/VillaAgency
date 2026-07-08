@@ -93,17 +93,17 @@ This project was built to demonstrate how the basic skeleton of a web applicatio
 - **Object Mapping:** Mapster
 - **Front End:** Bootstrap 5, jQuery, SweetAlert2
 
-For a detailed list of which packages each layer uses and why: **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#dependency-inventory-nuget-packages)**
+For a detailed list of which packages each layer uses and why: **[ARCHITECTURE.md](ARCHITECTURE.md#dependency-inventory-nuget-packages)**
 
 ---
 
 ## Related Project: Test Data Generator (Python)
 
-A separate Python tool has also been built to populate the database with realistic test data: **[VillaAgency_DataGenerator-Python-](https://github.com/melisakkus/VillaAgency_DataGenerator-Python-)**.
+A separate Python tool has also been built to populate the database with realistic test data: **[VillaAgency_DataGenerator-Python-](https://github.com/melisakkus/VillaAgency_DataGenerator-Python-/tree/main)**.
 
 This tool uses `Faker` to generate 1,000 listings with category-specific logical constraints (room/bathroom count, price range, floor/parking information); it then bulk-updates image links on MongoDB Atlas via `bulk_write`, converts the price field from `float` to `int`, assigns listings a probability-weighted status (`Status`) along with a creation timestamp, and cleans up legacy fields no longer in use (`$unset`). In short, it's a helper migration/seed layer that lets VillaAgency be showcased with a production-like data volume instead of an empty database.
 
-For details, see the [README.tr.md](https://github.com/melisakkus/VillaAgency_DataGenerator-Python-/blob/main/README.tr.md) file in that repository (Turkish).
+For details, see the [README.md](https://github.com/melisakkus/VillaAgency_DataGenerator-Python-/blob/main/README.md) file in that repository.
 
 ---
 
@@ -116,5 +116,5 @@ This project does not currently carry an open-source license — all rights are 
 For questions, live demo requests, or collaboration proposals, you can reach me through the following channels:
 
 - **GitHub:** [github.com/melisakkus](https://github.com/melisakkus)
-- **LinkedIn:** _(add your profile link here)_
-- **Email:** _(add your contact email here)_
+- **LinkedIn:** _(https://www.linkedin.com/in/melisa-akkus-/)_
+- **Email:** _(melisa.akkus01@gmail.com)_

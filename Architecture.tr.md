@@ -1,21 +1,23 @@
 # VillaAgency — Mimari ve Tasarım Kararları
 
-Bu belge, VillaAgency projesinin katman mimarisini, veri erişim stratejisini ve geliştirme sürecinde alınan tasarım kararlarının gerekçelerini ayrıntılı olarak açıklar. Projenin genel tanıtımı, özellik listesi ve kurulum talimatları için depo kökündeki [README](../README_NEW.md) dosyasına bakın.
+Bu belge, VillaAgency projesinin katman mimarisini, veri erişim stratejisini ve geliştirme sürecinde alınan tasarım kararlarının gerekçelerini ayrıntılı olarak açıklar. Projenin genel tanıtımı, özellik listesi ve kurulum talimatları için depo kökündeki [README](README.tr.md) dosyasına bakın.
 
 Buradaki her başlık, kodda karşılığı olan somut bir tercihi anlatır; varsayımsal ya da uygulanmamış bir özellik içermez.
 
 ## İçindekiler
 
-- [Mimari Yaklaşım](#mimari-yaklaşım)
-- [Veri Erişim Katmanı: Generic ve Entity-Özel Repository'lerin Bir Arada Kullanımı](#veri-erişim-katmanı-generic-ve-entity-özel-repositorylerin-bir-arada-kullanımı)
-- [İş Mantığı Katmanı: Generic Manager'dan Bilinçli Bir Vazgeçiş](#iş-mantığı-katmanı-generic-managerdan-bilinçli-bir-vazgeçiş)
-- [Doğrulama: FluentValidation](#doğrulama-fluentvalidation)
-- [Loglama: Serilog ile Yapılandırılmış Kayıt](#loglama-serilog-ile-yapılandırılmış-kayıt)
-- [Merkezi Hata Yönetimi](#merkezi-hata-yönetimi)
-- [Kimlik Doğrulama ve Rol Bazlı Yetkilendirme](#kimlik-doğrulama-ve-rol-bazlı-yetkilendirme)
-- [Sayfalama Tercihi: Neden Önbellekleme Yerine Sayfalama?](#sayfalama-tercihi-neden-önbellekleme-yerine-sayfalama)
-- [Ölçeklenebilirlik ve Sürdürülebilirlik](#ölçeklenebilirlik-ve-sürdürülebilirlik)
-- [Bilinen Sınırlamalar](#bilinen-sınırlamalar)
+- [VillaAgency — Mimari ve Tasarım Kararları](#villaagency--mimari-ve-tasarım-kararları)
+  - [İçindekiler](#i̇çindekiler)
+  - [Mimari Yaklaşım](#mimari-yaklaşım)
+  - [Veri Erişim Katmanı: Generic ve Entity-Özel Repository'lerin Bir Arada Kullanımı](#veri-erişim-katmanı-generic-ve-entity-özel-repositorylerin-bir-arada-kullanımı)
+  - [İş Mantığı Katmanı: Generic Manager'dan Bilinçli Bir Vazgeçiş](#i̇ş-mantığı-katmanı-generic-managerdan-bilinçli-bir-vazgeçiş)
+  - [Doğrulama: FluentValidation](#doğrulama-fluentvalidation)
+  - [Loglama: Serilog ile Yapılandırılmış Kayıt](#loglama-serilog-ile-yapılandırılmış-kayıt)
+  - [Merkezi Hata Yönetimi](#merkezi-hata-yönetimi)
+  - [Kimlik Doğrulama ve Rol Bazlı Yetkilendirme](#kimlik-doğrulama-ve-rol-bazlı-yetkilendirme)
+  - [Sayfalama Tercihi: Neden Önbellekleme Yerine Sayfalama?](#sayfalama-tercihi-neden-önbellekleme-yerine-sayfalama)
+  - [Ölçeklenebilirlik ve Sürdürülebilirlik](#ölçeklenebilirlik-ve-sürdürülebilirlik)
+  - [Bilinen Sınırlamalar](#bilinen-sınırlamalar)
 
 ---
 
