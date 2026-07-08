@@ -1,24 +1,21 @@
 # VillaAgency — Mimari ve Tasarım Kararları
 
-Bu belge, VillaAgency projesinin katman mimarisini, veri erişim stratejisini ve geliştirme sürecinde alınan tasarım kararlarının gerekçelerini ayrıntılı olarak açıklar. Projenin genel tanıtımı, özellik listesi ve kurulum talimatları için depo kökündeki [README](../README.tr.md) dosyasına bakın.
+Bu belge, VillaAgency projesinin katman mimarisini, veri erişim stratejisini ve geliştirme sürecinde alınan tasarım kararlarının gerekçelerini ayrıntılı olarak açıklar. Projenin genel tanıtımı, özellik listesi ve kurulum talimatları için depo kökündeki [README](../README_NEW.md) dosyasına bakın.
 
 Buradaki her başlık, kodda karşılığı olan somut bir tercihi anlatır; varsayımsal ya da uygulanmamış bir özellik içermez.
 
 ## İçindekiler
 
-- [VillaAgency — Mimari ve Tasarım Kararları](#villaagency--mimari-ve-tasarım-kararları)
-  - [İçindekiler](#i̇çindekiler)
-  - [Mimari Yaklaşım](#mimari-yaklaşım)
-  - [Bağımlılık Envanteri (NuGet Paketleri)](#bağımlılık-envanteri-nuget-paketleri)
-  - [Veri Erişim Katmanı: Generic ve Entity-Özel Repository'lerin Bir Arada Kullanımı](#veri-erişim-katmanı-generic-ve-entity-özel-repositorylerin-bir-arada-kullanımı)
-  - [İş Mantığı Katmanı: Generic Manager'dan Bilinçli Bir Vazgeçiş](#i̇ş-mantığı-katmanı-generic-managerdan-bilinçli-bir-vazgeçiş)
-  - [Doğrulama: FluentValidation](#doğrulama-fluentvalidation)
-  - [Loglama: Serilog ile Yapılandırılmış Kayıt](#loglama-serilog-ile-yapılandırılmış-kayıt)
-  - [Merkezi Hata Yönetimi](#merkezi-hata-yönetimi)
-  - [Kimlik Doğrulama ve Rol Bazlı Yetkilendirme](#kimlik-doğrulama-ve-rol-bazlı-yetkilendirme)
-  - [Sayfalama Tercihi: Neden Önbellekleme Yerine Sayfalama?](#sayfalama-tercihi-neden-önbellekleme-yerine-sayfalama)
-  - [Ölçeklenebilirlik ve Sürdürülebilirlik](#ölçeklenebilirlik-ve-sürdürülebilirlik)
-  - [Bilinen Sınırlamalar](#bilinen-sınırlamalar)
+- [Mimari Yaklaşım](#mimari-yaklaşım)
+- [Veri Erişim Katmanı: Generic ve Entity-Özel Repository'lerin Bir Arada Kullanımı](#veri-erişim-katmanı-generic-ve-entity-özel-repositorylerin-bir-arada-kullanımı)
+- [İş Mantığı Katmanı: Generic Manager'dan Bilinçli Bir Vazgeçiş](#iş-mantığı-katmanı-generic-managerdan-bilinçli-bir-vazgeçiş)
+- [Doğrulama: FluentValidation](#doğrulama-fluentvalidation)
+- [Loglama: Serilog ile Yapılandırılmış Kayıt](#loglama-serilog-ile-yapılandırılmış-kayıt)
+- [Merkezi Hata Yönetimi](#merkezi-hata-yönetimi)
+- [Kimlik Doğrulama ve Rol Bazlı Yetkilendirme](#kimlik-doğrulama-ve-rol-bazlı-yetkilendirme)
+- [Sayfalama Tercihi: Neden Önbellekleme Yerine Sayfalama?](#sayfalama-tercihi-neden-önbellekleme-yerine-sayfalama)
+- [Ölçeklenebilirlik ve Sürdürülebilirlik](#ölçeklenebilirlik-ve-sürdürülebilirlik)
+- [Bilinen Sınırlamalar](#bilinen-sınırlamalar)
 
 ---
 
@@ -47,40 +44,6 @@ Program.cs
 ```
 
 Bunun sağladığı şey basittir: `Program.cs`, tüm bağımlılık ağacını tek bir üst seviye çağrıyla (`AddBusinessServices`) kurar; her katman kendi bağımlılık kayıt sorumluluğunu kendi projesinde taşır. İleride bir `VillaAgency.Api` projesi eklenmek istenirse, mevcut zincire dokunmadan yalnızca kendi `Add*Services()` metodunu çağırması yeterlidir.
-
----
-
-## Bağımlılık Envanteri (NuGet Paketleri)
-
-Her katman yalnızca kendi sorumluluğu için gereken paketleri referans eder; bir üst katmana sızan gereksiz bağımlılık yoktur.
-
-| Katman Adı | Bağımlılık / NuGet Paketi | Versiyon | Amacı |
-| :--- | :--- | :--- | :--- |
-| **Genel** | .NET 8 SDK | v8.0 | Projenin genel çalışma zamanı (runtime) ve altyapısı. |
-| **VillaAgency.Entity** | MongoDB.Bson | v3.9.0 | Model sınıflarının MongoDB standartlarına (`BsonId`, `BsonRepresentation`) uyumlu olması. |
-| **VillaAgency.Entity** | AspNetCore.Identity.MongoDbCore | v7.0.0 | `AppUser`/`AppRole` Identity modellerinin doğrudan bu katmanda MongoDB'ye uyumlu tanımlanabilmesi. |
-| **VillaAgency.Dto** | MongoDB.Bson | v3.9.0 | DTO'larda gerekli olduğunda `ObjectId`/Bson tiplerinin taşınabilmesi. |
-| **VillaAgency.DataAccess** | MongoDB.Driver | v3.9.0 | Veritabanı etkileşimi, aggregation pipeline ve asenkron CRUD işlemleri. |
-| **VillaAgency.DataAccess** | AspNetCore.Identity.MongoDbCore | v7.0.0 | ASP.NET Core Identity altyapısının MongoDB üzerinde native (EF Core gerektirmeden) çalışması. |
-| **VillaAgency.DataAccess** | Humanizer.Core | v3.0.10 | Koleksiyon/isim dönüşümlerinde (ör. tekil→çoğul) okunabilir string üretimi. |
-| **VillaAgency.DataAccess** | Microsoft.Extensions.Configuration | v10.0.8 | `appsettings.json` verilerinin okunması ve yönetilmesi. |
-| **VillaAgency.DataAccess** | Microsoft.Extensions.Configuration.Binder | v10.0.8 | Ham konfigürasyon değerlerinin güçlü tipli (`MongoDbSettings`) C# nesnelerine bağlanması. |
-| **VillaAgency.DataAccess** | Microsoft.Extensions.DependencyInjection | v10.0.8 | Repository ve Context sınıflarının uygulama havuzuna DI ile kaydedilmesi. |
-| **VillaAgency.Business** | Mapster | v10.0.8 | Entity ve DTO katmanları arasında düşük maliyetli nesne eşleme (mapping). |
-| **VillaAgency.Business** | FluentValidation | v12.1.1 | İş mantığı katmanında veri bütünlüğü ve doğrulama kuralları. |
-| **VillaAgency.Business** | FluentValidation.DependencyInjectionExtensions | v12.1.1 | Modül bazlı validator sınıflarının IoC container'a otomatik kaydedilmesi. |
-| **VillaAgency.Business** | Microsoft.AspNetCore.Http.Abstractions | v2.3.11 | Business katmanının, dosya yükleme gibi HTTP context'e bağlı işlemlerde MVC'ye sıkı bağımlı olmadan çalışabilmesi. |
-| **VillaAgency.Business** | Microsoft.Extensions.Caching.Abstractions | v10.0.9 | `ICacheService` soyutlamasının altyapısı (bkz. [Sayfalama Tercihi](#sayfalama-tercihi-neden-önbellekleme-yerine-sayfalama); şu an pasif). |
-| **VillaAgency.WebUI** | FluentValidation.AspNetCore | v11.3.1 | FluentValidation kurallarının `ModelState` ile otomatik entegrasyonu. |
-| **VillaAgency.WebUI** | Serilog.AspNetCore | v10.0.0 | Yapılandırılmış (structured) loglama ve merkezi hata izleme altyapısı. |
-| **VillaAgency.WebUI** | Serilog.Sinks.Console | v6.1.1 | Geliştirme ortamında logların konsola yazılması. |
-| **VillaAgency.WebUI** | Serilog.Sinks.File | v7.0.0 | Logların günlük rotasyonlu fiziksel dosyalara (`Logs/log-.txt`) yazılması. |
-| **VillaAgency.WebUI** | Microsoft.VisualStudio.Web.CodeGeneration.Design | v8.0.23 | MVC Controller/View iskeletlerinin (scaffolding) otomatik oluşturulması. |
-
-**Notlar:**
-
-- **İzolasyon:** `VillaAgency.WebUI` projesi, `DataAccess` veya `Entity` katmanlarına doğrudan referans vermez. UI katmanı, veritabanı detaylarından tamamen soyutlanmıştır.
-- **DTO Stratejisi:** `VillaAgency.Dto` katmanındaki `MongoDB.Bson` bağımlılığı yalnızca veritabanı kimliklerinin (`ObjectId`) korunması amacıyla bulunur.
 
 ---
 
@@ -124,8 +87,6 @@ DataAccess katmanında generic repository deseni işe yaradıktan sonra, akla ge
 
 Bunun yerine hibrit bir model uygulandı: DataAccess'te generic repository korunurken, Business katmanında her entity kendi arayüzüne (`IBannerService`) ve kendi manager sınıfına (`BannerManager`) sahiptir. Bu sınıflar DTO ↔ Entity dönüşümünü Mapster ile yapar, `null` parametrelere `ArgumentNullException`, bulunamayan kayıtlara `KeyNotFoundException` fırlatır ve işlemleri `ILogger<T>` ile loglar. Yazılan kod miktarı generic yaklaşıma göre biraz artar, ama karşılığında Sunum katmanı veritabanından tamamen izole kalır ve her entity kendi kuralı için genişleyebilir bir zemine sahip olur.
 
-Mapster global olarak `TypeAdapterConfig.GlobalSettings.Default.IgnoreNullValues(true)` ile yapılandırılmıştır (`Program.cs`). Bu ayarın amacı, kısmi güncelleme (partial update) senaryolarında bir Update DTO'sunda doldurulmamış (null) bırakılan alanların, hedef entity'deki mevcut geçerli veriyi ezmesini engellemektir — bir formda yalnızca birkaç alan değiştirildiğinde, diğer alanların istemeden `null`'a düşmesi bu sayede önlenir.
-
 ---
 
 ## Doğrulama: FluentValidation
@@ -162,7 +123,7 @@ Projede ayrıca, `Middleware_Reference` klasörü altında exception tipine gör
 
 ## Kimlik Doğrulama ve Rol Bazlı Yetkilendirme
 
-Kimlik doğrulama `AspNetCore.Identity.MongoDbCore` ile MongoDB üzerine kurulmuştur (`AppUser : MongoIdentityUser<string>`, `AppRole`). Gerekçe basittir: proje zaten uçtan uca MongoDB üzerinde çalışıyor, kullanıcı yönetimi için ayrı bir ilişkisel veritabanı açmak gereksiz bir bağımlılık olurdu. Oturum çerezi `ConfigureApplicationCookie` ile özelleştirilmiştir: giriş yapmamış bir istek `/Account/Login`'e, yetkisiz bir istek `/Account/AccessDenied`'a yönlendirilir; çerez 7 gün geçerlidir ve `SlidingExpiration = true` ile her istekte bu süre yenilenir.
+Kimlik doğrulama `AspNetCore.Identity.MongoDbCore` ile MongoDB üzerine kurulmuştur (`AppUser : MongoIdentityUser<string>`, `AppRole`). Gerekçe basittir: proje zaten uçtan uca MongoDB üzerinde çalışıyor, kullanıcı yönetimi için ayrı bir ilişkisel veritabanı açmak gereksiz bir bağımlılık olurdu.
 
 Panel, tek tip bir "admin kullanıcı" yerine gerçek bir kurumsal yapıya benzer şekilde iki katmanlı bir yetki modeli üzerine kuruludur: bir **Admin**, kendi altında sınırlı yetkili **Manager** hesapları açabilir.
 
@@ -182,7 +143,7 @@ Bu ayrım, kodda tüm Admin controller'larının ortak atası olan `AdminBaseCon
 
 Bu hiyerarşiyi pekiştiren bir detay: `UserController.Create`, panel üzerinden açılan yeni hesapları sabit olarak `Roles.Manager` ile kaydeder. Panelden yeni bir Admin hesabı açılamaz — Manager hesapları yalnızca mevcut bir Admin tarafından oluşturulabilen, ona bağlı hesaplardır.
 
-Giriş akışında `AuthManager.LoginAsync`, kullanıcı adı ile e-postayı aynı alandan (`@` karakteri kontrolüyle) ayırt eder ve `lockoutOnFailure: true` ile Identity'nin `MaxFailedAccessAttempts = 5` / `10 dakika` kilitleme politikasını devreye sokar. `user.IsActive` alanı ayrıca kontrol edilir; pasife alınmış bir hesap doğru şifreyle bile giriş yapamaz — bu, bir Admin'in bir Manager'ın erişimini hesabı silmeden geçici olarak durdurabilmesini sağlar. Uygulama ilk ayağa kalktığında roller ve `appsettings.json`'daki `AdminUser` bölümünde tanımlanan bilgilerle bir ilk Admin hesabı otomatik oluşturulur; yeni bir ortama deploy edildiğinde veritabanına elle kayıt atmaya gerek kalmaz. Seed bilgilerinin (kullanıcı adı, e-posta, şifre, ad-soyad) `Program.cs` içine hardcode edilmek yerine konfigürasyondan okunması, farklı ortamlarda (Development/Staging/Production) kod değiştirmeden farklı bir ilk admin hesabı tanımlanabilmesini sağlar.
+Giriş akışında `AuthManager.LoginAsync`, kullanıcı adı ile e-postayı aynı alandan (`@` karakteri kontrolüyle) ayırt eder ve `lockoutOnFailure: true` ile Identity'nin `MaxFailedAccessAttempts = 5` / `10 dakika` kilitleme politikasını devreye sokar. `user.IsActive` alanı ayrıca kontrol edilir; pasife alınmış bir hesap doğru şifreyle bile giriş yapamaz — bu, bir Admin'in bir Manager'ın erişimini hesabı silmeden geçici olarak durdurabilmesini sağlar. Uygulama ilk ayağa kalktığında roller ve `admin@villaagency.com` ile bir ilk Admin hesabı otomatik oluşturulur; yeni bir ortama deploy edildiğinde veritabanına elle kayıt atmaya gerek kalmaz.
 
 ---
 

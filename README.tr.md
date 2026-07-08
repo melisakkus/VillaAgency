@@ -7,6 +7,8 @@ Language Options: [🇬🇧 English](README.md) | [🇹🇷 Türkçe (bu dosya)]
 > 🧩 Teknik mimari kararları, katman tasarımı ve gerekçeleri için: **[docs/ARCHITECTURE.tr.md](docs/ARCHITECTURE.tr.md)**
 >
 > 🔗 **Canlı Demo:** _(yayına alındığında link burada paylaşılacaktır)_
+>
+> 🔐 Paneli birlikte gezmek veya kurulum/demo talebiniz için: [İletişim](#i̇letişim)
 
 ASP.NET Core 8 MVC ile yazılmış bu proje, bir emlak acentesinin hem müşteriye açık tanıtım sitesini hem de bu siteyi besleyen içerik yönetim panelini tek bir çözümde birleştirir.
 
@@ -26,19 +28,37 @@ Bu proje, bir web uygulamasının temel iskeletinin — katmanlama, doğrulama, 
 
 ## Ekran Görüntüleri
 
-> Görselleri eklemek için: proje kökünde `docs/screenshots/` klasörü oluşturun, görselleri oraya koyun ve aşağıdaki placeholder satırları kendi dosya adlarınızla değiştirin. Göstermeye değer 4-6 kare önerilir: **(1)** herkese açık anasayfa, **(2)** ürün/villa listeleme + filtreleme, **(3)** ürün detay sayfası, **(4)** admin dashboard, **(5)** mesaj kutusu (sekmeli görünüm), **(6)** dark mode karşılaştırması. Görselleri yan yana değil, alt alta ve kısa bir açıklama satırıyla birlikte koymak GitHub'da daha temiz görünür.
+> Görselleri eklemek için: proje kökünde `docs/screenshots/` klasörü oluşturun, görselleri oraya koyun, aşağıdaki dosya adlarını kendi görsellerinizle değiştirin ve her başlığın altına `![Açıklama](docs/screenshots/dosya-adi.png)` satırını ekleyin — GitHub bu görselleri README içinde otomatik render eder.
 
 **Herkese Açık Anasayfa**
 `docs/screenshots/public-home.png`
 
-**Ürün Listeleme & Filtreleme**
+**Ürün / Villa Listeleme & Filtreleme**
 `docs/screenshots/public-products.png`
+
+**Ürün Detay Sayfası**
+`docs/screenshots/public-product-detail.png`
+
+**İletişim Formu**
+`docs/screenshots/public-contact.png`
 
 **Admin Dashboard**
 `docs/screenshots/admin-dashboard.png`
 
-**Mesaj Kutusu**
+**Ürün Yönetimi (Admin)**
+`docs/screenshots/admin-products.png`
+
+**Mesaj Kutusu (Tümü / Okunmamış / Silinmiş)**
 `docs/screenshots/admin-messages.png`
+
+**Kullanıcı Yönetimi (Admin)**
+`docs/screenshots/admin-users.png`
+
+**Dark Mode Karşılaştırması**
+`docs/screenshots/dark-mode.png`
+
+**Hata Sayfası**
+`docs/screenshots/error-page.png`
 
 ---
 
@@ -63,106 +83,27 @@ Bu proje, bir web uygulamasının temel iskeletinin — katmanlama, doğrulama, 
 
 ---
 
-## Kullanılan Teknolojiler ve Seçim Gerekçeleri
+## Kullanılan Teknolojiler
 
-Projenin katmanlı mimarisinde, her katman sadece ihtiyaç duyduğu bağımlılıkları içerecek şekilde izole edilmiştir.
+- **Backend:** .NET 8, ASP.NET Core MVC
+- **Veritabanı:** MongoDB
+- **Kimlik Doğrulama:** ASP.NET Core Identity (MongoDB üzerinde)
+- **Doğrulama:** FluentValidation
+- **Loglama:** Serilog (Console + günlük rotasyonlu dosya)
+- **Nesne Eşleme:** Mapster
+- **Ön Yüz:** Bootstrap 5, jQuery, SweetAlert2
 
-| Katman Adı | Bağımlılık / NuGet Paketi | Versiyon | Amacı |
-| :--- | :--- | :--- | :--- |
-| **Genel** | .NET 8 SDK | v8.0 | Projenin genel çalışma zamanı (runtime) ve altyapısı. |
-| **VillaAgency.Entity** | MongoDB.Bson | v3.9.0 | Model sınıflarının MongoDB standartlarına (`BsonId`, `BsonRepresentation`) uyumlu olması. |
-| **VillaAgency.Entity** | AspNetCore.Identity.MongoDbCore | v7.0.0 | `AppUser`/`AppRole` Identity modellerinin doğrudan bu katmanda MongoDB'ye uyumlu tanımlanabilmesi. |
-| **VillaAgency.Dto** | MongoDB.Bson | v3.9.0 | DTO'larda gerekli olduğunda `ObjectId`/Bson tiplerinin taşınabilmesi. |
-| **VillaAgency.DataAccess** | MongoDB.Driver | v3.9.0 | Veritabanı etkileşimi, aggregation pipeline ve asenkron CRUD işlemleri. |
-| **VillaAgency.DataAccess** | AspNetCore.Identity.MongoDbCore | v7.0.0 | ASP.NET Core Identity altyapısının MongoDB üzerinde native (EF Core gerektirmeden) çalışması. |
-| **VillaAgency.DataAccess** | Humanizer.Core | v3.0.10 | Koleksiyon/isim dönüşümlerinde (ör. tekil→çoğul) okunabilir string üretimi. |
-| **VillaAgency.DataAccess** | Microsoft.Extensions.Configuration | v10.0.8 | `appsettings.json` verilerinin okunması ve yönetilmesi. |
-| **VillaAgency.DataAccess** | Microsoft.Extensions.Configuration.Binder | v10.0.8 | Ham konfigürasyon değerlerinin güçlü tipli (`MongoDbSettings`) C# nesnelerine bağlanması. |
-| **VillaAgency.DataAccess** | Microsoft.Extensions.DependencyInjection | v10.0.8 | Repository ve Context sınıflarının uygulama havuzuna DI ile kaydedilmesi. |
-| **VillaAgency.Business** | Mapster | v10.0.8 | Entity ve DTO katmanları arasında düşük maliyetli nesne eşleme (mapping). |
-| **VillaAgency.Business** | FluentValidation | v12.1.1 | İş mantığı katmanında veri bütünlüğü ve doğrulama kuralları. |
-| **VillaAgency.Business** | FluentValidation.DependencyInjectionExtensions | v12.1.1 | Modül bazlı validator sınıflarının IoC container'a otomatik kaydedilmesi. |
-| **VillaAgency.Business** | Microsoft.AspNetCore.Http.Abstractions | v2.3.11 | Business katmanının, dosya yükleme gibi HTTP context'e bağlı işlemlerde MVC'ye sıkı bağımlı olmadan çalışabilmesi. |
-| **VillaAgency.Business** | Microsoft.Extensions.Caching.Abstractions | v10.0.9 | `ICacheService` soyutlamasının altyapısı (bkz. [Sayfalama Tercihi](docs/ARCHITECTURE.tr.md#sayfalama-tercihi-neden-önbellekleme-yerine-sayfalama); şu an pasif). |
-| **VillaAgency.WebUI** | FluentValidation.AspNetCore | v11.3.1 | FluentValidation kurallarının `ModelState` ile otomatik entegrasyonu. |
-| **VillaAgency.WebUI** | Serilog.AspNetCore | v10.0.0 | Yapılandırılmış (structured) loglama ve merkezi hata izleme altyapısı. |
-| **VillaAgency.WebUI** | Serilog.Sinks.Console | v6.1.1 | Geliştirme ortamında logların konsola yazılması. |
-| **VillaAgency.WebUI** | Serilog.Sinks.File | v7.0.0 | Logların günlük rotasyonlu fiziksel dosyalara (`Logs/log-.txt`) yazılması. |
-| **VillaAgency.WebUI** | Microsoft.VisualStudio.Web.CodeGeneration.Design | v8.0.23 | MVC Controller/View iskeletlerinin (scaffolding) otomatik oluşturulması. |
-
-**Mimari notlar:**
-
-- **İzolasyon:** `VillaAgency.WebUI` projesi, `DataAccess` veya `Entity` katmanlarına doğrudan referans vermez. UI katmanı, veritabanı detaylarından tamamen soyutlanmıştır.
-- **Bağımlılık Zinciri:** DI kayıtları, `Program.cs` üzerinde tek bir `AddBusinessServices` çağrısıyla başlatılır; her katman kendi bağımlılıklarını (`AddDataAccessServices`, `AddIdentityServices`) kendi projesinde zincirleme olarak kaydeder.
-- **DTO Stratejisi:** `VillaAgency.Dto` katmanındaki `MongoDB.Bson` bağımlılığı yalnızca veritabanı kimliklerinin (`ObjectId`) korunması amacıyla bulunur.
-
-Katman sorumlulukları, veri erişim stratejisi, doğrulama/loglama/hata yönetimi mimarisi ve alınan tasarım kararlarının gerekçeleri için: **[docs/ARCHITECTURE.tr.md](docs/ARCHITECTURE.tr.md)**
+Her katmanın hangi paketleri neden kullandığına dair ayrıntılı liste ve gerekçeler için: **[docs/ARCHITECTURE.tr.md](docs/ARCHITECTURE.tr.md#bağımlılık-envanteri-nuget-paketleri)**
 
 ---
 
-## Kurulum ve Çalıştırma
+## İlgili Proje: Test Verisi Üretici (Python)
 
-### Gereksinimler
-- [.NET 8 SDK](https://dotnet.microsoft.com/download)
-- Bir MongoDB örneği (yerel kurulum veya [MongoDB Atlas](https://www.mongodb.com/atlas) bulut kümesi)
+Veritabanını gerçekçi test verisiyle doldurmak için ayrı bir Python aracı da geliştirilmiştir: **[VillaAgency_DataGenerator-Python-](https://github.com/melisakkus/VillaAgency_DataGenerator-Python-)**.
 
-### Adımlar
+Bu araç, `Faker` ile kategoriye özel mantıksal sınırlar (oda/banyo sayısı, fiyat aralığı, kat/otopark bilgisi) içeren 1000 adet ilan üretir; ardından MongoDB Atlas üzerinde toplu güncelleme (`bulk_write`) ile görsel linklerini günceller, fiyat alanını `float`'tan `int`'e dönüştürür ve ilanlara olasılık ağırlıklı durum (`Status`) ile oluşturulma zaman damgası ekleyip artık kullanılmayan eski alanları (`$unset`) temizler. Kısacası VillaAgency'nin boş bir veritabanıyla değil, üretim benzeri bir veri hacmiyle sergilenebilmesini sağlayan yardımcı bir migration/seed katmanıdır.
 
-```bash
-git clone https://github.com/melisakkus/VillaAgency.git
-cd VillaAgency
-```
-
-`VillaAgency.UI/appsettings.json` dosyasını oluşturun (bu dosya `.gitignore` içinde tutulur, repoda yer almaz):
-
-```json
-{
-  "MongoDB": {
-    "ConnectionString": "mongodb://localhost:27017",
-    "DatabaseName": "VillaAgencyDb"
-  },
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  },
-  "Serilog": {
-    "MinimumLevel": {
-      "Default": "Information",
-      "Override": { "Microsoft": "Warning", "System": "Warning" }
-    },
-    "WriteTo": [
-      { "Name": "Console" },
-      {
-        "Name": "File",
-        "Args": {
-          "path": "Logs/log-.txt",
-          "rollingInterval": "Day",
-          "retainedFileCountLimit": 30,
-          "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
-        }
-      }
-    ]
-  },
-  "AllowedHosts": "*"
-}
-```
-
-Ardından:
-
-```bash
-dotnet restore
-dotnet run --project VillaAgency.UI
-```
-
-Uygulama ilk kez ayağa kalktığında `Admin` ve `Manager` rolleriyle birlikte varsayılan bir yönetici hesabı otomatik olarak oluşturulur (bkz. `Program.cs`). Kendi ortamınızda çalıştırırken bu bilgilerle doğrudan giriş yapabilirsiniz.
-
-> 🔐 **Canlı demoyu incelemek isteyen değerlendiriciler için:** Giriş bilgilerini paylaşmak yerine, panel üzerinde birlikte gezinebilmek için benimle iletişime geçmenizi rica ederim (bkz. [İletişim](#i̇letişim)).
-
-> ⚠️ **Güvenlik notu:** Seed edilen hesap yalnızca geliştirme/demo ortamı içindir. Prodüksiyona alınmadan önce mutlaka şifre değiştirilmeli veya seed mantığı ortamlara (Development/Production) göre koşullandırılmalıdır.
-
-Loglar çalışma dizinindeki `Logs/` klasöründe günlük olarak rotasyona uğrar.
+Detaylar için ilgili reponun [README.tr.md](https://github.com/melisakkus/VillaAgency_DataGenerator-Python-/blob/main/README.tr.md) dosyasına bakabilirsiniz.
 
 ---
 

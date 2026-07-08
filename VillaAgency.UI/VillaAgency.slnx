@@ -3,6 +3,11 @@
   <Folder Name="/docs/screenshots/" />
   <Folder Name="/Solution Items/">
     <File Path="&amp; Loglama Mimarisi.txt" />
+    <File Path="../Architecture.md" />
+    <File Path="../CLAUDE.md" />
+    <File Path="../README.md" />
+    <File Path="../README.tr.md" />
+    <File Path="../README_NEW.md" />
     <File Path="explanations.txt" />
     <File Path="text.txt" />
     <File Path="whereami.txt" />
