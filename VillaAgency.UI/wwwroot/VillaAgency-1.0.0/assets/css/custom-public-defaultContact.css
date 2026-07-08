@@ -1,0 +1,178 @@
+﻿
+.contact-content {
+    padding: 60px 0 0 0;
+    background: #fbfbfb;
+    margin-top: 0;
+}
+
+.custom-contact-card {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    padding: 22px;
+    border-radius: 15px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.04);
+    border: 1px solid #eee;
+    text-decoration: none !important;
+    transition: .3s;
+    height: 100%;
+}
+
+    .custom-contact-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 28px rgba(243,85,37,.12);
+    }
+
+.contact-card-icon img {
+    width: 45px;
+}
+
+.contact-card-info {
+    margin-left: 16px;
+    flex: 1;
+}
+
+    .contact-card-info h5 {
+        font-size: 17px;
+        font-weight: 700;
+        color: #1e1e1e;
+        margin-bottom: 3px;
+    }
+
+    .contact-card-info span {
+        color: #999;
+        font-size: 13px;
+    }
+
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.form-column-wrapper {
+    height: 100%;
+}
+
+#contact-form {
+    margin: 0 !important;
+    padding: 25px !important;
+}
+
+.contact-form-container {
+    background: #fff;
+    border-radius: 20px;
+    padding: 0px;
+    border: 1px solid #eee;
+    box-shadow: 0 8px 25px rgba(0,0,0,.05);
+}
+
+#contact-form fieldset {
+    border: none;
+    padding: 0;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+#contact-form label {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 6px;
+}
+
+#contact-form input,
+#contact-form textarea {
+    width: 100%;
+    border: 1px solid #f1f1f1;
+    background: #f7f7f7;
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-size: 14px;
+    color: #333;
+    transition: .3s;
+    outline: none;
+    margin-bottom: 0px !important;
+}
+
+    #contact-form input:focus,
+    #contact-form textarea:focus {
+        background: #fff;
+        border-color: #f35525;
+        box-shadow: 0 0 0 3px rgba(243,85,37,.12);
+    }
+
+#contact-form textarea {
+    height: 95px;
+    resize: none;
+}
+
+.validation-error {
+    display: none;
+    color: #dc3545;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 4px;
+    line-height: 1.2;
+}
+
+    .validation-error.show {
+        display: block;
+    }
+
+#form-submit {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 12px;
+    background: #1e1e1e;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s;
+}
+
+    #form-submit:hover {
+        background: #f35525;
+        box-shadow: 0 10px 20px rgba(243,85,37,.25);
+    }
+
+@@media (max-width:991px) {
+
+    .contact-form-container {
+        margin-top: 35px;
+        padding: 28px;
+    }
+
+    #map iframe {
+        height: 400px !important;
+    }
+}
+
+@@media (max-width:576px) {
+
+    .contact-form-container {
+        padding: 22px;
+    }
+
+    .custom-contact-card {
+        padding: 18px;
+    }
+
+    .contact-card-info h5 {
+        font-size: 15px;
+    }
+}
+
+.contact-card-info h5 {
+    letter-spacing: 0.5px;
+    font-variant-numeric: tabular-nums;
+}
+
+.country-code {
+    color: #f35525;
+    font-weight: 800;
+}
+

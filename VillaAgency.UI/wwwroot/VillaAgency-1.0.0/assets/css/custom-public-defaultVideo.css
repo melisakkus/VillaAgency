@@ -1,0 +1,12 @@
+﻿.video.section .section-heading {
+    max-width: 580px !important;
+    margin: 0 auto 60px auto !important;
+}
+
+    .video.section .section-heading h2 {
+        font-size: 40px !important;
+        line-height: 52px !important;
+        color: #fff !important;
+        font-weight: 700 !important;
+        text-transform: capitalize !important;
+    }

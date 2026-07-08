@@ -5,21 +5,23 @@ using VillaAgency.Business.Abstract;
 namespace VillaAgency.Business.Concrete
 {
     /// <summary>
-    /// Generic caching abstraction.
+    /// Provides a generic caching abstraction for the Business layer.
     ///
-    /// NOTE:
-    /// This service is currently not used in the application.
-    /// During early development, In-Memory caching was implemented to reduce
-    /// database access for product listings.
+    /// Design Note:
+    /// This service was implemented during the initial architecture phase to
+    /// improve performance by caching product data in memory and reducing
+    /// repetitive database queries.
     ///
-    /// Later, the application was redesigned to use server-side pagination
-    /// and filtering. Since only a small subset of data is fetched per request,
-    /// the performance gain from caching became negligible compared to the added
-    /// cache invalidation complexity.
+    /// During later development, the application was redesigned to use
+    /// server-side pagination and filtering. Since each request retrieves
+    /// only a limited subset of records, the performance benefit of caching
+    /// became minimal while introducing additional cache invalidation
+    /// complexity.
     ///
-    /// The abstraction is intentionally preserved for future scalability needs,
-    /// allowing an easy transition to MemoryCache, Redis, or other distributed
-    /// caching providers without affecting higher application layers.
+    /// Therefore, the caching mechanism is currently inactive.
+    /// The abstraction has intentionally been preserved because it allows
+    /// the application to adopt IMemoryCache, Redis, or any distributed
+    /// caching provider in the future without changing the business layer.
     /// </summary>
     public class CacheManager : ICacheService
     {
