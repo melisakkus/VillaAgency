@@ -6,7 +6,7 @@ Language Options: [🇬🇧 English (this file)](README.md) | [🇹🇷 Türkçe
 
 > 🧩 For technical architecture decisions, layer design, and rationale: **[Architecture.md](Architecture.md)**
 >
-> 🔗 **Live Demo:** _(link will be shared here once deployed)_
+> 🔗 **Live Demo:** _https://villa-agency.com/_
 >
 > 🔐 To explore the panel together or request a setup/demo: [Contact](#contact)
 
@@ -23,42 +23,6 @@ The **public side** is a showcase site where visitors can browse villa listings 
 Role-based authorization is applied in the admin panel: an **Admin** can add **Manager** accounts with limited privileges; these accounts can only perform the operations assigned to them (product and message management) and cannot access the remaining modules (Banner, Contact, Feature/FAQ, Video, User Management). Incoming messages are managed with an inbox logic that supports read/deleted states. Product listing is done with paging in view of a growing data volume; any unexpected errors that occur in the system are handled through a centralized error-handling mechanism instead of being shown to the user as raw stack traces.
 
 This project was built to demonstrate how the basic skeleton of a web application — layering, validation, logging, error handling, authorization, data access — can be set up consistently. The rationale behind the architectural decisions taken, and the known limitations, are covered in detail in a separate document ([Architecture.md](Architecture.md)).
-
----
-
-## Screenshots
-
-> To add images: create a `docs/screenshots/` folder at the project root, place your images there, replace the file names below with your own, and add a `![Description](docs/screenshots/file-name.png)` line under each heading — GitHub will render these images inline in the README automatically.
-
-**Public Homepage**
-`docs/screenshots/public-home.png`
-
-**Product / Villa Listing & Filtering**
-`docs/screenshots/public-products.png`
-
-**Product Detail Page**
-`docs/screenshots/public-product-detail.png`
-
-**Contact Form**
-`docs/screenshots/public-contact.png`
-
-**Admin Dashboard**
-`docs/screenshots/admin-dashboard.png`
-
-**Product Management (Admin)**
-`docs/screenshots/admin-products.png`
-
-**Message Inbox (All / Unread / Deleted)**
-`docs/screenshots/admin-messages.png`
-
-**User Management (Admin)**
-`docs/screenshots/admin-users.png`
-
-**Dark Mode Comparison**
-`docs/screenshots/dark-mode.png`
-
-**Error Page**
-`docs/screenshots/error-page.png`
 
 ---
 
@@ -116,6 +80,155 @@ During the development process, a comprehensive data management tool was created
 This structure enabled working with production-like data during the development phase and ensured that both the application UI and query performance were optimized from the ground up.
 
 For details, see the [README.md](https://github.com/melisakkus/VillaAgency_DataGenerator-Python-/blob/main/README.md) file in that repository.
+
+---
+
+## 📸 Screenshots
+
+### 🌐 Public Website
+
+#### 🏠 Home Page
+
+- `docs/screenshots/Public UI/UI-Banner.png`
+
+- `docs/screenshots/Public UI/UI-Feature.png`
+
+- `docs/screenshots/Public UI/UI-Video.png`
+
+- `docs/screenshots/Public UI/UI-Counter.png`
+
+- `docs/screenshots/Public UI//UI-Deal0.png`
+
+- `docs/screenshots/Public UI//UI-Deal.png`
+
+- `docs/screenshots/Public UI/UI-Products.png`
+
+- `docs/screenshots/Public UI/UI-Contact.png`
+
+- `docs/screenshots/Public UI/UI-Message-Send.png`
+
+- `docs/screenshots/Public UI/UI-Message-Error.png`
+
+- `docs/screenshots/Public UI/UI-FAQ.png`
+
+#### 🏡 Property Listings
+
+- `docs/screenshots/Public UI/UI-Properties.png`
+
+- `docs/screenshots/Public UI/UI-Properties-2.png`
+
+- `docs/screenshots/Public UI/UI-Properties-3.png`
+
+#### 📄 Property Details
+
+- `docs/screenshots/Public UI/UI-Detail.png`
+
+- `docs/screenshots/Public UI/UI-Detail-2.png`
+
+- `docs/screenshots/Public UI/UI-Detail-3.png`
+
+### 🔐 Admin Dashboard
+
+#### 🔑 Login Page
+
+- `docs/screenshots/Admin/Admin-1.png`
+
+- `docs/screenshots/Admin/Admin-2.png`
+
+- `docs/screenshots/Admin/Admin-3.png`
+
+#### 📊 Dashboard
+
+- `docs/screenshots/Admin/Admin-4.png`
+
+- `docs/screenshots/Admin/Admin-5.png`
+
+- `docs/screenshots/Admin/Admin-6.png`
+
+- `docs/screenshots/Admin/Admin-7.png`
+
+#### 👥 User & Role Management
+
+- `docs/screenshots/Admin/Admin-8.png`
+
+#### 💬 Message Management
+
+- `docs/screenshots/Admin/Admin-9.png`
+
+- `docs/screenshots/Admin/Admin-10.png`
+
+- `docs/screenshots/Admin/Admin-11.png`
+
+- `docs/screenshots/Admin/Admin-12.png`
+
+- `docs/screenshots/Admin/Admin-13.png`
+
+#### 🏡 Property Management
+
+- `docs/screenshots/Admin/Admin-14.png`
+
+- `docs/screenshots/Admin/Admin-15.png`
+
+- `docs/screenshots/Admin/Admin-16.png`
+
+- `docs/screenshots/Admin/Admin-17.png`
+
+- `docs/screenshots/Admin/Admin-18.png`
+
+- `docs/screenshots/Admin/Admin-19.png`
+
+- `docs/screenshots/Admin/Admin-20.png`
+
+- `docs/screenshots/Admin/Admin-21.png`
+
+
+#### 🖼️ Banner Management
+
+- `docs/screenshots/Admin/Admin-22.png`
+
+#### 📞 Contact Management
+
+- `docs/screenshots/Admin/Admin-23.png`
+
+#### ⭐ Feature Management
+
+- `docs/screenshots/Admin/Admin-24.png`
+
+- `docs/screenshots/Admin/Admin-25.png`
+
+#### ❓ FAQs Management
+
+- `docs/screenshots/Admin/Admin-26.png`
+
+- `docs/screenshots/Admin/Admin-27.png`
+
+#### 🎥 Video Management
+
+- `docs/screenshots/Admin/Admin-28.png`
+
+- `docs/screenshots/Admin/Admin-29.png`
+  
+
+### 👤 Manager Dashboard
+
+#### 📊 Dashboard
+- `docs/screenshots/Manager/Manager-1.png`
+
+#### 💬 Message Management
+- `docs/screenshots/Manager/Manager-2.png`
+
+- `docs/screenshots/Manager/Manager-3.png`
+
+- `docs/screenshots/Manager/Manager-4.png`
+
+- `docs/screenshots/Manager/Manager-5.png`
+
+#### 🏡 Property Management
+- `docs/screenshots/Manager/Manager-6.png`
+
+- `docs/screenshots/Manager/Manager-7.png`
+
+- `docs/screenshots/Manager/Manager-8.png`
 
 ---
 
