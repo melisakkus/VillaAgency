@@ -67,3 +67,9 @@
         display: block !important;
         word-break: break-word !important;
     }
+
+@media (max-width: 767px) {
+    .featured .left-image img {
+        padding-left: 0;
+    }
+}
