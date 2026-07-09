@@ -89,146 +89,146 @@ For details, see the [README.md](https://github.com/melisakkus/VillaAgency_DataG
 
 #### 🏠 Home Page
 
-- `docs/screenshots/Public UI/UI-Banner.png`
+- ![Home Page](`docs/screenshots/Public UI/UI-Banner.png`)
 
-- `docs/screenshots/Public UI/UI-Feature.png`
+- ![Home Page](`docs/screenshots/Public UI/UI-Feature.png`)
 
-- `docs/screenshots/Public UI/UI-Video.png`
+- ![Home Page](`docs/screenshots/Public UI/UI-Video.png`)
 
-- `docs/screenshots/Public UI/UI-Counter.png`
+- ![Home Page](`docs/screenshots/Public UI/UI-Counter.png`)
 
-- `docs/screenshots/Public UI//UI-Deal0.png`
+- ![Home Page](`docs/screenshots/Public UI//UI-Deal0.png`)
 
-- `docs/screenshots/Public UI//UI-Deal.png`
+- ![Home Page](`docs/screenshots/Public UI//UI-Deal.png`)
 
-- `docs/screenshots/Public UI/UI-Products.png`
+- ![Home Page](`docs/screenshots/Public UI/UI-Products.png`)
 
-- `docs/screenshots/Public UI/UI-Contact.png`
+- ![Home Page](`docs/screenshots/Public UI/UI-Contact.png`)
 
-- `docs/screenshots/Public UI/UI-Message-Send.png`
+- ![Home Page](`docs/screenshots/Public UI/UI-Message-Send.png`)
 
-- `docs/screenshots/Public UI/UI-Message-Error.png`
+- ![Home Page](`docs/screenshots/Public UI/UI-Message-Error.png`)
 
-- `docs/screenshots/Public UI/UI-FAQ.png`
+- ![Home Page](`docs/screenshots/Public UI/UI-FAQ.png`)
 
 #### 🏡 Property Listings
 
-- `docs/screenshots/Public UI/UI-Properties.png`
+- ![Property Listings](`docs/screenshots/Public UI/UI-Properties.png`)
 
-- `docs/screenshots/Public UI/UI-Properties-2.png`
+- ![Property Listings](`docs/screenshots/Public UI/UI-Properties-2.png`)
 
-- `docs/screenshots/Public UI/UI-Properties-3.png`
+- ![Property Listings](`docs/screenshots/Public UI/UI-Properties-3.png`)
 
 #### 📄 Property Details
 
-- `docs/screenshots/Public UI/UI-Detail.png`
+- ![Property Details](`docs/screenshots/Public UI/UI-Detail.png`)
 
-- `docs/screenshots/Public UI/UI-Detail-2.png`
+- ![Property Details](`docs/screenshots/Public UI/UI-Detail-2.png`)
 
-- `docs/screenshots/Public UI/UI-Detail-3.png`
+- ![Property Details](`docs/screenshots/Public UI/UI-Detail-3.png`)
 
 ### 🔐 Admin Dashboard
 
 #### 🔑 Login Page
 
-- `docs/screenshots/Admin/Admin-1.png`
+- ![Login Page](`docs/screenshots/Admin/Admin-1.png`)
 
-- `docs/screenshots/Admin/Admin-2.png`
+- ![Login Page](`docs/screenshots/Admin/Admin-2.png`)
 
-- `docs/screenshots/Admin/Admin-3.png`
+- ![Login Page](`docs/screenshots/Admin/Admin-3.png`)
 
 #### 📊 Dashboard
 
-- `docs/screenshots/Admin/Admin-4.png`
+- ![Dashboard](`docs/screenshots/Admin/Admin-4.png`)
 
-- `docs/screenshots/Admin/Admin-5.png`
+- ![Dashboard](`docs/screenshots/Admin/Admin-5.png`)
 
-- `docs/screenshots/Admin/Admin-6.png`
+- ![Dashboard](`docs/screenshots/Admin/Admin-6.png`)
 
-- `docs/screenshots/Admin/Admin-7.png`
+- ![Dashboard](`docs/screenshots/Admin/Admin-7.png`)
 
 #### 👥 User & Role Management
 
-- `docs/screenshots/Admin/Admin-8.png`
+- ![User & Role Management](`docs/screenshots/Admin/Admin-8.png`)
 
 #### 💬 Message Management
 
-- `docs/screenshots/Admin/Admin-9.png`
+- ![Message Management](`docs/screenshots/Admin/Admin-9.png`)
 
-- `docs/screenshots/Admin/Admin-10.png`
+- ![Message Management](`docs/screenshots/Admin/Admin-10.png`)
 
-- `docs/screenshots/Admin/Admin-11.png`
+- ![Message Management](`docs/screenshots/Admin/Admin-11.png`)
 
-- `docs/screenshots/Admin/Admin-12.png`
+- ![Message Management](`docs/screenshots/Admin/Admin-12.png`)
 
-- `docs/screenshots/Admin/Admin-13.png`
+- ![Message Management](`docs/screenshots/Admin/Admin-13.png`)
 
 #### 🏡 Property Management
 
-- `docs/screenshots/Admin/Admin-14.png`
+- ![Property Management](`docs/screenshots/Admin/Admin-14.png`)
 
-- `docs/screenshots/Admin/Admin-15.png`
+- ![Property Management](`docs/screenshots/Admin/Admin-15.png`)
 
-- `docs/screenshots/Admin/Admin-16.png`
+- ![Property Management](`docs/screenshots/Admin/Admin-16.png`)
 
-- `docs/screenshots/Admin/Admin-17.png`
+- ![Property Management](`docs/screenshots/Admin/Admin-17.png`)
 
-- `docs/screenshots/Admin/Admin-18.png`
+- ![Property Management](`docs/screenshots/Admin/Admin-18.png`)
 
-- `docs/screenshots/Admin/Admin-19.png`
+- ![Property Management](`docs/screenshots/Admin/Admin-19.png`)
 
-- `docs/screenshots/Admin/Admin-20.png`
+- ![Property Management](`docs/screenshots/Admin/Admin-20.png`)
 
-- `docs/screenshots/Admin/Admin-21.png`
+- ![Property Management](`docs/screenshots/Admin/Admin-21.png`)
 
 
 #### 🖼️ Banner Management
 
-- `docs/screenshots/Admin/Admin-22.png`
+- ![Banner Management](`docs/screenshots/Admin/Admin-22.png`)
 
 #### 📞 Contact Management
 
-- `docs/screenshots/Admin/Admin-23.png`
+- ![Contact Management](`docs/screenshots/Admin/Admin-23.png`)
 
 #### ⭐ Feature Management
 
-- `docs/screenshots/Admin/Admin-24.png`
+- ![Feature Management](`docs/screenshots/Admin/Admin-24.png`)
 
-- `docs/screenshots/Admin/Admin-25.png`
+- ![Feature Management](`docs/screenshots/Admin/Admin-25.png`)
 
 #### ❓ FAQs Management
 
-- `docs/screenshots/Admin/Admin-26.png`
+- ![FAQs Management](`docs/screenshots/Admin/Admin-26.png`)
 
-- `docs/screenshots/Admin/Admin-27.png`
+- ![FAQs Management](`docs/screenshots/Admin/Admin-27.png`)
 
 #### 🎥 Video Management
 
-- `docs/screenshots/Admin/Admin-28.png`
+- ![Video Management ](`docs/screenshots/Admin/Admin-28.png`)
 
-- `docs/screenshots/Admin/Admin-29.png`
+- ![Video Management ](`docs/screenshots/Admin/Admin-29.png`)
   
 
 ### 👤 Manager Dashboard
 
 #### 📊 Dashboard
-- `docs/screenshots/Manager/Manager-1.png`
+- ![ ](`docs/screenshots/Manager/Manager-1.png`)
 
 #### 💬 Message Management
-- `docs/screenshots/Manager/Manager-2.png`
+- ![Message Management](`docs/screenshots/Manager/Manager-2.png`)
 
-- `docs/screenshots/Manager/Manager-3.png`
+- ![Message Management ](`docs/screenshots/Manager/Manager-3.png`)
 
-- `docs/screenshots/Manager/Manager-4.png`
+- ![Message Management ](`docs/screenshots/Manager/Manager-4.png`)
 
-- `docs/screenshots/Manager/Manager-5.png`
+- ![Message Management ](`docs/screenshots/Manager/Manager-5.png`)
 
 #### 🏡 Property Management
-- `docs/screenshots/Manager/Manager-6.png`
+- ![Property Management ](`docs/screenshots/Manager/Manager-6.png`)
 
-- `docs/screenshots/Manager/Manager-7.png`
+- ![Property Management ](`docs/screenshots/Manager/Manager-7.png`)
 
-- `docs/screenshots/Manager/Manager-8.png`
+- ![Property Management ](`docs/screenshots/Manager/Manager-8.png`)
 
 ---
 
