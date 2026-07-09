@@ -91,7 +91,7 @@ For details, see the [README.md](https://github.com/melisakkus/VillaAgency_DataG
 
 - ![Home Page](docs/screenshots/Public%20UI/UI-Banner.png)
 
-- ![Home Page](docs/screenshots/Public%20UI/UI-Feature.png)
+ ![Home Page](docs/screenshots/Public%20UI/UI-Feature.png)
 
 - ![Home Page](docs/screenshots/Public%20UI/UI-Video.png)
 
@@ -105,10 +105,10 @@ For details, see the [README.md](https://github.com/melisakkus/VillaAgency_DataG
 
 - ![Home Page](docs/screenshots/Public%20UI/UI-Contact.png)
 
-- ![Home Page](docs/screenshots/Public%20UI/UI-Message-Send.png)
-
 - ![Home Page](docs/screenshots/Public%20UI/UI-Message-Error.png)
 
+- ![Home Page](docs/screenshots/Public%20UI/UI-Message-Send.png)
+  
 - ![Home Page](docs/screenshots/Public%20UI/UI-FAQ.png)
 
 #### 🏡 Property Listings

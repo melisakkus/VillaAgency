@@ -88,9 +88,9 @@ Detaylar için ilgili reponun [README.tr.md](https://github.com/melisakkus/Villa
 
 #### 🏠 Ana Sayfa
 
-- ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Banner.png)
+ ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Banner.png)
 
-- ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Feature.png)
+ ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Feature.png)
 
 - ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Video.png)
 
@@ -104,9 +104,9 @@ Detaylar için ilgili reponun [README.tr.md](https://github.com/melisakkus/Villa
 
 - ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Contact.png)
 
-- ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Message-Send.png)
-
 - ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Message-Error.png)
+
+- ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Message-Send.png)
 
 - ![Ana Sayfa](docs/screenshots/Public%20UI/UI-FAQ.png)
 
