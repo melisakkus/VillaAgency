@@ -88,149 +88,147 @@ Detaylar için ilgili reponun [README.tr.md](https://github.com/melisakkus/Villa
 
 #### 🏠 Ana Sayfa
 
-- ![Ana Sayfa](`docs/screenshots/Public UI/UI-Banner.png`)
+- ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Banner.png)
 
-- ![Ana Sayfa](`docs/screenshots/Public UI/UI-Feature.png`)
+- ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Feature.png)
 
-- ![Ana Sayfa](`docs/screenshots/Public UI/UI-Video.png`)
+- ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Video.png)
 
-- ![Ana Sayfa](`docs/screenshots/Public UI/UI-Counter.png`)
+- ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Counter.png)
 
-- ![Ana Sayfa](`docs/screenshots/Public UI//UI-Deal0.png`)
+- ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Deal0.png)
 
-- ![Ana Sayfa](`docs/screenshots/Public UI//UI-Deal.png`)
+- ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Deal.png)
 
-- ![Ana Sayfa](`docs/screenshots/Public UI/UI-Products.png`)
+- ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Products.png)
 
-- ![Ana Sayfa](`docs/screenshots/Public UI/UI-Contact.png`)
+- ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Contact.png)
 
-- ![Ana Sayfa](`docs/screenshots/Public UI/UI-Message-Send.png`)
+- ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Message-Send.png)
 
-- ![Ana Sayfa](`docs/screenshots/Public UI/UI-Message-Error.png`)
+- ![Ana Sayfa](docs/screenshots/Public%20UI/UI-Message-Error.png)
 
-- ![Ana Sayfa](`docs/screenshots/Public UI/UI-FAQ.png`)
+- ![Ana Sayfa](docs/screenshots/Public%20UI/UI-FAQ.png)
 
 #### 🏡 İlan Listeleme
 
-- ![İlan Listeleme](`docs/screenshots/Public UI/UI-Properties.png`)
+- ![İlan Listeleme](docs/screenshots/Public%20UI/UI-Properties.png)
 
-- ![İlan Listeleme](`docs/screenshots/Public UI/UI-Properties-2.png`)
+- ![İlan Listeleme](docs/screenshots/Public%20UI/UI-Properties-2.png)
 
-- ![İlan Listeleme](`docs/screenshots/Public UI/UI-Properties-3.png`)
+- ![İlan Listeleme](docs/screenshots/Public%20UI/UI-Properties-3.png)
 
 #### 📄 İlan Detay Sayfası
 
-- ![İlan Detay Sayfası ](`docs/screenshots/Public UI/UI-Detail.png`)
+- ![İlan Detay Sayfası](docs/screenshots/Public%20UI/UI-Detail.png)
 
-- ![İlan Detay Sayfası ](`docs/screenshots/Public UI/UI-Detail-2.png`)
+- ![İlan Detay Sayfası](docs/screenshots/Public%20UI/UI-Detail-2.png)
 
-- ![İlan Detay Sayfası ](`docs/screenshots/Public UI/UI-Detail-3.png`)
+- ![İlan Detay Sayfası](docs/screenshots/Public%20UI/UI-Detail-3.png)
 
 ### 🔐 Admin Paneli
 
 #### 🔑 Giriş Sayfası
 
-- ![Giriş Sayfası ](`docs/screenshots/Admin/Admin-1.png`)
+- ![Giriş Sayfası](docs/screenshots/Admin/Admin-1.png)
 
-- ![Giriş Sayfası ](`docs/screenshots/Admin/Admin-2.png`)
+- ![Giriş Sayfası](docs/screenshots/Admin/Admin-2.png)
 
-- ![Giriş Sayfası ](`docs/screenshots/Admin/Admin-3.png`)
+- ![Giriş Sayfası](docs/screenshots/Admin/Admin-3.png)
 
 #### 📊 Dashboard
 
-- ![Dashboard ](`docs/screenshots/Admin/Admin-4.png`)
+- ![Dashboard](docs/screenshots/Admin/Admin-4.png)
 
-- ![ Dashboard](`docs/screenshots/Admin/Admin-5.png`)
+- ![Dashboard](docs/screenshots/Admin/Admin-5.png)
 
-- ![Dashboard](`docs/screenshots/Admin/Admin-6.png`)
+- ![Dashboard](docs/screenshots/Admin/Admin-6.png)
 
-- ![Dashboard ](`docs/screenshots/Admin/Admin-7.png`)
+- ![Dashboard](docs/screenshots/Admin/Admin-7.png)
 
 #### 👥 Kullanıcı ve Rol Yönetimi
 
-- ![Kullanıcı ve Rol Yönetimi](`docs/screenshots/Admin/Admin-8.png`)
+- ![Kullanıcı ve Rol Yönetimi](docs/screenshots/Admin/Admin-8.png)
 
 #### 💬 Mesaj Yönetimi
 
-- ![Mesaj Yönetimi ](`docs/screenshots/Admin/Admin-9.png`)
+- ![Mesaj Yönetimi](docs/screenshots/Admin/Admin-9.png)
 
-- ![Mesaj Yönetimi ](`docs/screenshots/Admin/Admin-10.png`)
+- ![Mesaj Yönetimi](docs/screenshots/Admin/Admin-10.png)
 
-- ![Mesaj Yönetimi ](`docs/screenshots/Admin/Admin-11.png`)
+- ![Mesaj Yönetimi](docs/screenshots/Admin/Admin-11.png)
 
-- ![Mesaj Yönetimi ](`docs/screenshots/Admin/Admin-12.png`)
+- ![Mesaj Yönetimi](docs/screenshots/Admin/Admin-12.png)
 
-- ![Mesaj Yönetimi ](`docs/screenshots/Admin/Admin-13.png`)
+- ![Mesaj Yönetimi](docs/screenshots/Admin/Admin-13.png)
 
 #### 🏡 İlan Yönetimi
 
-- ![İlan Yönetimi ](`docs/screenshots/Admin/Admin-14.png`)
+- ![İlan Yönetimi](docs/screenshots/Admin/Admin-14.png)
 
-- ![İlan Yönetimi ](`docs/screenshots/Admin/Admin-15.png`)
+- ![İlan Yönetimi](docs/screenshots/Admin/Admin-15.png)
 
-- ![İlan Yönetimi ](`docs/screenshots/Admin/Admin-16.png`)
+- ![İlan Yönetimi](docs/screenshots/Admin/Admin-16.png)
 
-- ![İlan Yönetimi ](`docs/screenshots/Admin/Admin-17.png`)
+- ![İlan Yönetimi](docs/screenshots/Admin/Admin-17.png)
 
-- ![İlan Yönetimi ](`docs/screenshots/Admin/Admin-18.png`)
+- ![İlan Yönetimi](docs/screenshots/Admin/Admin-18.png)
 
-- ![İlan Yönetimi ](`docs/screenshots/Admin/Admin-19.png`)
+- ![İlan Yönetimi](docs/screenshots/Admin/Admin-19.png)
 
-- ![İlan Yönetimi ](`docs/screenshots/Admin/Admin-20.png`)
+- ![İlan Yönetimi](docs/screenshots/Admin/Admin-20.png)
 
-- ![İlan Yönetimi ](`docs/screenshots/Admin/Admin-21.png`)
-
+- ![İlan Yönetimi](docs/screenshots/Admin/Admin-21.png)
 
 #### 🖼️ Banner Yönetimi
 
-- ![Banner Yönetimi ](`docs/screenshots/Admin/Admin-22.png`)
+- ![Banner Yönetimi](docs/screenshots/Admin/Admin-22.png)
 
 #### 📞 İletişim Bilgileri Yönetimi
 
-- ![İletişim Bilgileri Yönetimi ](`docs/screenshots/Admin/Admin-23.png`)
+- ![İletişim Bilgileri Yönetimi](docs/screenshots/Admin/Admin-23.png)
 
 #### ⭐ Feature Yönetimi
 
-- ![Feature Yönetimi](`docs/screenshots/Admin/Admin-24.png`)
+- ![Feature Yönetimi](docs/screenshots/Admin/Admin-24.png)
 
-- ![Feature Yönetimi ](`docs/screenshots/Admin/Admin-25.png`)
+- ![Feature Yönetimi](docs/screenshots/Admin/Admin-25.png)
 
 #### ❓ FAQ Yönetimi
 
-- ![FAQ Yönetimi ](`docs/screenshots/Admin/Admin-26.png`)
+- ![FAQ Yönetimi](docs/screenshots/Admin/Admin-26.png)
 
-- ![FAQ Yönetimi ](`docs/screenshots/Admin/Admin-27.png`)
+- ![FAQ Yönetimi](docs/screenshots/Admin/Admin-27.png)
 
 #### 🎥 Video Yönetimi
 
-- ![Video Yönetimi ](`docs/screenshots/Admin/Admin-28.png`)
+- ![Video Yönetimi](docs/screenshots/Admin/Admin-28.png)
 
-- ![Video Yönetimi ](`docs/screenshots/Admin/Admin-29.png`)
-  
+- ![Video Yönetimi](docs/screenshots/Admin/Admin-29.png)
 
 ### 👤 Manager Paneli
 
 #### 📊 Dashboard
 
-- ![Dashboard](`docs/screenshots/Manager/Manager-1.png`)
+- ![Dashboard](docs/screenshots/Manager/Manager-1.png)
 
 #### 💬 Mesaj Yönetimi
 
-- ![Mesaj Yönetimi ](`docs/screenshots/Manager/Manager-2.png`)
+- ![Mesaj Yönetimi](docs/screenshots/Manager/Manager-2.png)
 
-- ![Mesaj Yönetimi ](`docs/screenshots/Manager/Manager-3.png`)
+- ![Mesaj Yönetimi](docs/screenshots/Manager/Manager-3.png)
 
-- ![Mesaj Yönetimi ](`docs/screenshots/Manager/Manager-4.png`)
+- ![Mesaj Yönetimi](docs/screenshots/Manager/Manager-4.png)
 
-- ![Mesaj Yönetimi ](`docs/screenshots/Manager/Manager-5.png`)
+- ![Mesaj Yönetimi](docs/screenshots/Manager/Manager-5.png)
 
 #### 🏡 İlan Yönetimi
 
-- ![İlan Yönetimi ](`docs/screenshots/Manager/Manager-6.png`)
+- ![İlan Yönetimi](docs/screenshots/Manager/Manager-6.png)
 
-- ![İlan Yönetimi ](`docs/screenshots/Manager/Manager-7.png`)
+- ![İlan Yönetimi](docs/screenshots/Manager/Manager-7.png)
 
-- ![İlan Yönetimi ](`docs/screenshots/Manager/Manager-8.png`)
+- ![İlan Yönetimi](docs/screenshots/Manager/Manager-8.png)
 
 ---
 
