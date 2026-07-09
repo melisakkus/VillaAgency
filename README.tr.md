@@ -7,6 +7,8 @@ Language Options: [🇬🇧 English](README.md) | [🇹🇷 Türkçe (bu dosya)]
 > 🧩 Teknik mimari kararları, katman tasarımı ve gerekçeleri için: **[Architecture.tr.md](Architecture.tr.md)**
 >
 > 🔗 **Canlı Demo:** _https://villa-agency.com/_
+> 
+> 🎬 **Demo Video:** [![VillaAgency Demo](https://img.youtube.com/vi/gK5sC7rK3Us/maxresdefault.jpg)](https://www.youtube.com/watch?v=gK5sC7rK3Us)
 >
 > 🔐 Paneli birlikte gezmek veya kurulum/demo talebiniz için: [İletişim](#i̇letişim)
 
