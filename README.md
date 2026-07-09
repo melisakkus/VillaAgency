@@ -76,7 +76,7 @@ This project was built to demonstrate how the basic skeleton of a web applicatio
 - **Role-Based Authorization:** Different access scopes between Admin and Manager roles (see the [architecture document](Architecture.md#authentication-and-role-based-authorization) for the detailed permission table).
 - **Product Management:** Category and status-based filtering, paging, one-click status update (Active / Sold / Rented / Archived).
 - **Message Inbox:** All / Unread / Deleted tabs, independent paging per tab, mark-as-read, and recoverable (soft delete) deletion.
-- **Dashboard:** Total/active/sold product counts, category distribution, and recent messages summarized on a single page using parallel queries.
+- **Dashboard:** Total/active/sold product counts, category distribution, and recent unread messages summarized on a single page using parallel queries.
 - **User Management:** Temporarily suspending an account's access by toggling it active/inactive, without deleting it.
 - **Server-Side Validation:** Field-level, descriptive error messages via FluentValidation.
 - **Dark Mode:** Dark theme support based on CSS custom properties.
@@ -101,7 +101,19 @@ For a detailed list of which packages each layer uses and why: **[Architecture.m
 
 A separate Python tool has also been built to populate the database with realistic test data: **[VillaAgency_DataGenerator-Python-](https://github.com/melisakkus/VillaAgency_DataGenerator-Python-/tree/main)**.
 
-This tool uses `Faker` to generate 1,000 listings with category-specific logical constraints (room/bathroom count, price range, floor/parking information); it then bulk-updates image links on MongoDB Atlas via `bulk_write`, converts the price field from `float` to `int`, assigns listings a probability-weighted status (`Status`) along with a creation timestamp, and cleans up legacy fields no longer in use (`$unset`). In short, it's a helper migration/seed layer that lets VillaAgency be showcased with a production-like data volume instead of an empty database.
+During the development process, a comprehensive data management tool was created to simulate production-level behavior. This tool was designed as a "Data Seeding" and "Data Migration" layer, ensuring that the application can be scaled with realistic data volumes rather than working with an empty database.
+
+- Data Seeding: Using `Faker` and `PyMongo`, over 1000 realistic listing documents with logical constraints (e.g., room/bathroom counts, price ranges, floor information) were automatically generated and inserted into the database.
+
+- Data Migration & Optimization: Throughout the project's evolution, the following enhancements were implemented on the database schema:
+
+  - Performance Optimization: Image links were updated in bulk using `bulk_write` operations to ensure consistency.
+
+  - Data Normalization: Data type inconsistencies in the price field were resolved, converting all values from float to int.
+
+  - Schema Evolution: A status field with weighted probabilities (e.g., Active, Sold, Rented) and timestamps were added; obsolete fields were permanently removed from the database using MongoDB's `$unset` operator.
+
+This structure enabled working with production-like data during the development phase and ensured that both the application UI and query performance were optimized from the ground up.
 
 For details, see the [README.md](https://github.com/melisakkus/VillaAgency_DataGenerator-Python-/blob/main/README.md) file in that repository.
 
@@ -116,5 +128,5 @@ This project does not currently carry an open-source license — all rights are 
 For questions, live demo requests, or collaboration proposals, you can reach me through the following channels:
 
 - **GitHub:** [github.com/melisakkus](https://github.com/melisakkus)
-- **LinkedIn:** _(https://www.linkedin.com/in/melisa-akkus-/)_
-- **Email:** _(melisa.akkus01@gmail.com)_
+- **LinkedIn:** _https://www.linkedin.com/in/melisa-akkus-/_
+- **Email:** _melisa.akkus01@gmail.com_

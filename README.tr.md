@@ -76,7 +76,7 @@ Bu proje, bir web uygulamasının temel iskeletinin — katmanlama, doğrulama, 
 - **Rol Bazlı Yetkilendirme:** Admin ve Manager rolleri arasında farklı erişim kapsamları (ayrıntılı yetki tablosu için [Mimari dokümanına](Architecture.tr.md#kimlik-doğrulama-ve-rol-bazlı-yetkilendirme) bakınız).
 - **Ürün Yönetimi:** Kategori ve durum bazlı filtreleme, sayfalama, tek tıkla durum güncelleme (Aktif / Satıldı / Kiralandı / Arşivlendi).
 - **Mesaj Kutusu:** Tümü / Okunmamış / Silinmiş sekmeleri, her sekme için bağımsız sayfalama, okundu işaretleme ve geri alınabilir (soft delete) silme.
-- **Dashboard:** Toplam/aktif/satılan ürün sayıları, kategori dağılımı ve son mesajların paralel sorgularla tek sayfada özetlenmesi.
+- **Dashboard:** Toplam/aktif/satılan ürün sayıları, kategori dağılımı ve okunmamış son mesajların paralel sorgularla tek sayfada özetlenmesi.
 - **Kullanıcı Yönetimi:** Bir hesabı silmeden, aktif/pasif durumuna alarak erişimini geçici olarak durdurma.
 - **Sunucu Taraflı Doğrulama:** FluentValidation ile alan bazlı, açıklayıcı hata mesajları.
 - **Dark Mode:** CSS custom property tabanlı karanlık tema desteği.
@@ -101,7 +101,19 @@ Her katmanın hangi paketleri neden kullandığına dair ayrıntılı liste ve g
 
 Veritabanını gerçekçi test verisiyle doldurmak için ayrı bir Python aracı da geliştirilmiştir: **[VillaAgency_DataGenerator-Python-](https://github.com/melisakkus/VillaAgency_DataGenerator-Python-/blob/main/README.tr.md)**.
 
-Bu araç, `Faker` ile kategoriye özel mantıksal sınırlar (oda/banyo sayısı, fiyat aralığı, kat/otopark bilgisi) içeren 1000 adet ilan üretir; ardından MongoDB Atlas üzerinde toplu güncelleme (`bulk_write`) ile görsel linklerini günceller, fiyat alanını `float`'tan `int`'e dönüştürür ve ilanlara olasılık ağırlıklı durum (`Status`) ile oluşturulma zaman damgası ekleyip artık kullanılmayan eski alanları (`$unset`) temizler. Kısacası VillaAgency'nin boş bir veritabanıyla değil, üretim benzeri bir veri hacmiyle sergilenebilmesini sağlayan yardımcı bir migration/seed katmanıdır.
+Projenin geliştirme sürecinde, sistemin üretim ortamındaki davranışını simüle etmek amacıyla kapsamlı bir veri yönetim aracı geliştirilmiştir. Bu araç, uygulamanın boş bir veritabanıyla değil, gerçekçi bir veri hacmiyle ölçeklendirilebilir olmasını sağlayan bir "Data Seeding" ve "Data Migration" katmanı olarak tasarlanmıştır.
+
+- Data Seeding (Veri Tohumlama): `Faker` ve `PyMongo` kullanılarak, mantıksal kısıtlara (oda sayısı, fiyat aralığı, kat bilgisi vb.) sahip 1000+ adet gerçekçi ilan dokümanı otomatik olarak üretilmiş ve veritabanına aktarılmıştır.
+
+- Data Migration (Veri Göçü ve Optimizasyon): Projenin evrimsel sürecinde veritabanı şeması üzerinde şu iyileştirmeler yapılmıştır:
+
+    - Performans Optimizasyonu: `bulk_write` operasyonları ile görsel linkleri toplu olarak optimize edilmiştir.
+
+    - Veri Normalizasyonu: Fiyat alanındaki veri tipi tutarsızlıkları giderilerek, tüm veriler float türünden int türüne dönüştürülmüştür.
+
+    - Şema Yönetimi (Schema Evolution): İlanlara olasılık ağırlıklı durum (Status) ve zaman damgası (Timestamp) eklenmiş; ihtiyaç duyulmayan eski alanlar MongoDB’nin `$unset` operatörü ile veritabanından tamamen temizlenmiştir.
+
+Bu yapı sayesinde geliştirme aşamasında gerçek verilerle çalışılmış, uygulama arayüzünün ve sorgu performansının en baştan optimize edilmesi sağlanmıştır.
 
 Detaylar için ilgili reponun [README.tr.md](https://github.com/melisakkus/VillaAgency_DataGenerator-Python-/blob/main/README.tr.md) dosyasına bakabilirsiniz.
 
@@ -116,5 +128,5 @@ Bu proje şu an herhangi bir açık kaynak lisansı taşımamaktadır — tüm h
 Sorularınız, canlı demo talebiniz veya iş birliği teklifleriniz için aşağıdaki kanallardan bana ulaşabilirsiniz:
 
 - **GitHub:** [github.com/melisakkus](https://github.com/melisakkus)
-- **LinkedIn:** _(https://www.linkedin.com/in/melisa-akkus-/)_
-- **Email:** _(melisa.akkus01@gmail.com)_
+- **LinkedIn:** _https://www.linkedin.com/in/melisa-akkus-/_
+- **Email:** _melisa.akkus01@gmail.com_
