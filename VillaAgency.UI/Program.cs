@@ -2,13 +2,23 @@ using FluentValidation.AspNetCore;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Serilog;
+using Serilog.Events;
 using VillaAgency.Business.Extension;
 using VillaAgency.Entity.Identity;
 using VillaAgency.Entity.Identity.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger();
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("System", LogEventLevel.Warning)
+    .WriteTo.Console()
+    .WriteTo.File("Logs/log-.txt",
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 30,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .CreateLogger();
 
 // Instruct .NET to use Serilog as the logging provider
 builder.Host.UseSerilog();
