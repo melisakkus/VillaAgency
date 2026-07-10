@@ -17,7 +17,7 @@
             {
                 <div class="col-lg-3 col-md-4 col-sm-6 property-card-wrapper">
                     <div class="item">
-                        <a href="property-details.html" class="property-image-wrapper">
+                        <a asp-controller="DefaultProductDetail" asp-action="Index" asp-route-id="@item.Id" class="property-image-wrapper">
                             <img src="@item.ImageUrl"
                                  alt="@item.Title"
                                  class="property-thumb"
@@ -26,7 +26,7 @@
                         <span class="category">@item.Category</span>
                         <h6>$@item.Price.ToString("N0")</h6>
                         <h4 class="property-item-title">
-                            <a href="property-details.html">@item.Title</a>
+                            <a asp-controller="DefaultProductDetail" asp-action="Index" asp-route-id="@item.Id">@item.Title</a>
                         </h4>
                         <ul>
                             <li>Bedrooms: <span>@item.BedroomCount</span></li>
