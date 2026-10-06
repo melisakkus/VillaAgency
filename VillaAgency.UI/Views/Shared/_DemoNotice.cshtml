@@ -4,18 +4,23 @@
         <span class="demo-notice-badge">Portfolio Project</span>
         <h3 id="demo-notice-title">Welcome to <span>VillaAgency</span></h3>
         <p>
-            This is a <strong>demo website</strong> built by <strong>Melisa Akkuş</strong>.
-            The listings, prices and contact details are for demonstration purposes only.
+            This website is a <strong>portfolio project</strong> showcasing a fully functional real estate platform
+            with a custom admin panel. All listings, prices and contact details are for demonstration purposes only.
         </p>
         <p>
-            Everything you see is managed through a custom admin panel.
-            Would you like a website like this for your own business?
+            For custom web solutions or collaboration inquiries, feel free to reach out through the channels below.
         </p>
+        <div class="demo-notice-author">
+            <strong>Melisa Akkuş</strong>
+            <span>Software Developer &amp; Industrial Engineer</span>
+        </div>
+        <div class="demo-notice-links">
+            <a href="https://github.com/melisakkus" target="_blank" rel="noopener" title="GitHub"><i class="fab fa-github"></i> GitHub</a>
+            <a href="https://www.linkedin.com/in/melisa-akkus-/" target="_blank" rel="noopener" title="LinkedIn"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
+            <a href="mailto:melisa.akkus01@gmail.com?subject=Website%20Inquiry" title="Email"><i class="fa fa-envelope"></i> Email</a>
+        </div>
         <div class="demo-notice-actions">
-            <a class="demo-notice-btn" href="mailto:melisa.akkus01@gmail.com?subject=Website%20Inquiry">
-                <i class="fa fa-envelope"></i> Contact Me
-            </a>
-            <button type="button" class="demo-notice-btn demo-notice-btn-alt">Explore the Demo</button>
+            <button type="button" class="demo-notice-btn demo-notice-explore">Explore the Demo</button>
         </div>
     </div>
 </div>
@@ -131,16 +136,52 @@
             border-color: #1e293b;
         }
 
-    .demo-notice-btn-alt {
-        background: #fff;
-        color: #1e293b !important;
-        border-color: #e2e8f0;
+    .demo-notice-author {
+        margin: 18px 0 14px;
+        padding-top: 16px;
+        border-top: 1px solid #e2e8f0;
     }
 
-        .demo-notice-btn-alt:hover {
-            background: #f8fafc;
-            border-color: #1e293b;
+        .demo-notice-author strong {
+            display: block;
+            color: #1e293b;
+            font-size: 16px;
+            font-weight: 600;
         }
+
+        .demo-notice-author span {
+            color: #c5a880;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+    .demo-notice-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+
+        .demo-notice-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            background: #f8fafc;
+            color: #1e293b !important;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none !important;
+            transition: all .3s ease;
+        }
+
+            .demo-notice-links a:hover {
+                background: #f35525;
+                border-color: #f35525;
+                color: #fff !important;
+            }
 </style>
 
 <script>
@@ -149,21 +190,15 @@
 
         function close() {
             notice.hidden = true;
-            try { localStorage.setItem('villaDemoNoticeSeen', '1'); } catch (e) { }
         }
 
         notice.querySelector('.demo-notice-close').addEventListener('click', close);
-        notice.querySelector('.demo-notice-btn-alt').addEventListener('click', close);
+        notice.querySelector('.demo-notice-explore').addEventListener('click', close);
         notice.addEventListener('click', function (e) { if (e.target === notice) close(); });
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
 
-        var seen = false;
-        try { seen = localStorage.getItem('villaDemoNoticeSeen') === '1'; } catch (e) { }
-
-        if (!seen) {
-            window.addEventListener('load', function () {
-                setTimeout(function () { notice.hidden = false; }, 800);
-            });
-        }
+        window.addEventListener('load', function () {
+            setTimeout(function () { notice.hidden = false; }, 800);
+        });
     })();
 </script>
