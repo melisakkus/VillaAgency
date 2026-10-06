@@ -184,14 +184,14 @@
             <div class="row">
                 <div class="col-lg-8 col-md-7">
                     <ul class="info">
-                        <li><i class="fa fa-code"></i> <strong>Portfolio Project</strong> by Melisa Akkuş &middot; <a href="mailto:melisa.akkus01@gmail.com?subject=Website%20Inquiry" style="color: #f35525;">Contact Me</a></li>
+                        <li><i class="fa fa-code"></i> <strong>Portfolio Project</strong> by Melisa Akkuş &middot; <a href="mailto:melisa.akkus01@gmail.com?subject=Website%20Inquiry" style="color: #f35525;" data-contact="email" data-location="header">Contact Me</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-4 col-md-5">
                     <div class="sub-header-right">
                         <ul class="social-links">
-                            <li><a href="https://www.linkedin.com/in/melisa-akkus-/" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i></a></li>
-                            <li><a href="https://github.com/melisakkus" target="_blank" rel="noopener"><i class="fab fa-github"></i></a></li>
+                            <li><a href="https://www.linkedin.com/in/melisa-akkus-/" target="_blank" rel="noopener" data-contact="linkedin" data-location="header"><i class="fab fa-linkedin"></i></a></li>
+                            <li><a href="https://github.com/melisakkus" target="_blank" rel="noopener" data-contact="github" data-location="header"><i class="fab fa-github"></i></a></li>
                         </ul>
                         <a asp-area="" asp-controller="Account" asp-action="Login" class="admin-quick-login">
                             <i class="fa fa-lock"></i> Management Portal
@@ -202,7 +202,7 @@
         </div>
     </div>
     <aside class="mobile-portfolio-bar">
-        <strong>Portfolio Project</strong> by Melisa Akkuş &middot; <a href="mailto:melisa.akkus01@gmail.com?subject=Website%20Inquiry">Contact Me</a>
+        <strong>Portfolio Project</strong> by Melisa Akkuş &middot; <a href="mailto:melisa.akkus01@gmail.com?subject=Website%20Inquiry" data-contact="email" data-location="mobile_bar">Contact Me</a>
     </aside>
     <!-- ***** Header Area Start ***** -->
     <header class="header-area header-sticky">
@@ -274,6 +274,17 @@
     <script src="~/VillaAgency-1.0.0/assets/js/owl-carousel.js"></script>
     <script src="~/VillaAgency-1.0.0/assets/js/counter.js"></script>
     <script src="~/VillaAgency-1.0.0/assets/js/custom.js"></script>
+    <script>
+        document.addEventListener('click', function (e) {
+            var link = e.target.closest('[data-contact]');
+            if (link && typeof gtag === 'function') {
+                gtag('event', 'contact_click', {
+                    method: link.dataset.contact,
+                    location: link.dataset.location
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>
