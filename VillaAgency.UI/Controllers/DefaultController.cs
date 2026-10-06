@@ -12,8 +12,14 @@ namespace VillaAgency.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendMessage(CreateMessageDto dto)
+        public async Task<IActionResult> SendMessage(CreateMessageDto dto, string? website, long? formLoadedAt)
         {
+            // Spam bot check: hidden field filled or form submitted too fast → pretend success, don't save
+            var tooFast = formLoadedAt is null ||
+                          DateTimeOffset.UtcNow.ToUnixTimeSeconds() - formLoadedAt < 3;
+            if (!string.IsNullOrEmpty(website) || tooFast)
+                return Json(new { success = true, message = "Your message has been sent successfully!" });
+
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Where(x => x.Value.Errors.Count > 0)

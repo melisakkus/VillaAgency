@@ -130,6 +130,8 @@
                 <div class="contact-form p-4 border rounded bg-white" style="box-shadow: 0px 0px 15px rgba(0,0,0,0.05); border-radius: 10px;">
                     <h5 class="fw-bold mb-3 text-dark" style="font-size: 18px;">Schedule a Tour & Request Info</h5>
                     <form id="contactForm" novalidate>
+                        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;">
+                        <input type="hidden" id="formLoadedAt" name="formLoadedAt" value="@DateTimeOffset.UtcNow.ToUnixTimeSeconds()">
                         <div class="mb-3">
                             <input type="text" id="name" name="Name" class="form-control" placeholder="Your Full Name">
                         </div>
@@ -169,7 +171,9 @@
                 Name: $("#name").val(),
                 Email: $("#email").val(),
                 Subject: $("#subject").val(),
-                Content: $("#content").val()
+                Content: $("#content").val(),
+                website: $("#website").val(),
+                formLoadedAt: $("#formLoadedAt").val()
             };
 
             $btn.prop("disabled", true).text("Sending...");

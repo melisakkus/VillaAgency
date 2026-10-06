@@ -73,6 +73,8 @@
                 <div class="form-column-wrapper">
                     <div class="contact-form-container">
                         <form id="contact-form" asp-controller="Default" asp-action="SendMessage" method="post">
+                            <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;">
+                            <input type="hidden" name="formLoadedAt" value="@DateTimeOffset.UtcNow.ToUnixTimeSeconds()">
                             <div class="row">
                                 <div class="col-lg-12">
                                     <fieldset>
