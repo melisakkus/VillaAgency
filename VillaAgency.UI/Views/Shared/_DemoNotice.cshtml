@@ -1,0 +1,169 @@
+<div id="demo-notice" class="demo-notice" hidden>
+    <div class="demo-notice-box" role="dialog" aria-modal="true" aria-labelledby="demo-notice-title">
+        <button type="button" class="demo-notice-close" aria-label="Close">&times;</button>
+        <span class="demo-notice-badge">Portfolio Project</span>
+        <h3 id="demo-notice-title">Welcome to <span>VillaAgency</span></h3>
+        <p>
+            This is a <strong>demo website</strong> built by <strong>Melisa Akkuş</strong>.
+            The listings, prices and contact details are for demonstration purposes only.
+        </p>
+        <p>
+            Everything you see is managed through a custom admin panel.
+            Would you like a website like this for your own business?
+        </p>
+        <div class="demo-notice-actions">
+            <a class="demo-notice-btn" href="mailto:melisa.akkus01@gmail.com?subject=Website%20Inquiry">
+                <i class="fa fa-envelope"></i> Contact Me
+            </a>
+            <button type="button" class="demo-notice-btn demo-notice-btn-alt">Explore the Demo</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .demo-notice {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: rgba(30, 41, 59, .55);
+    }
+
+        .demo-notice[hidden] {
+            display: none;
+        }
+
+    .demo-notice-box {
+        position: relative;
+        width: 100%;
+        max-width: 460px;
+        padding: 36px 30px 30px;
+        background: #fff;
+        border-radius: 20px;
+        border-top: 4px solid #f35525;
+        box-shadow: 0 20px 50px rgba(30, 41, 59, .25);
+        text-align: center;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .demo-notice-close {
+        position: absolute;
+        top: 10px;
+        right: 16px;
+        border: 0;
+        background: none;
+        font-size: 28px;
+        line-height: 1;
+        color: #94a3b8;
+        cursor: pointer;
+    }
+
+        .demo-notice-close:hover {
+            color: #f35525;
+        }
+
+    .demo-notice-badge {
+        display: inline-block;
+        margin-bottom: 14px;
+        padding: 4px 14px;
+        border-radius: 20px;
+        background: #fdf1ec;
+        color: #f35525;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .demo-notice-box h3 {
+        margin: 0 0 14px;
+        color: #1e293b;
+        font-size: 22px;
+        font-weight: 600;
+    }
+
+        .demo-notice-box h3 span {
+            color: #c5a880;
+        }
+
+    .demo-notice-box p {
+        margin: 0 0 12px;
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+        .demo-notice-box p strong {
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+    .demo-notice-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 22px;
+    }
+
+    .demo-notice-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 24px;
+        border: 1px solid #f35525;
+        border-radius: 25px;
+        background: #f35525;
+        color: #fff !important;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none !important;
+        cursor: pointer;
+        transition: all .3s ease;
+    }
+
+        .demo-notice-btn:hover {
+            background: #1e293b;
+            border-color: #1e293b;
+        }
+
+    .demo-notice-btn-alt {
+        background: #fff;
+        color: #1e293b !important;
+        border-color: #e2e8f0;
+    }
+
+        .demo-notice-btn-alt:hover {
+            background: #f8fafc;
+            border-color: #1e293b;
+        }
+</style>
+
+<script>
+    (function () {
+        var notice = document.getElementById('demo-notice');
+
+        function close() {
+            notice.hidden = true;
+            try { localStorage.setItem('villaDemoNoticeSeen', '1'); } catch (e) { }
+        }
+
+        notice.querySelector('.demo-notice-close').addEventListener('click', close);
+        notice.querySelector('.demo-notice-btn-alt').addEventListener('click', close);
+        notice.addEventListener('click', function (e) { if (e.target === notice) close(); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+
+        var seen = false;
+        try { seen = localStorage.getItem('villaDemoNoticeSeen') === '1'; } catch (e) { }
+
+        if (!seen) {
+            window.addEventListener('load', function () {
+                setTimeout(function () { notice.hidden = false; }, 800);
+            });
+        }
+    })();
+</script>
